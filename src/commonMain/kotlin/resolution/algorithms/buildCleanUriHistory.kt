@@ -1,4 +1,4 @@
-package algorithms
+package resolution.algorithms
 
 import resolution.UriResolutionStep
 

@@ -1,4 +1,4 @@
-import algorithms.getImplementations
+import resolution.algorithms.getImplementations
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import resolution.*
 import types.*

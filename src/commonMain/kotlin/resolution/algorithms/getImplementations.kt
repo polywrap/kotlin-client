@@ -10,7 +10,7 @@ import types.*
  *
  * @param wrapperInterfaceUri The URI of the wrapper interface to find implementations of.
  * @param interfaces An array of interface implementations to search for implementations of the wrapper interface in.
- * @param client (Optional) A [CoreClient] instance used to resolve URIs.
+ * @param client (Optional) A [UriResolutionHandler] instance used to resolve URIs.
  * @param resolutionContext (Optional) The context used for URI resolution.
  * @return A [Result] that contains the list of implementation URIs if successful, or a [WrapError] if there was an error.
  */

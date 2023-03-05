@@ -1,5 +1,6 @@
 plugins {
     kotlin("multiplatform") version "1.8.0"
+    kotlin("plugin.serialization") version "1.8.0"
 }
 
 group = "eth.krisbitney"
@@ -17,11 +18,11 @@ kotlin {
             useJUnitPlatform()
         }
     }
-    js(IR) {
-        nodejs {
-            binaries.executable()
-        }
-    }
+//    js(IR) {
+//        nodejs {
+//            binaries.executable()
+//        }
+//    }
     val hostOs = System.getProperty("os.name")
     val isMingwX64 = hostOs.startsWith("Windows")
     val nativeTarget = when {
@@ -33,7 +34,12 @@ kotlin {
 
     
     sourceSets {
-        val commonMain by getting
+        val commonMain by getting {
+            dependencies {
+                implementation("com.ensarsarajcic.kotlinx:serialization-msgpack:0.5.4")
+                implementation("com.ensarsarajcic.kotlinx:serialization-msgpack-unsigned-support:0.5.4")
+            }
+        }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
@@ -42,8 +48,8 @@ kotlin {
         }
         val jvmMain by getting
         val jvmTest by getting
-        val jsMain by getting
-        val jsTest by getting
+//        val jsMain by getting
+//        val jsTest by getting
         val nativeMain by getting
         val nativeTest by getting
     }

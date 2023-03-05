@@ -1,7 +1,7 @@
-import resolution.algorithms.getImplementations
+import eth.krisbitney.polywrap.core.resolution.*
+import eth.krisbitney.polywrap.core.types.InterfaceImplementations
+import eth.krisbitney.polywrap.core.resolution.algorithms.getImplementations
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import resolution.*
-import types.*
 import kotlin.test.*
 import kotlinx.coroutines.test.*
 

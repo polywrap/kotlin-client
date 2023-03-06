@@ -1,6 +1,7 @@
 package eth.krisbitney.polywrap.core.wrap.formats.wrap01.abi
 
 import kotlinx.serialization.EncodeDefault
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 /**
@@ -28,7 +29,8 @@ data class ArrayDefinition(
     override val array: ArrayDefinition? = null,
     override val map: MapDefinition? = null,
     override val scalar: ScalarDefinition? = null,
-    override val obj: GenericDefinition? = null,
+    @SerialName("object")
+    override val _object: GenericDefinition? = null,
     override val enum: GenericDefinition? = null,
     override val unresolvedObjectOrEnum: GenericDefinition? = null,
     val item: IGenericDefinition? = null

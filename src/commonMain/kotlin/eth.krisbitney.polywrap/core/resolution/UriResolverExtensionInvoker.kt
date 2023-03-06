@@ -1,6 +1,6 @@
 package eth.krisbitney.polywrap.core.resolution
 
-import eth.krisbitney.polywrap.core.msgpack.MsgPackSerializable
+import eth.krisbitney.polywrap.core.msgpack.encodeObject
 import eth.krisbitney.polywrap.core.types.InvokeOptions
 import eth.krisbitney.polywrap.core.types.Invoker
 
@@ -35,12 +35,6 @@ data class MaybeUriOrManifest(
     }
 }
 
-/** Arguments for the tryResolveUri method */
-data class ArgsTryResolveUri(val authority: String, val path: String) : MsgPackSerializable
-
-/** Arguments for the getFile method */
-data class ArgsGetFile(val path: String) : MsgPackSerializable
-
 object UriResolverExtensionInvoker {
     /**
      * Use an invoker to try to resolve a URI using a wrapper that implements the UriResolver interface
@@ -58,7 +52,10 @@ object UriResolverExtensionInvoker {
             InvokeOptions(
                 uri = wrapper,
                 method = "tryResolveUri",
-                args = ArgsTryResolveUri(uri.authority, uri.path).encode()
+                args = mapOf(
+                    "authority" to uri.authority,
+                    "path" to uri.path
+                ).encodeObject()
             )
         )
     }
@@ -79,7 +76,9 @@ object UriResolverExtensionInvoker {
             InvokeOptions(
                 uri = wrapper,
                 method = "getFile",
-                args = ArgsGetFile(path).encode()
+                args = mapOf(
+                    "path" to path
+                ).encodeObject()
             )
         )
     }

@@ -4,13 +4,14 @@ import kotlinx.serialization.*
 import com.ensarsarajcic.kotlinx.serialization.msgpack.MsgPack
 import com.ensarsarajcic.kotlinx.serialization.msgpack.MsgPackConfiguration
 
+
 val msgPack: MsgPack by lazy {
     MsgPack(MsgPackConfiguration(
         rawCompatibility = false,
         strictTypes = false,
         strictTypeWriting = true,
         preventOverflows = true,
-        ignoreUnknownKeys = true
+        ignoreUnknownKeys = false
     ))
 }
 

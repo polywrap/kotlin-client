@@ -1,5 +1,6 @@
 package eth.krisbitney.polywrap.core.wrap.formats.wrap01.abi
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 /**
@@ -16,7 +17,8 @@ sealed interface AnyDefinition : IGenericDefinition {
     val array: ArrayDefinition?
     val scalar: ScalarDefinition?
     val map: MapDefinition?
-    val obj: GenericDefinition?
+    @SerialName("object")
+    val _object: GenericDefinition?
     val enum: GenericDefinition?
     val unresolvedObjectOrEnum: IGenericDefinition?
 }

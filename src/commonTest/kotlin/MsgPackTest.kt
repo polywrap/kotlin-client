@@ -3,7 +3,7 @@ import eth.krisbitney.polywrap.core.msgpack.msgpackEncode
 import kotlinx.serialization.Serializable
 import kotlin.test.*
 
-class MsgPackTests {
+class MsgPackTest {
     @Test
     fun shouldEncodeAndDecodeObject() {
         @Serializable

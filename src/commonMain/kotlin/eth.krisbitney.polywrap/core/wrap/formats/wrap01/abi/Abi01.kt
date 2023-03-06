@@ -15,7 +15,7 @@ import kotlinx.serialization.Serializable
  * @property envType [EnvDefinition] that defines environment variables in the ABI.
  * */
 @Serializable
-data class Abi(
+data class Abi01(
     val objectTypes: List<ObjectDefinition>? = null,
     val moduleType: ModuleDefinition? = null,
     val enumTypes: List<EnumDefinition>? = null,
@@ -25,4 +25,6 @@ data class Abi(
     val importedEnumTypes: List<ImportedEnumDefinition>? = null,
     val importedEnvTypes: List<ImportedEnvDefinition>? = null,
     val envType: EnvDefinition? = null
-)
+) {
+    val version = "0.1"
+}

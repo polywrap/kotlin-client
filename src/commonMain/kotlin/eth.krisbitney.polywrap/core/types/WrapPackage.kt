@@ -9,16 +9,14 @@ interface WrapPackage {
     /**
      * Produce an instance of the wrap manifest
      *
-     * @param noValidate If true, manifest validation step will be skipped
      * @return A Promise with a Result containing the wrap manifest or an error
      */
-    suspend fun getManifest(noValidate: Boolean = false): Result<WrapManifest>
+    suspend fun getManifest(): Result<WrapManifest>
 
     /**
      * Produce an instance of the wrapper
      *
-     * @param noValidate If true, manifest validation step will be skipped
      * @return A Promise with a Result containing the wrapper or an error
      */
-    suspend fun createWrapper(noValidate: Boolean = false): Result<Wrapper>
+    suspend fun createWrapper(): Result<Wrapper>
 }

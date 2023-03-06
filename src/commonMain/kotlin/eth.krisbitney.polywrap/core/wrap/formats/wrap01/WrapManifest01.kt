@@ -19,7 +19,7 @@ data class WrapManifest01(
 ) {
 
     init {
-        require(version == "0.1" || version == "0.1.0") { "Unsupported WrapManifest version: $version. Expected version: 0.1" }
+        require(version == "0.1.0" || version == "0.1") { "Unsupported WrapManifest version: $version. Expected version: 0.1.0" }
         require(type == "wasm" || type == "interface" || type == "plugin") { "Unsupported WrapManifest type: $type. Supported types: wasm, plugin, interface" }
         require(Regex("""^[a-zA-Z0-9\-_]+$""").matches(name)) { "WrapManifest name contains invalid characters: $name" }
     }

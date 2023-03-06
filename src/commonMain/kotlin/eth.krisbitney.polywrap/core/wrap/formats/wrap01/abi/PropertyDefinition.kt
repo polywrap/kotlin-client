@@ -1,6 +1,5 @@
 package eth.krisbitney.polywrap.core.wrap.formats.wrap01.abi
 
-import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -14,17 +13,16 @@ import kotlinx.serialization.Serializable
  * @property array Definition of an array property, if it is an array type.
  * @property scalar Definition of a scalar property, if it is a scalar type.
  * @property map Definition of a map property, if it is a map type.
- * @property obj Reference to an object property, if it is an object type.
+ * @property _object Reference to an object property, if it is an object type.
  * @property enum Reference to an enum property, if it is an enum type.
  * @property unresolvedObjectOrEnum Reference to an unresolved object or enum property.
  */
-@OptIn(kotlinx.serialization.ExperimentalSerializationApi::class)
 @Serializable
 data class PropertyDefinition(
     override val type: String,
     override val kind: Int,
     override val name: String? = null,
-    @EncodeDefault override val required: Boolean = false,
+    override val required: Boolean? = null,
     override val comment: String? = null,
     override val array: ArrayDefinition? = null,
     override val scalar: ScalarDefinition? = null,

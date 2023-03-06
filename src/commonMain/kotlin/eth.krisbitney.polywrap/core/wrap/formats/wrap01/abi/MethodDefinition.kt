@@ -1,6 +1,5 @@
 package eth.krisbitney.polywrap.core.wrap.formats.wrap01.abi
 
-import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -15,16 +14,15 @@ import kotlinx.serialization.Serializable
  * @property env An optional [EnvRequired] object representing the environment required for the method.
  * @property _return An optional [PropertyDefinition] object representing the return value of the method.
  */
-@OptIn(kotlinx.serialization.ExperimentalSerializationApi::class)
 @Serializable
 data class MethodDefinition(
     override val type: String,
     override val kind: Int,
     override val name: String? = null,
-    @EncodeDefault override val required: Boolean = false,
+    override val required: Boolean? = null,
     override val comment: String? = null,
     val arguments: List<PropertyDefinition>? = null,
-    val env:  EnvRequired = EnvRequired(false),
+    val env: EnvRequired? = null,
     @SerialName("return")
     val _return: PropertyDefinition? = null
 ) : IGenericDefinition, WithComment {
@@ -34,7 +32,6 @@ data class MethodDefinition(
      *
      * @property required A boolean indicating whether the environment is required.
      */
-    @OptIn(kotlinx.serialization.ExperimentalSerializationApi::class)
     @Serializable
-    data class EnvRequired(@EncodeDefault val required: Boolean = false)
+    data class EnvRequired(val required: Boolean? = null)
 }

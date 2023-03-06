@@ -25,6 +25,4 @@ data class Abi01(
     val importedEnumTypes: List<ImportedEnumDefinition>? = null,
     val importedEnvTypes: List<ImportedEnvDefinition>? = null,
     val envType: EnvDefinition? = null
-) {
-    val version = "0.1"
-}
+)

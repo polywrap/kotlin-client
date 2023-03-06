@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
  * @property array An optional [ArrayDefinition] for this definition.
  * @property scalar An optional [ScalarDefinition] for this definition.
  * @property map An optional [MapDefinition] for this definition.
- * @property obj An optional object reference for this definition.
+ * @property _object An optional object reference for this definition.
  * @property enum An optional enum reference for this definition.
  * @property unresolvedObjectOrEnum An optional unresolved reference for this definition.
  */

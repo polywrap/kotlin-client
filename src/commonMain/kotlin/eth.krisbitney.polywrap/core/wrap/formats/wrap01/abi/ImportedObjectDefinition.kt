@@ -1,6 +1,5 @@
 package eth.krisbitney.polywrap.core.wrap.formats.wrap01.abi
 
-import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 
 /**
@@ -17,13 +16,12 @@ import kotlinx.serialization.Serializable
  * @property properties The list of properties of the imported object.
  * @property interfaces The list of interfaces implemented by the imported object.
  */
-@OptIn(kotlinx.serialization.ExperimentalSerializationApi::class)
 @Serializable
 data class ImportedObjectDefinition(
     override val type: String,
     override val kind: Int,
     override val name: String? = null,
-    @EncodeDefault override val required: Boolean = false,
+    override val required: Boolean? = null,
     override val comment: String? = null,
     override val uri: String,
     override val namespace: String,

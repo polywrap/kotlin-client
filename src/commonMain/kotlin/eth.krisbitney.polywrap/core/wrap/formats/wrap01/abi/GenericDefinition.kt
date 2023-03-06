@@ -1,6 +1,5 @@
 package eth.krisbitney.polywrap.core.wrap.formats.wrap01.abi
 
-import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 
 /**
@@ -11,11 +10,10 @@ import kotlinx.serialization.Serializable
  * @property name The name of the generic definition, if any.
  * @property required A flag indicating if the generic definition is required.
  */
-@OptIn(kotlinx.serialization.ExperimentalSerializationApi::class)
 @Serializable
 data class GenericDefinition(
     override val type: String,
     override val kind: Int,
     override val name: String? = null,
-    @EncodeDefault override val required: Boolean = false,
+    override val required: Boolean? = null,
 ) : IGenericDefinition

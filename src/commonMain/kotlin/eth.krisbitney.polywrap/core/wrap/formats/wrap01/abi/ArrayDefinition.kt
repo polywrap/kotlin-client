@@ -1,6 +1,5 @@
 package eth.krisbitney.polywrap.core.wrap.formats.wrap01.abi
 
-import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -14,18 +13,17 @@ import kotlinx.serialization.Serializable
  * @property array An optional nested [ArrayDefinition] within the current definition.
  * @property map An optional [MapDefinition] for this definition.
  * @property scalar An optional [ScalarDefinition] for this definition.
- * @property obj An optional object reference for this definition.
+ * @property _object An optional object reference for this definition.
  * @property enum An optional enum reference for this definition.
  * @property unresolvedObjectOrEnum An optional unresolved reference for this definition.
  * @property item The type of item stored in the array.
  */
-@OptIn(kotlinx.serialization.ExperimentalSerializationApi::class)
 @Serializable
 data class ArrayDefinition(
     override val type: String,
     override val kind: Int,
     override val name: String? = null,
-    @EncodeDefault override val required: Boolean = false,
+    override val required: Boolean? = null,
     override val array: ArrayDefinition? = null,
     override val map: MapDefinition? = null,
     override val scalar: ScalarDefinition? = null,

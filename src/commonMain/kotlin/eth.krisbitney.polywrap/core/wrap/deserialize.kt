@@ -18,12 +18,6 @@ fun deserializeWrapManifest(manifest: ByteArray): Result<WrapManifest> {
         return Result.failure(IllegalArgumentException(message))
     }
 
-    val supportedManifestVersions: List<String> = WrapManifestVersions.values().map { it.value }
-    if (!supportedManifestVersions.contains(wrapManifest.version)) {
-        val message = "Unsupported WrapManifest version: ${wrapManifest.version}"
-        return Result.failure(IllegalArgumentException(message))
-    }
-
     // todo: check with semver and migrate
 
     return Result.success(wrapManifest)

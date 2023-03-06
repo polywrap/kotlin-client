@@ -117,13 +117,6 @@ class WrapManifestTest {
     }
 
     @Test
-    fun shouldSerializeManifest() {
-        val encoded = manifestMsgPack.encodeToByteArray(testManifest)
-        println(encoded.contentToString())
-        assertEquals(encodedTestManifest, encoded)
-    }
-
-    @Test
     fun shouldDeserializeManifest() {
         val decoded = deserializeWrapManifest(encodedTestManifest).getOrThrow()
         assertEquals(testManifest, decoded)

@@ -15,4 +15,4 @@ enum class WrapManifestVersions(val value: String) {
     V0_1("0.1")
 }
 
-val latestWrapManifestVersion: String = WrapManifestVersions.V0_1_0.value
+const val latestWrapManifestVersion: String = "0.1.0"

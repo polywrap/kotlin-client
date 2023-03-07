@@ -5,7 +5,6 @@ import com.ensarsarajcic.kotlinx.serialization.msgpack.MsgPackConfiguration
 import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.encodeToByteArray
 
-// todo: check with semver, add migration logic, handle multiple manifest versions
 class WrapManifestSerializer {
 
     private val manifestMsgPack: MsgPack = MsgPack(

@@ -1,6 +1,6 @@
 package eth.krisbitney.polywrap.core.resolution
 
-import eth.krisbitney.polywrap.core.msgpack.msgPackEncode
+import eth.krisbitney.polywrap.msgpack.msgPackEncode
 import eth.krisbitney.polywrap.core.types.InvokeOptions
 import eth.krisbitney.polywrap.core.types.Invoker
 

@@ -1,4 +1,4 @@
-import eth.krisbitney.polywrap.core.wrap.WrapManifestSerializer
+import eth.krisbitney.polywrap.core.wrap.WrapManifest
 import eth.krisbitney.polywrap.core.wrap.formats.wrap01.WrapManifest01
 import eth.krisbitney.polywrap.core.wrap.formats.wrap01.abi.*
 import kotlin.test.*
@@ -109,15 +109,14 @@ class WrapManifestTest {
 
     @Test
     fun shouldSerializeAndDeserializeManifest() {
-        val serializer = WrapManifestSerializer()
-        val encoded = serializer.serialize(testManifest)
-        val decoded = serializer.deserialize(encoded).getOrThrow()
+        val encoded = WrapManifest.serialize(testManifest)
+        val decoded = WrapManifest.deserialize(encoded).getOrThrow()
         assertEquals(testManifest, decoded)
     }
 
     @Test
     fun shouldDeserializeManifest() {
-        val decoded = WrapManifestSerializer().deserialize(encodedTestManifest).getOrThrow()
+        val decoded = WrapManifest.deserialize(encodedTestManifest).getOrThrow()
         assertEquals(testManifest, decoded)
     }
 

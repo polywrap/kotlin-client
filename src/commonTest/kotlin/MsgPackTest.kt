@@ -1,6 +1,6 @@
-import eth.krisbitney.polywrap.core.msgpack.MsgPackMap
-import eth.krisbitney.polywrap.core.msgpack.msgPackDecode
-import eth.krisbitney.polywrap.core.msgpack.msgPackEncode
+import eth.krisbitney.polywrap.msgpack.MsgPackMap
+import eth.krisbitney.polywrap.msgpack.msgPackDecode
+import eth.krisbitney.polywrap.msgpack.msgPackEncode
 import kotlinx.serialization.Serializable
 import kotlin.test.*
 
@@ -25,7 +25,7 @@ class MsgPackTest {
         val encoded = msgPackEncode(customObject)
         assertTrue(encoded.contentEquals(expectedBytes))
 
-        val decoded = msgPackDecode<CustomObject>(encoded)
+        val decoded = msgPackDecode<CustomObject>(encoded).getOrThrow()
         assertEquals(customObject, decoded)
     }
 
@@ -51,7 +51,7 @@ class MsgPackTest {
         val encoded = msgPackEncode(msgPackMap)
         assertTrue(encoded.contentEquals(expectedBytes))
 
-        val decoded: MsgPackMap<String, String> = msgPackDecode(encoded)
+        val decoded = msgPackDecode<MsgPackMap<String, String>>(encoded).getOrThrow()
         assertEquals(msgPackMap, decoded)
     }
 
@@ -75,7 +75,7 @@ class MsgPackTest {
         val encoded = msgPackEncode(msgPackMap)
         assertTrue(encoded.contentEquals(expectedBytes))
 
-        val decoded: MsgPackMap<String, MsgPackMap<String, String>> = msgPackDecode(encoded)
+        val decoded = msgPackDecode<MsgPackMap<String, MsgPackMap<String, String>>>(encoded).getOrThrow()
         assertEquals(msgPackMap, decoded)
     }
 
@@ -97,7 +97,7 @@ class MsgPackTest {
         val encoded = msgPackEncode(msgPackMap)
         assertTrue(encoded.contentEquals(expectedBytes))
 
-        val decoded: MsgPackMap<String, ByteArray> = msgPackDecode(encoded)
+        val decoded = msgPackDecode<MsgPackMap<String, ByteArray>>(encoded).getOrThrow()
         assertEquals(msgPackMap.map.keys.toString(), decoded.map.keys.toString())
         val expectedValues = msgPackMap.map.values.map { it.contentToString() }
         val receivedValues = decoded.map.values.map { it.contentToString() }

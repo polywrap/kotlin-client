@@ -1,4 +1,4 @@
-package eth.krisbitney.polywrap.core.msgpack
+package eth.krisbitney.polywrap.msgpack
 
 import com.ensarsarajcic.kotlinx.serialization.msgpack.exceptions.MsgPackSerializationException
 import com.ensarsarajcic.kotlinx.serialization.msgpack.extensions.BaseMsgPackExtensionSerializer

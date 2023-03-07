@@ -1,4 +1,4 @@
-package eth.krisbitney.polywrap.core.msgpack
+package eth.krisbitney.polywrap.msgpack
 
 import kotlinx.serialization.*
 import com.ensarsarajcic.kotlinx.serialization.msgpack.MsgPack
@@ -9,7 +9,7 @@ val msgPack: MsgPack by lazy {
     MsgPack(MsgPackConfiguration(
         rawCompatibility = false,
         strictTypes = false,
-        strictTypeWriting = true,
+        strictTypeWriting = false,
         preventOverflows = true,
         ignoreUnknownKeys = false
     ))
@@ -29,6 +29,6 @@ inline fun <reified T : Any> msgPackEncode(value: T): ByteArray {
  * @param bytes The msgpack byte array to decode
  * @return The decoded object
  */
-inline fun <reified T : Any> msgPackDecode(bytes: ByteArray): T {
-    return msgPack.decodeFromByteArray(bytes)
+inline fun <reified T : Any> msgPackDecode(bytes: ByteArray): Result<T> {
+    return runCatching { msgPack.decodeFromByteArray(bytes) }
 }

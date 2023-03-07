@@ -1,6 +1,8 @@
 package eth.krisbitney.polywrap.core.wrap.formats.wrap01
 
 import eth.krisbitney.polywrap.core.wrap.formats.wrap01.abi.Abi01
+import eth.krisbitney.polywrap.msgpack.msgPackDecode
+import eth.krisbitney.polywrap.msgpack.msgPackEncode
 import kotlinx.serialization.Serializable
 
 /**
@@ -22,5 +24,36 @@ data class WrapManifest01(
         require(version == "0.1.0" || version == "0.1") { "Unsupported WrapManifest version: $version. Expected version: 0.1.0" }
         require(type == "wasm" || type == "interface" || type == "plugin") { "Unsupported WrapManifest type: $type. Supported types: wasm, plugin, interface" }
         require(Regex("""^[a-zA-Z0-9\-_]+$""").matches(name)) { "WrapManifest name contains invalid characters: $name" }
+    }
+
+    /**
+     * Serializes the manifest to a [ByteArray] in MessagePack format.
+     * @return the serialized manifest as a [ByteArray].
+     */
+    fun serialize(): ByteArray = msgPackEncode(this)
+
+    companion object {
+        /**
+         * Serializes a [manifest] to a [ByteArray] in MessagePack format.
+         * @param manifest a [WrapManifest01]
+         * @return the serialized manifest as a [ByteArray].
+         */
+        fun serialize(manifest: WrapManifest01): ByteArray = msgPackEncode(manifest)
+
+        /**
+         * Deserializes a given [manifest] represented as a [ByteArray] to a [WrapManifest01] object.
+         * @param manifest the serialized manifest to deserialize.
+         * @return the deserialized [WrapManifest01] object.
+         * @throws Error if the given manifest is not a valid WrapManifest or if it's unable to be parsed.
+         */
+        fun deserialize(manifest: ByteArray): Result<WrapManifest01> {
+            val result: Result<WrapManifest01> = msgPackDecode(manifest)
+            if (result.isFailure) {
+                val err = result.exceptionOrNull()
+                val message = "Unable to parse WrapManifest: ${err?.message}"
+                return Result.failure(IllegalArgumentException(message))
+            }
+            return result
+        }
     }
 }

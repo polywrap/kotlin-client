@@ -1,6 +1,6 @@
 import eth.krisbitney.polywrap.core.msgpack.MsgPackMap
-import eth.krisbitney.polywrap.core.msgpack.msgpackDecode
-import eth.krisbitney.polywrap.core.msgpack.msgpackEncode
+import eth.krisbitney.polywrap.core.msgpack.msgPackDecode
+import eth.krisbitney.polywrap.core.msgpack.msgPackEncode
 import kotlinx.serialization.Serializable
 import kotlin.test.*
 
@@ -22,10 +22,10 @@ class MsgPackTest {
         ).map(Int::toByte).toByteArray()
 
         val customObject = CustomObject("firstValue", "secondValue")
-        val encoded = msgpackEncode(customObject)
+        val encoded = msgPackEncode(customObject)
         assertTrue(encoded.contentEquals(expectedBytes))
 
-        val decoded = msgpackDecode<CustomObject>(encoded)
+        val decoded = msgPackDecode<CustomObject>(encoded)
         assertEquals(customObject, decoded)
     }
 
@@ -48,10 +48,10 @@ class MsgPackTest {
             101
         ).map(Int::toByte).toByteArray()
 
-        val encoded = msgpackEncode(msgPackMap)
+        val encoded = msgPackEncode(msgPackMap)
         assertTrue(encoded.contentEquals(expectedBytes))
 
-        val decoded: MsgPackMap<String, String> = msgpackDecode(encoded)
+        val decoded: MsgPackMap<String, String> = msgPackDecode(encoded)
         assertEquals(msgPackMap, decoded)
     }
 
@@ -72,10 +72,10 @@ class MsgPackTest {
             50
         ).map(Int::toByte).toByteArray()
 
-        val encoded = msgpackEncode(msgPackMap)
+        val encoded = msgPackEncode(msgPackMap)
         assertTrue(encoded.contentEquals(expectedBytes))
 
-        val decoded: MsgPackMap<String, MsgPackMap<String, String>> = msgpackDecode(encoded)
+        val decoded: MsgPackMap<String, MsgPackMap<String, String>> = msgPackDecode(encoded)
         assertEquals(msgPackMap, decoded)
     }
 
@@ -94,10 +94,10 @@ class MsgPackTest {
             196, 3, 3, 2, 1
         ).map(Int::toByte).toByteArray()
 
-        val encoded = msgpackEncode(msgPackMap)
+        val encoded = msgPackEncode(msgPackMap)
         assertTrue(encoded.contentEquals(expectedBytes))
 
-        val decoded: MsgPackMap<String, ByteArray> = msgpackDecode(encoded)
+        val decoded: MsgPackMap<String, ByteArray> = msgPackDecode(encoded)
         assertEquals(msgPackMap.map.keys.toString(), decoded.map.keys.toString())
         val expectedValues = msgPackMap.map.values.map { it.contentToString() }
         val receivedValues = decoded.map.values.map { it.contentToString() }

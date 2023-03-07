@@ -1,6 +1,6 @@
 package eth.krisbitney.polywrap.core.resolution
 
-import eth.krisbitney.polywrap.core.msgpack.encodeObject
+import eth.krisbitney.polywrap.core.msgpack.msgPackEncode
 import eth.krisbitney.polywrap.core.types.InvokeOptions
 import eth.krisbitney.polywrap.core.types.Invoker
 
@@ -52,10 +52,7 @@ object UriResolverExtensionInvoker {
             InvokeOptions(
                 uri = wrapper,
                 method = "tryResolveUri",
-                args = mapOf(
-                    "authority" to uri.authority,
-                    "path" to uri.path
-                ).encodeObject()
+                args = msgPackEncode(mapOf("authority" to uri.authority, "path" to uri.path))
             )
         )
     }
@@ -76,9 +73,7 @@ object UriResolverExtensionInvoker {
             InvokeOptions(
                 uri = wrapper,
                 method = "getFile",
-                args = mapOf(
-                    "path" to path
-                ).encodeObject()
+                args = msgPackEncode(mapOf("path" to path))
             )
         )
     }

@@ -20,7 +20,7 @@ val msgPack: MsgPack by lazy {
  * @param value The object to encode
  * @return The msgpack byte array
  */
-inline fun <reified T : Any> msgpackEncode(value: T): ByteArray {
+inline fun <reified T : Any> msgPackEncode(value: T): ByteArray {
     return msgPack.encodeToByteArray(value)
 }
 
@@ -29,6 +29,6 @@ inline fun <reified T : Any> msgpackEncode(value: T): ByteArray {
  * @param bytes The msgpack byte array to decode
  * @return The decoded object
  */
-inline fun <reified T : Any> msgpackDecode(bytes: ByteArray): T {
+inline fun <reified T : Any> msgPackDecode(bytes: ByteArray): T {
     return msgPack.decodeFromByteArray(bytes)
 }

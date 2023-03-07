@@ -1,3 +1,4 @@
+import eth.krisbitney.polywrap.core.msgpack.MsgPackMap
 import eth.krisbitney.polywrap.core.msgpack.msgpackDecode
 import eth.krisbitney.polywrap.core.msgpack.msgpackEncode
 import kotlinx.serialization.Serializable
@@ -28,12 +29,14 @@ class MsgPackTest {
         assertEquals(customObject, decoded)
     }
 
-    @Test @Ignore
+    @Test
     fun shouldEncodeAndDecodeMap() {
         val customMap = mapOf(
             "firstKey" to "firstValue",
             "secondKey" to "secondValue"
         )
+        val msgPackMap = MsgPackMap(customMap)
+
         // 199 means Ext8, 43 means 43 bytes, 1 means generic map ext type,
         // and the remainder is the 43 bytes of the map
         val expectedBytes = intArrayOf(
@@ -45,19 +48,21 @@ class MsgPackTest {
             101
         ).map(Int::toByte).toByteArray()
 
-        val encoded = msgpackEncode(customMap)
+        val encoded = msgpackEncode(msgPackMap)
         assertTrue(encoded.contentEquals(expectedBytes))
 
-        val decoded: Map<String, String> = msgpackDecode(encoded)
-        assertEquals(customMap, decoded)
+        val decoded: MsgPackMap<String, String> = msgpackDecode(encoded)
+        assertEquals(msgPackMap, decoded)
     }
 
-    @Test @Ignore
+    @Test
     fun shouldEncodeAndDecodeNestedMap() {
-        val customMap: Map<String, Map<String, String>> = mapOf(
-            "firstKey" to mapOf("one" to "1"),
-            "secondKey" to mapOf("second" to "2")
+        val customMap: Map<String, MsgPackMap<String, String>> = mapOf(
+            "firstKey" to MsgPackMap(mapOf("one" to "1")),
+            "secondKey" to MsgPackMap(mapOf("second" to "2"))
         )
+        val msgPackMap = MsgPackMap(customMap)
+
         val expectedBytes = intArrayOf(
             199, 43, 1, 130, 168, 102, 105, 114, 115,
             116, 75, 101, 121, 199, 7, 1, 129, 163,
@@ -67,19 +72,21 @@ class MsgPackTest {
             50
         ).map(Int::toByte).toByteArray()
 
-        val encoded = msgpackEncode(customMap)
+        val encoded = msgpackEncode(msgPackMap)
         assertTrue(encoded.contentEquals(expectedBytes))
 
-        val decoded: Map<String, Map<String, String>> = msgpackDecode(encoded)
-        assertEquals(customMap, decoded)
+        val decoded: MsgPackMap<String, MsgPackMap<String, String>> = msgpackDecode(encoded)
+        assertEquals(msgPackMap, decoded)
     }
 
-    @Test @Ignore
+    @Test
     fun shouldEncodeAndDecodeMapOfBytes() {
         val customMap: Map<String, ByteArray> = mapOf(
             "firstKey" to byteArrayOf(1, 2, 3),
             "secondKey" to byteArrayOf(3, 2, 1)
         )
+        val msgPackMap = MsgPackMap(customMap)
+
         val expectedBytes = intArrayOf(
             199, 30, 1, 130, 168, 102, 105, 114, 115,
             116, 75, 101, 121, 196, 3, 1, 2, 3, 169,
@@ -87,10 +94,13 @@ class MsgPackTest {
             196, 3, 3, 2, 1
         ).map(Int::toByte).toByteArray()
 
-        val encoded = msgpackEncode(customMap)
+        val encoded = msgpackEncode(msgPackMap)
         assertTrue(encoded.contentEquals(expectedBytes))
 
-        val decoded: Map<String, ByteArray> = msgpackDecode(encoded)
-        assertEquals(customMap, decoded)
+        val decoded: MsgPackMap<String, ByteArray> = msgpackDecode(encoded)
+        assertEquals(msgPackMap.map.keys.toString(), decoded.map.keys.toString())
+        val expectedValues = msgPackMap.map.values.map { it.contentToString() }
+        val receivedValues = decoded.map.values.map { it.contentToString() }
+        assertEquals(expectedValues, receivedValues)
     }
 }

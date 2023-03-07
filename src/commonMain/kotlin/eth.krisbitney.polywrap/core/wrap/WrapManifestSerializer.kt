@@ -36,7 +36,7 @@ class WrapManifestSerializer {
         val wrapManifest: WrapManifest
         try {
             wrapManifest = manifestMsgPack.decodeFromByteArray(manifest)
-        } catch (e: Throwable) {
+        } catch (e: Exception) {
             val message = "Unable to parse WrapManifest: ${e.message}"
             return Result.failure(IllegalArgumentException(message))
         }

@@ -9,14 +9,14 @@ interface WrapPackage {
     /**
      * Produce an instance of the wrap manifest
      *
-     * @return A Promise with a Result containing the wrap manifest or an error
+     * @return A Result containing the wrap manifest or an error
      */
     suspend fun getManifest(): Result<WrapManifest>
 
     /**
      * Produce an instance of the wrapper
      *
-     * @return A Promise with a Result containing the wrapper or an error
+     * @return A Result containing the wrapper or an error
      */
     suspend fun createWrapper(): Result<Wrapper>
 }

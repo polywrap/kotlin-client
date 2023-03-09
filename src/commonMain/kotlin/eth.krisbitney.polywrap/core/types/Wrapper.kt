@@ -10,31 +10,26 @@ import eth.krisbitney.polywrap.core.wrap.WrapManifest
  */
 interface Wrapper : Invocable {
     /**
-     * Invoke the Wrapper based on the provided [options].
+     * Invoke the Wrapper based on the provided [InvokeOptions].
      *
      * @param options Options for this invocation.
-     * @param invoker The client instance requesting this invocation.
-     * This client will be used for any sub-invokes that occur.
-     * @return A Promise with the result of the invocation.
+     * @param invoker The client instance requesting this invocation. This client will be used for any sub-invocations that occur.
+     * @return The result of the invocation.
      */
-    override suspend fun <TData>invoke(options: InvokeOptions, invoker: Invoker): InvocableResult<TData>
+    override suspend fun invoke(options: InvokeOptions, invoker: Invoker): InvokeResult<ByteArray>
 
     /**
      * Get a file from the Wrapper package.
      *
      * @param path The path to the file.
-     * @param encoding The encoding of the file.
-     * @return A Promise with the result of the file retrieval.
+     * @return The result of the file retrieval.
      */
-    suspend fun getFile(
-        path: String,
-        encoding: String = "utf-8"
-    ): Result<ByteArray>
+    suspend fun getFile(path: String): Result<ByteArray>
 
     /**
      * Get a manifest from the Wrapper package.
      *
-     * @return The eth.krisbitney.polywrap.core.WrapManifest for this Wrapper.
+     * @return The [WrapManifest] for this Wrapper.
      */
     fun getManifest(): WrapManifest
 }

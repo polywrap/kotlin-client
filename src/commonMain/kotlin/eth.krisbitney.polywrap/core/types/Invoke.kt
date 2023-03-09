@@ -8,15 +8,15 @@ import eth.krisbitney.polywrap.core.resolution.UriResolutionContext
  *
  * @property uri The Wrapper's URI
  * @property method Method to be executed
- * @property args Arguments for the method, encoded in the Msgpack byte format
- * @property env Env variables for the wrapper invocation
+ * @property args Arguments for the method, encoded in the MessagePack byte format
+ * @property env Env variables for the wrapper invocation, encoded in the MessagePack byte format
  * @property resolutionContext A Uri resolution context
  */
 data class InvokeOptions(
     val uri: Uri,
     val method: String,
     val args: ByteArray? = null,
-    val env: Map<String, Any>? = null, // TODO - should this be JSON?
+    val env: ByteArray? = null,
     val resolutionContext: UriResolutionContext? = null,
 ) {
     override fun equals(other: Any?): Boolean {
@@ -31,7 +31,10 @@ data class InvokeOptions(
             if (other.args == null) return false
             if (!args.contentEquals(other.args)) return false
         } else if (other.args != null) return false
-        if (env != other.env) return false
+        if (env != null) {
+            if (other.env == null) return false
+            if (!env.contentEquals(other.env)) return false
+        } else if (other.env != null) return false
         if (resolutionContext != other.resolutionContext) return false
 
         return true
@@ -41,7 +44,7 @@ data class InvokeOptions(
         var result = uri.hashCode()
         result = 31 * result + method.hashCode()
         result = 31 * result + (args?.contentHashCode() ?: 0)
-        result = 31 * result + (env?.hashCode() ?: 0)
+        result = 31 * result + (env?.contentHashCode() ?: 0)
         result = 31 * result + (resolutionContext?.hashCode() ?: 0)
         return result
     }
@@ -66,10 +69,7 @@ interface Invoker {
      * @param TData Type of the invoke result data.
      * @return A Promise with a Result containing the return value or an error.
      */
-    suspend fun <TData>invokeWrapper(
-        wrapper: Wrapper,
-        options: InvokeOptions,
-    ): InvokeResult<TData>
+    suspend fun <TData>invokeWrapper(wrapper: Wrapper, options: InvokeOptions): InvokeResult<TData>
 
     /**
      * Invoke a wrapper.
@@ -83,18 +83,6 @@ interface Invoker {
     suspend fun <TData>invoke(options: InvokeOptions): InvokeResult<TData>
 }
 
-/**
- * Result of a Wrapper invocation, possibly Msgpack-encoded.
- *
- * @param TData Type of the invoke result data.
- * @property result The result of the invocation.
- * @property encoded If true, result (if successful) contains a Msgpack-encoded byte array.
- */
-data class InvocableResult<TData>(
-    val result: InvokeResult<TData>,
-    val encoded: Boolean = false
-)
-
 /** An invocable entity, such as a wrapper. */
 interface Invocable {
     /**
@@ -102,10 +90,7 @@ interface Invocable {
      *
      * @param options Invoke options to set.
      * @param invoker An [Invoker], capable of invoking this object.
-     * @return A Promise with a [InvocableResult] containing the return value or an error.
+     * @return A Promise with a [InvokeResult] containing the return value or an error.
      */
-    suspend fun <TResult>invoke(
-        options: InvokeOptions,
-        invoker: Invoker
-    ): InvocableResult<TResult>
+    suspend fun invoke(options: InvokeOptions, invoker: Invoker): InvokeResult<ByteArray>
 }

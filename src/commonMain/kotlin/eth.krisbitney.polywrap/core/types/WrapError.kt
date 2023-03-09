@@ -53,8 +53,10 @@ enum class WrapErrorCode(val value: Int) {
 }
 
 /**
- * Wraps error options provide additional context to [WrapError].
+ * WrapError is a custom error type that provides additional context to errors.
  *
+ * @property reason The reason or context for the error.
+ * @param cause The exception that caused this exception.
  * @property code The error code.
  * @property uri The URI of the wrapper.
  * @property method The method that caused the error.
@@ -63,7 +65,9 @@ enum class WrapErrorCode(val value: Int) {
  * @property resolutionStack The clean resolution step stack.
  * @property innerError A nested WrapError.
  */
-data class WrapErrorOptions(
+class WrapError(
+    val reason: String = "An error occurred.",
+    cause: Throwable? = null,
     val code: WrapErrorCode,
     val uri: String,
     val method: String? = null,
@@ -71,20 +75,7 @@ data class WrapErrorOptions(
     val source: ErrorSource? = null,
     val resolutionStack: String? = null,
     val innerError: WrapError? = null
-)
-
-/**
- * WrapError is a custom error type that provides additional context to errors.
- *
- * @property reason The error message.
- * @property cause The exception that caused this exception.
- * @property options The error options.
- */
-class WrapError(
-    reason: String = "An error occurred.",
-    cause: Throwable? = null,
-    val options: WrapErrorOptions,
-) : Exception(stringify(reason, cause, options), cause) {
+) : Exception(stringify(reason, cause, code, uri, method, args, source, resolutionStack, innerError), cause) {
 
     override fun toString(): String {
         return "$name: $message"
@@ -105,26 +96,45 @@ class WrapError(
                 Regex("(?:\r\n|\r|\n)uri: (?<uri>wrap://[A-Za-z0-9_-]+/.+)").pattern,
                 Regex("(?:(?:\r\n|\r|\n)method: (?<method>([A-Za-z_]{1}[A-Za-z0-9_]*)))?").pattern,
                 Regex("(?:(?:\r\n|\r|\n)args: (?<args>\\{(?:.|\r|\n)+} ))?").pattern,
-                Regex("(?:(?:\r\n|\r|\n)source: \\{ file: \"(?<file>.+)\", row: (?<row>[0-9]+), col: (?<col>[0-9]+) \\})?").pattern,
+                Regex("(?:(?:\r\n|\r|\n)source: \\{ file: \"(?<file>.+)\", row: (?<row>[0-9]+), col: (?<col>[0-9]+) })?").pattern,
                 Regex("(?:(?:\r\n|\r|\n)uriResolutionStack: (?<resolutionStack>\\[(?:.|\r|\n)+]))?").pattern,
                 Regex("(?:(?:\r\n|\r|\n){2}This exception was caused by the following exception:(?:\r\n|\r|\n)(?<cause>(?:.|\r|\n)+))?").pattern,
                 Regex("\"?$").pattern
             ).joinToString("")
         )
 
-        private data class ParsedWrapError(
+        private class ParsedWrapError(
             val reason: String,
-            val cause: Throwable?,
-            val options: WrapErrorOptions
+            val cause: Throwable? = null,
+            val code: WrapErrorCode,
+            val uri: String,
+            val method: String? = null,
+            val args: String? = null,
+            val source: ErrorSource? = null,
+            val resolutionStack: String? = null,
+            val innerError: WrapError? = null
         )
 
         fun parse(error: String): WrapError? {
-            val errorStrings = error.split(delim)
+            val sanitizedError = sanitizeErrorString(error)
+            val errorStrings = sanitizedError.split(delim)
 
             // case: single WrapError or not a WrapError
             if (errorStrings.size == 1) {
-                val args = _parse(error)
-                return args?.let { WrapError(it.reason, it.cause, it.options) }
+                val args = _parse(sanitizedError)
+                return args?.let {
+                    WrapError(
+                        it.reason,
+                        it.cause,
+                        it.code,
+                        it.uri,
+                        it.method,
+                        it.args,
+                        it.source,
+                        it.resolutionStack,
+                        it.innerError
+                    )
+                }
             }
 
             // case: stack of WrapErrors stringified
@@ -134,12 +144,22 @@ class WrapError(
             var curr: WrapError? = null
             for (i in errArgs.size - 1 downTo 0) {
                 val currArgs = errArgs.getOrNull(i) ?: throw Error("Failed to parse WrapError")
-                curr = WrapError(currArgs.reason, currArgs.cause, currArgs.options.copy(innerError = curr))
+                curr = WrapError(
+                    currArgs.reason,
+                    currArgs.cause,
+                    currArgs.code,
+                    currArgs.uri,
+                    currArgs.method,
+                    currArgs.args,
+                    currArgs.source,
+                    currArgs.resolutionStack,
+                    curr
+                )
             }
             return curr
         }
 
-        private fun sanitizeUnwrappedRustResult(error: String): String {
+        private fun sanitizeErrorString(error: String): String {
             var sanitizedError = error
 
             if (sanitizedError.startsWith("__wrap_abort: called `Result::unwrap()` on an `Err` value: \"")) {
@@ -175,20 +195,26 @@ class WrapError(
             return ParsedWrapError(
                 reason = reason,
                 cause = Error(cause),
-                options = WrapErrorOptions(
-                    code = WrapErrorCode.from(code),
-                    uri = uri,
-                    method = method,
-                    args = args?.trim(),
-                    source = source,
-                    resolutionStack = resolutionStack,
-                )
+                code = WrapErrorCode.from(code),
+                uri = uri,
+                method = method,
+                args = args?.trim(),
+                source = source,
+                resolutionStack = resolutionStack,
             )
         }
 
-        private fun stringify(reason: String, cause: Throwable?, options: WrapErrorOptions): String {
-            val (code, uri, method, args, source, resolutionStack, innerError) = options
-
+        private fun stringify(
+            reason: String, 
+            cause: Throwable?,
+            code: WrapErrorCode,
+            uri: String,
+            method: String? = null,
+            args: String? = null,
+            source: ErrorSource? = null,
+            resolutionStack: String? = null,
+            innerError: WrapError? = null
+        ): String {
             val maybeMethod = method?.let { "method: $it" } ?: ""
             val maybeArgs = args?.let { "args: $it " } ?: ""
             val maybeSource = source?.let { "source: { file: \"${it.file}\", row: ${it.row}, col: ${it.col} }" } ?: ""

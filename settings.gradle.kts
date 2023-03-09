@@ -1,3 +1,3 @@
 
-rootProject.name = "polywrap-kt-core"
+rootProject.name = "polywrap-kt"
 

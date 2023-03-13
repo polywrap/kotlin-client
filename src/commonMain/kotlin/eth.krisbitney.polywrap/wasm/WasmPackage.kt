@@ -48,16 +48,26 @@ data class WasmPackage(private val fileReader: FileReader) : WrapPackage {
      * @return A [WasmWrapper] instance
      */
     override suspend fun createWrapper(): Result<Wrapper> {
-        val manifest = getManifest()
-        if (manifest.isFailure) {
-            return Result.failure(manifest.exceptionOrNull()!!)
-        }
         val module = getWasmModule()
         if (module.isFailure) {
             return Result.failure(module.exceptionOrNull()!!)
         }
-        val wrapper = WasmWrapper(manifest.getOrThrow(), module.getOrThrow(), fileReader)
+        val wrapper = WasmWrapper(module.getOrThrow())
         return Result.success(wrapper)
+    }
+
+    /**
+     * Get a file from the Wrapper package.
+     *
+     * @param path The path to the file.
+     * @return The result of the file retrieval.
+     */
+    override suspend fun getFile(path: String): Result<ByteArray> {
+        val dataResult = fileReader.readFile(path)
+        if (dataResult.isFailure) {
+            return Result.failure(Error("WasmWrapper: File was not found.\nSubpath: $path"))
+        }
+        return  dataResult
     }
 
     /**

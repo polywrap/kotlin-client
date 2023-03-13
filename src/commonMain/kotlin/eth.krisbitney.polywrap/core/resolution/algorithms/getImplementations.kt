@@ -6,7 +6,6 @@ import eth.krisbitney.polywrap.core.resolution.UriResolutionContext
 import eth.krisbitney.polywrap.core.resolution.UriResolutionHandler
 import eth.krisbitney.polywrap.core.types.WrapError
 import eth.krisbitney.polywrap.core.types.WrapErrorCode
-import eth.krisbitney.polywrap.core.types.WrapErrorOptions
 
 /**
  * Retrieves all implementations of a given wrapper interface from an array of interface implementations.
@@ -31,12 +30,11 @@ suspend fun getImplementations(
     if (client != null) {
         val redirectsResult = applyResolution(wrapperInterfaceUri, client, resolutionContext)
         if (redirectsResult.isFailure) {
-            val error = WrapError("Failed to resolve redirects",
-                redirectsResult.exceptionOrNull(),
-                WrapErrorOptions(
-                    uri = wrapperInterfaceUri.uri,
-                    code = WrapErrorCode.CLIENT_GET_IMPLEMENTATIONS_ERROR,
-                )
+            val error = WrapError(
+                reason = "Failed to resolve redirects",
+                cause = redirectsResult.exceptionOrNull(),
+                uri = wrapperInterfaceUri.uri,
+                code = WrapErrorCode.CLIENT_GET_IMPLEMENTATIONS_ERROR,
             )
             return Result.failure(error)
         }
@@ -67,12 +65,11 @@ private suspend fun addAllImplementationsFromImplementationsArray(
         val fullyResolvedUri: Uri = if (uriResolutionHandler != null) {
             val redirectsResult = applyResolution(interfaceImplementations.interfaceUri, uriResolutionHandler, resolutionContext)
             if (redirectsResult.isFailure) {
-                val error = WrapError("Failed to resolve redirects",
-                    redirectsResult.exceptionOrNull(),
-                    WrapErrorOptions(
-                        uri = interfaceImplementations.interfaceUri.uri,
-                        code = WrapErrorCode.CLIENT_GET_IMPLEMENTATIONS_ERROR,
-                    )
+                val error = WrapError(
+                    reason = "Failed to resolve redirects",
+                    cause = redirectsResult.exceptionOrNull(),
+                    uri = interfaceImplementations.interfaceUri.uri,
+                    code = WrapErrorCode.CLIENT_GET_IMPLEMENTATIONS_ERROR,
                 )
                 return Result.failure(error)
             }

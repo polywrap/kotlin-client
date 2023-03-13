@@ -2,8 +2,8 @@ package eth.krisbitney.polywrap.core.types
 
 class ErrorSource(
     val file: String?,
-    val row: UInt?,
-    val col: UInt?,
+    val row: Int?,
+    val col: Int?,
 )
 
 /**
@@ -82,8 +82,8 @@ class WrapError(
     }
 
     companion object {
-        val name: String = "WrapError"
-        private val delim = "\n\nAnother exception was encountered during execution:\n"
+        const val name: String = "WrapError"
+        private const val delim = "\n\nAnother exception was encountered during execution:\n"
 
         /**
          * Matches a WrapError in a string and returns its parsed arguments.
@@ -187,8 +187,8 @@ class WrapError(
             val source = file?.let {
                 ErrorSource(
                     file = it,
-                    row = row?.toUIntOrNull(),
-                    col = col?.toUIntOrNull()
+                    row = row?.toIntOrNull(),
+                    col = col?.toIntOrNull()
                 )
             }
 

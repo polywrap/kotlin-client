@@ -1,6 +1,18 @@
 package eth.krisbitney.polywrap.wasm
 
+/**
+ * An abstract class for reading files.
+ */
 abstract class FileReader {
+
+    /**
+     * Reads the file at the specified [filePath] and returns the content as a [Result] object.
+     *
+     * @param filePath The path to the file to be read.
+     *
+     * @return A [Result] object that contains the content of the file as a [ByteArray] if the file is read successfully.
+     *         If there was an error while reading the file, the [Result] object will contain an appropriate error message.
+     */
     abstract suspend fun readFile(filePath: String): Result<ByteArray>
 
     companion object {

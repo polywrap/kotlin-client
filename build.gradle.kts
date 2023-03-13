@@ -38,6 +38,7 @@ kotlin {
             dependencies {
                 implementation("com.ensarsarajcic.kotlinx:serialization-msgpack:0.5.4")
                 implementation("com.ensarsarajcic.kotlinx:serialization-msgpack-unsigned-support:0.5.4")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
             }
         }
         val commonTest by getting {
@@ -46,7 +47,11 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
             }
         }
-        val jvmMain by getting
+        val jvmMain by getting {
+            dependencies {
+                implementation("io.github.kawamuray.wasmtime:wasmtime-java:0.14.0")
+            }
+        }
         val jvmTest by getting
         val jsMain by getting
         val jsTest by getting

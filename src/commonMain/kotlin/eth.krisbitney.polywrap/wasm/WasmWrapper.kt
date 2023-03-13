@@ -1,26 +1,10 @@
 package eth.krisbitney.polywrap.wasm
 
 import eth.krisbitney.polywrap.core.types.*
-import eth.krisbitney.polywrap.core.wrap.WrapManifest
 
-data class WasmWrapper(
-    private val manifest: WrapManifest,
-    private val wasmModule: ByteArray,
-    private val fileReader: FileReader
-) : Wrapper {
-
-    override suspend fun getFile(path: String): Result<ByteArray> {
-        val dataResult = fileReader.readFile(path)
-        if (dataResult.isFailure) {
-            return Result.failure(Error("WasmWrapper: File was not found.\nSubpath: $path"))
-        }
-        return  dataResult
-    }
-
-    override fun getManifest(): WrapManifest = manifest
+data class WasmWrapper(private val wasmModule: ByteArray) : Wrapper {
 
     fun getWasmModule(): ByteArray = wasmModule
-
 
     override suspend fun invoke(options: InvokeOptions, invoker: Invoker): InvokeResult<ByteArray> {
         val (uri, method, args, env, resolutionContext) = options

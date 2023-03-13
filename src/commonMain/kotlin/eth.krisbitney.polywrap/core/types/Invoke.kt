@@ -81,6 +81,21 @@ interface Invoker {
      * @return A Promise with a Result containing the return value or an error.
      */
     suspend fun <TData>invoke(options: InvokeOptions): InvokeResult<TData>
+
+    /**
+     * Returns the interface implementations associated with an interface URI from the
+     * configuration used to instantiate the client.
+     *
+     * @param uri - a wrap URI
+     * @param applyResolution - If true, follow redirects to resolve URIs
+     * @param resolutionContext - Use and update an existing resolution context
+     * @return a Result containing an array of URIs if the request was successful
+     */
+    suspend fun getImplementations(
+        uri: Uri,
+        applyResolution: Boolean = false,
+        resolutionContext: UriResolutionContext? = null,
+    ): Result<List<Uri>>
 }
 
 /** An invocable entity, such as a wrapper. */

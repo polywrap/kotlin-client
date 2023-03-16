@@ -1,3 +1,5 @@
+package msgpack
+
 import eth.krisbitney.polywrap.msgpack.MsgPackMap
 import eth.krisbitney.polywrap.msgpack.msgPackDecode
 import eth.krisbitney.polywrap.msgpack.msgPackEncode

@@ -7,7 +7,7 @@ actual object WasmInstanceFactory {
     actual fun createInstance(module: ByteArray, state: WasmModuleState): WasmInstance = WasmInstanceJvm(module, state)
 }
 
-class WasmInstanceJvm(private val module: ByteArray, private val state: WasmModuleState) : WasmInstance {
+class WasmInstanceJvm(module: ByteArray, state: WasmModuleState) : WasmInstance(module, state) {
 
     override fun invoke(method: String, args: ByteArray, env: ByteArray?): Result<ByteArray> {
         val engine = Engine()
@@ -20,25 +20,13 @@ class WasmInstanceJvm(private val module: ByteArray, private val state: WasmModu
             val func = instance.getFunc(store, "_wrap_invoke").get()
             func.use {
                 val fn = WasmFunctions.func(store, func, WasmValType.I32, WasmValType.I32, WasmValType.I32, WasmValType.I32)
-                val invoked = fn.call(method.length, args.size, env?.size ?: 0)
-                if (invoked == 1) {
-                    val result =
-                        state.invoke.result ?: return Result.failure(IllegalStateException("Invoke result is missing."))
-                    return Result.success(result)
-                } else {
-                    val exception =
-                        state.invoke.error ?: return Result.failure(IllegalStateException("Invoke error is missing."))
-                    return Result.failure(Exception(exception))
-                }
+                val isSuccess = fn.call(method.length, args.size, env?.size ?: 0)
+                return processResult(isSuccess == 1)
             }
         }
     }
 
     private fun createMemory(store: Store<WasmModuleState>, module: ByteArray): Result<Memory> {
-        val ENV_MEMORY_IMPORTS_SIGNATURE = byteArrayOf(
-            0x65, 0x6e, 0x76, 0x06, 0x6d, 0x65, 0x6d, 0x6f, 0x72, 0x79, 0x02
-        )
-
         val idx = Collections.indexOfSubList(module.toList(), ENV_MEMORY_IMPORTS_SIGNATURE.toList())
 
         if (idx == -1) {

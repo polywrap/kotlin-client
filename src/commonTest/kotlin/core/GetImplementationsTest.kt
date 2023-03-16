@@ -1,3 +1,5 @@
+package core
+
 import eth.krisbitney.polywrap.core.resolution.*
 import eth.krisbitney.polywrap.core.types.InterfaceImplementations
 import eth.krisbitney.polywrap.core.resolution.algorithms.getImplementations

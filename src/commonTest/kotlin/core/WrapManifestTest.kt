@@ -1,3 +1,5 @@
+package core
+
 import eth.krisbitney.polywrap.core.wrap.WrapManifest
 import eth.krisbitney.polywrap.core.wrap.formats.wrap01.WrapManifest01
 import eth.krisbitney.polywrap.core.wrap.formats.wrap01.abi.*

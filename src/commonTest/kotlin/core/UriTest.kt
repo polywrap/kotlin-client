@@ -1,3 +1,5 @@
+package core
+
 import eth.krisbitney.polywrap.core.resolution.Uri
 import eth.krisbitney.polywrap.core.resolution.UriConfig
 import kotlin.test.*

@@ -4,14 +4,11 @@ import eth.krisbitney.polywrap.core.types.*
 import eth.krisbitney.polywrap.wasm.runtime.WasmInstanceFactory
 import eth.krisbitney.polywrap.wasm.runtime.WasmModuleState
 
-data class WasmWrapper(private val wasmModule: ByteArray) : Wrapper {
-
-    fun getWasmModule(): ByteArray = wasmModule
+data class WasmWrapper(val wasmModule: ByteArray) : Wrapper {
 
     override suspend fun invoke(options: InvokeOptions, invoker: Invoker): InvokeResult<ByteArray> {
         val (_, method, args, env, _) = options
         val (abortWithInvokeAborted, abortWithInternalError) = createAborts(options)
-        val module = getWasmModule()
         val state = WasmModuleState(
             method = method,
             args = args ?: byteArrayOf(0),
@@ -20,7 +17,7 @@ data class WasmWrapper(private val wasmModule: ByteArray) : Wrapper {
             abortWithInternalError = abortWithInternalError,
             invoker = invoker
         )
-        val instance = WasmInstanceFactory.createInstance(module, state)
+        val instance = WasmInstanceFactory.createInstance(wasmModule, state)
         return instance.invoke(method, args ?: byteArrayOf(0), env ?: byteArrayOf(0))
     }
 
@@ -50,5 +47,20 @@ data class WasmWrapper(private val wasmModule: ByteArray) : Wrapper {
         }
 
         return Pair(abortWithInvokeAborted, abortWithInternalError)
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || this::class != other::class) return false
+
+        other as WasmWrapper
+
+        if (!wasmModule.contentEquals(other.wasmModule)) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return wasmModule.contentHashCode()
     }
 }

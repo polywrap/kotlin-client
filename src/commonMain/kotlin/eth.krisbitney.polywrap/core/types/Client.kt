@@ -3,7 +3,6 @@ package eth.krisbitney.polywrap.core.types
 import eth.krisbitney.polywrap.core.wrap.WrapManifest
 import eth.krisbitney.polywrap.core.resolution.Uri
 import eth.krisbitney.polywrap.core.resolution.UriResolver
-import eth.krisbitney.polywrap.core.resolution.UriResolutionContext
 import eth.krisbitney.polywrap.core.resolution.UriResolutionHandler
 
 /**
@@ -75,7 +74,6 @@ interface Client : Invoker, UriResolutionHandler {
         encoding: String = "utf-8"
     ): Result<String>
 
-    // typescript tsdoc comment
     /**
      * Validate a wrapper, given a URI.
      *

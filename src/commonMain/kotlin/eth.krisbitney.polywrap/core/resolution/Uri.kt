@@ -62,7 +62,7 @@ class Uri(private val _config: UriConfig) {
     /** @returns Uri string representation */
     override fun toString(): String = this._config.uri
 
-    override fun hashCode(): Int = _config.hashCode()
+    override fun hashCode(): Int = _config.uri.hashCode()
 
     companion object {
         /**

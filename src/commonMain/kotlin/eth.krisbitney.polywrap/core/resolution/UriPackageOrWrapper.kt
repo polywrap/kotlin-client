@@ -1,41 +1,28 @@
 package eth.krisbitney.polywrap.core.resolution
 
+import eth.krisbitney.polywrap.core.types.WrapPackage
+import eth.krisbitney.polywrap.core.types.Wrapper
+
 /**
  * Indicates that a URI resolved to either a wrap package, a wrapper, or a URI
- * @property type The type of the resolved value, which will be one of: "uri", "package", or "wrapper"
  */
 sealed class UriPackageOrWrapper {
-    abstract val type: String
-    abstract val uri: Uri
 
     /**
      * Indicates that a URI resolved to a Uri
-     * @property type The type of the resolved value, which is always "uri"
      * @property uri The resolved URI value
      */
-    data class UriValue(override val uri: Uri) : UriPackageOrWrapper() {
-        override val type: String = "uri"
-    }
+    data class UriValue(val uri: Uri) : UriPackageOrWrapper()
 
     /**
      * Indicates that a URI resolved to a wrap package
-     * @property type The type of the resolved value, which is always "package"
-     * @property uri The resolved wrap package value, which implements the IUriPackage interface
+     * @property pkg The resolved package value
      */
-    data class UriPackageValue(val pkg: PackageRedirect) : UriPackageOrWrapper() {
-        override val type: String = "package"
-        override val uri: Uri
-            get() = pkg.uri
-    }
+    data class PackageValue(val pkg: WrapPackage) : UriPackageOrWrapper()
 
     /**
      * Indicates that a URI resolved to a wrapper
-     * @property type The type of the resolved value, which is always "wrapper"
-     * @property uri The resolved wrapper value, which implements the IUriWrapper interface
+     * @property wrapper The resolved wrapper value
      */
-    data class UriWrapperValue(val wrapper: WrapperRedirect) : UriPackageOrWrapper() {
-        override val type: String = "wrapper"
-        override val uri: Uri
-            get() = wrapper.uri
-    }
+    data class WrapperValue(val wrapper: Wrapper) : UriPackageOrWrapper()
 }

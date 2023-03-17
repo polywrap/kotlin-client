@@ -1,9 +1,6 @@
 package eth.krisbitney.polywrap.uriResolvers
 
-import eth.krisbitney.polywrap.core.resolution.UriResolver
-import eth.krisbitney.polywrap.core.resolution.Uri
-import eth.krisbitney.polywrap.core.resolution.UriPackageOrWrapper
-import eth.krisbitney.polywrap.core.resolution.UriResolutionContext
+import eth.krisbitney.polywrap.core.resolution.*
 import eth.krisbitney.polywrap.core.types.Invoker
 import eth.krisbitney.polywrap.core.types.Wrapper
 import eth.krisbitney.polywrap.uriResolvers.util.ResolverWithHistory
@@ -42,7 +39,7 @@ class WrapperRedirectResolver(val from: Uri, val wrapper: Wrapper) : ResolverWit
         return if (uri.uri != from.uri) {
             Result.success(UriPackageOrWrapper.UriValue(uri))
         } else {
-            Result.success(UriPackageOrWrapper.WrapperValue(wrapper))
+            Result.success(UriPackageOrWrapper.WrapperValue(WrapperRedirect(from, wrapper)))
         }
     }
 }

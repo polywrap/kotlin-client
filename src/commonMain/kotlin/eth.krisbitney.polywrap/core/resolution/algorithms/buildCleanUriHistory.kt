@@ -1,5 +1,6 @@
 package eth.krisbitney.polywrap.core.resolution.algorithms
 
+import eth.krisbitney.polywrap.core.resolution.UriPackageOrWrapper
 import eth.krisbitney.polywrap.core.resolution.UriResolutionStep
 
 /**
@@ -28,10 +29,10 @@ fun buildCleanUriHistory(history: List<UriResolutionStep>, depth: Int? = null): 
 
         if (step.result.isSuccess) {
             val uriPackageOrWrapper = step.result.getOrThrow()
-            val to = uriPackageOrWrapper.uri.uri
             
-            when (uriPackageOrWrapper.type) {
-                "uri" -> {
+            when (uriPackageOrWrapper) {
+                is UriPackageOrWrapper.UriValue -> {
+                    val to = uriPackageOrWrapper.uri.uri
                     if (from == to) {
                         cleanHistory.add(
                             step.description?.let {
@@ -46,14 +47,16 @@ fun buildCleanUriHistory(history: List<UriResolutionStep>, depth: Int? = null): 
                         )
                     }
                 }
-                "package" -> {
+                is UriPackageOrWrapper.PackageValue -> {
+                    val to = uriPackageOrWrapper.pkg.uri
                     cleanHistory.add(
                         step.description?.let {
                             "$from => $it => package (${to})"
                         } ?: "$from => package (${to})"
                     )
                 }
-                "wrapper" -> {
+                is UriPackageOrWrapper.WrapperValue -> {
+                    val to = uriPackageOrWrapper.wrapper.uri
                     cleanHistory.add(
                         step.description?.let {
                             "$from => $it => wrapper (${to})"

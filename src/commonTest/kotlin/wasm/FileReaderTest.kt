@@ -1,8 +1,7 @@
 package wasm
 
-import eth.krisbitney.polywrap.wasm.FileReader
-import eth.krisbitney.polywrap.wasm.FileReader.Companion.WRAP_MANIFEST_PATH
-import eth.krisbitney.polywrap.wasm.FileReader.Companion.WRAP_MODULE_PATH
+import eth.krisbitney.polywrap.core.types.FileReader
+import eth.krisbitney.polywrap.wasm.FileReaderFactory
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import readTestResource
@@ -10,13 +9,13 @@ import kotlin.test.*
 
 class FileReaderTest {
 
-    private val wrapperPath = "wrappers/numbers-type/implementations/as";
+    private val wrapperPath = "wrappers/numbers-type/implementations/as"
     private val manifestPath = "$wrapperPath/wrap.info"
     private val modulePath = "$wrapperPath/wrap.wasm"
 
     private val baseFileReader = object : FileReader() {
         override suspend fun readFile(filePath: String): Result<ByteArray> {
-            return readTestResource("$wrapperPath/$filePath");
+            return readTestResource("$wrapperPath/$filePath")
         }
     }
 
@@ -25,7 +24,7 @@ class FileReaderTest {
     fun fromMemoryWithBaseFileReader() = runTest {
         val manifest: ByteArray =  readTestResource(manifestPath).getOrThrow()
         val wasmModule: ByteArray = readTestResource(modulePath).getOrThrow()
-        val fileReader = FileReader.fromMemory(
+        val fileReader = FileReaderFactory.fromMemory(
             manifest = manifest,
             wasmModule = wasmModule,
             baseFileReader = baseFileReader
@@ -39,16 +38,16 @@ class FileReaderTest {
         val manifest: ByteArray =  readTestResource(manifestPath).getOrThrow()
         val wasmModule: ByteArray = readTestResource(modulePath).getOrThrow()
 
-        val fileReader = FileReader.fromMemory(
+        val fileReader = FileReaderFactory.fromMemory(
             manifest = manifest,
             wasmModule = wasmModule,
         )
 
-        val manifestResult = fileReader.readFile(WRAP_MANIFEST_PATH)
+        val manifestResult = fileReader.readFile(FileReader.WRAP_MANIFEST_PATH)
         assertTrue(manifestResult.isSuccess)
         assertContentEquals(manifest, manifestResult.getOrNull())
 
-        val wasmModuleResult = fileReader.readFile(WRAP_MODULE_PATH)
+        val wasmModuleResult = fileReader.readFile(FileReader.WRAP_MODULE_PATH)
         assertTrue(wasmModuleResult.isSuccess)
         assertContentEquals(wasmModule, wasmModuleResult.getOrNull())
 
@@ -62,7 +61,7 @@ class FileReaderTest {
     fun fromManifest() = runTest {
         val manifest: ByteArray =  readTestResource(manifestPath).getOrThrow()
         val wasmModule: ByteArray = readTestResource(modulePath).getOrThrow()
-        val fileReader = FileReader.fromManifest(
+        val fileReader = FileReaderFactory.fromManifest(
             manifest = manifest,
             baseFileReader = baseFileReader
         )
@@ -74,19 +73,19 @@ class FileReaderTest {
     fun fromWasmModule() = runTest {
         val manifest: ByteArray =  readTestResource(manifestPath).getOrThrow()
         val wasmModule: ByteArray = readTestResource(modulePath).getOrThrow()
-        val fileReader = FileReader.fromWasmModule(
+        val fileReader = FileReaderFactory.fromWasmModule(
             wasmModule = wasmModule,
             baseFileReader = baseFileReader
         )
         compareResult(fileReader, manifest, wasmModule)
     }
 
-    private suspend fun compareResult(fileReader: FileReader, manifest: ByteArray, wasmModule: ByteArray): Unit {
-        val manifestResult = fileReader.readFile(WRAP_MANIFEST_PATH)
+    private suspend fun compareResult(fileReader: FileReader, manifest: ByteArray, wasmModule: ByteArray) {
+        val manifestResult = fileReader.readFile(FileReader.WRAP_MANIFEST_PATH)
         assertTrue(manifestResult.isSuccess)
         assertContentEquals(manifest, manifestResult.getOrNull())
 
-        val wasmModuleResult = fileReader.readFile(WRAP_MODULE_PATH)
+        val wasmModuleResult = fileReader.readFile(FileReader.WRAP_MODULE_PATH)
         assertTrue(wasmModuleResult.isSuccess)
         assertContentEquals(wasmModule, wasmModuleResult.getOrNull())
 

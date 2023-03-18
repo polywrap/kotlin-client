@@ -1,4 +1,4 @@
-package eth.krisbitney.polywrap.uriResolvers.util
+package eth.krisbitney.polywrap.uriResolvers
 
 import eth.krisbitney.polywrap.core.resolution.PackageRedirect
 import eth.krisbitney.polywrap.core.resolution.UriRedirect

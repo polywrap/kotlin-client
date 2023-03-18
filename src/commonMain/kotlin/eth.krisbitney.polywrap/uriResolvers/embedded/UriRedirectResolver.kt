@@ -1,11 +1,11 @@
-package eth.krisbitney.polywrap.uriResolvers
+package eth.krisbitney.polywrap.uriResolvers.embedded
 
 import eth.krisbitney.polywrap.core.resolution.UriResolver
 import eth.krisbitney.polywrap.core.resolution.Uri
 import eth.krisbitney.polywrap.core.resolution.UriPackageOrWrapper
 import eth.krisbitney.polywrap.core.resolution.UriResolutionContext
-import eth.krisbitney.polywrap.core.types.Invoker
-import eth.krisbitney.polywrap.uriResolvers.util.ResolverWithHistory
+import eth.krisbitney.polywrap.core.types.Client
+import eth.krisbitney.polywrap.uriResolvers.ResolverWithHistory
 
 /**
  * A concrete implementation of [ResolverWithHistory] that redirects a URI to another URI.
@@ -29,13 +29,13 @@ class UriRedirectResolver(val from: Uri, val to: Uri) : ResolverWithHistory() {
      * Tries to resolve the given [uri] by redirecting it to another URI.
      *
      * @param uri The URI to resolve.
-     * @param invoker The [Invoker] instance used to invoke a wrapper implementing the [UriResolver] interface.
+     * @param client The [Client] instance used to invoke a wrapper implementing the [UriResolver] interface.
      * @param resolutionContext The current URI resolution context.
      * @return A [Result] containing a wrap package, a wrapper, or a URI if successful.
      */
     override suspend fun _tryResolveUri(
         uri: Uri,
-        invoker: Invoker,
+        client: Client,
         resolutionContext: UriResolutionContext
     ): Result<UriPackageOrWrapper> {
         return if (uri.uri != this.from.uri) {

@@ -1,8 +1,7 @@
-package eth.krisbitney.polywrap.uriResolvers
+package eth.krisbitney.polywrap.uriResolvers.embedded
 
 import eth.krisbitney.polywrap.core.resolution.*
-import eth.krisbitney.polywrap.core.types.Invoker
-import eth.krisbitney.polywrap.uriResolvers.util.StaticResolverLike
+import eth.krisbitney.polywrap.core.types.Client
 
 /**
  * A class that implements [UriResolver] using a predefined map of URIs to [UriPackageOrWrapper]s.
@@ -50,13 +49,13 @@ class StaticResolver(val uriMap: Map<String, UriPackageOrWrapper>) : UriResolver
      * Tries to resolve the given [uri] using the predefined [uriMap].
      *
      * @param uri The URI to resolve.
-     * @param invoker The [Invoker] instance used to invoke a wrapper implementing the [UriResolver] interface.
+     * @param client The [Client] instance used to invoke a wrapper implementing the [UriResolver] interface.
      * @param resolutionContext The current URI resolution context.
      * @return A [Result] containing a wrap package, a wrapper, or a URI if successful.
      */
     override suspend fun tryResolveUri(
         uri: Uri,
-        invoker: Invoker,
+        client: Client,
         resolutionContext: UriResolutionContext
     ): Result<UriPackageOrWrapper> {
         val uriPackageOrWrapper = uriMap[uri.uri]

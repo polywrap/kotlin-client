@@ -1,10 +1,9 @@
-package eth.krisbitney.polywrap.uriResolvers
+package eth.krisbitney.polywrap.uriResolvers.cache
 
 import eth.krisbitney.polywrap.core.resolution.*
-import eth.krisbitney.polywrap.core.types.Invoker
-import eth.krisbitney.polywrap.uriResolvers.cache.WrapperCache
-import eth.krisbitney.polywrap.uriResolvers.util.UriResolverFactory
-import eth.krisbitney.polywrap.uriResolvers.util.UriResolverLike
+import eth.krisbitney.polywrap.core.types.Client
+import eth.krisbitney.polywrap.uriResolvers.UriResolverFactory
+import eth.krisbitney.polywrap.uriResolvers.UriResolverLike
 import kotlinx.coroutines.sync.Mutex
 
 /**
@@ -57,13 +56,13 @@ class SynchronizedCacheResolver(
      * Tries to resolve the given URI using a cache and returns the result.
      *
      * @param uri The URI to resolve.
-     * @param invoker The invoker of the resolution.
+     * @param client The invoker of the resolution.
      * @param resolutionContext The context for the resolution.
      * @return A [Result] containing the resolved [UriPackageOrWrapper] on success, or an exception on failure.
      */
     override suspend fun tryResolveUri(
         uri: Uri,
-        invoker: Invoker,
+        client: Client,
         resolutionContext: UriResolutionContext
     ): Result<UriPackageOrWrapper> {
         acquireMutex(uri)
@@ -86,7 +85,7 @@ class SynchronizedCacheResolver(
         // resolve uri if not in cache
         val subContext = resolutionContext.createSubHistoryContext()
 
-        val result = resolverToCache.tryResolveUri(uri, invoker, subContext)
+        val result = resolverToCache.tryResolveUri(uri, client, subContext)
 
         val finalResult = if (result.isSuccess) {
             val cachedResult = cacheResult(result.getOrThrow(), subContext)
@@ -128,7 +127,7 @@ class SynchronizedCacheResolver(
                 val createResult = wrapPackage.createWrapper()
 
                 if (createResult.isFailure) {
-                    Result.failure(createResult.exceptionOrNull() ?: Exception("Failed to create wrapper"))
+                    Result.failure(createResult.exceptionOrNull()!!)
                 } else {
                     val wrapper = createResult.getOrThrow()
                     val resolutionPath = subContext.getResolutionPath()

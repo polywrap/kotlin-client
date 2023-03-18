@@ -1,9 +1,9 @@
-package eth.krisbitney.polywrap.uriResolvers.util
+package eth.krisbitney.polywrap.uriResolvers
 
 import eth.krisbitney.polywrap.core.resolution.UriResolver
-import eth.krisbitney.polywrap.uriResolvers.PackageRedirectResolver
-import eth.krisbitney.polywrap.uriResolvers.UriRedirectResolver
-import eth.krisbitney.polywrap.uriResolvers.WrapperRedirectResolver
+import eth.krisbitney.polywrap.uriResolvers.embedded.PackageRedirectResolver
+import eth.krisbitney.polywrap.uriResolvers.embedded.UriRedirectResolver
+import eth.krisbitney.polywrap.uriResolvers.embedded.WrapperRedirectResolver
 
 /**
  * An object that provides a factory method for creating [UriResolver] instances from various [UriResolverLike] types.

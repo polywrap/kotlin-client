@@ -1,8 +1,8 @@
 package wasm
 
+import eth.krisbitney.polywrap.core.types.FileReader
 import eth.krisbitney.polywrap.core.wrap.WrapManifest
-import eth.krisbitney.polywrap.wasm.FileReader
-import eth.krisbitney.polywrap.wasm.FileReader.Companion.WRAP_MODULE_PATH
+import eth.krisbitney.polywrap.wasm.FileReaderFactory
 import eth.krisbitney.polywrap.wasm.WasmPackage
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -26,7 +26,7 @@ class WasmPackageTest {
     fun getters() = runTest {
         val manifest: ByteArray =  readTestResource(manifestPath).getOrThrow()
         val wasmModule: ByteArray = readTestResource(modulePath).getOrThrow()
-        val fileReader = FileReader.fromMemory(
+        val fileReader = FileReaderFactory.fromMemory(
             manifest = manifest,
             wasmModule = wasmModule,
             baseFileReader = baseFileReader
@@ -40,7 +40,7 @@ class WasmPackageTest {
         val moduleResult = pkg.getWasmModule()
         assertContentEquals(moduleResult.getOrNull(), wasmModule)
 
-        val fileResult = pkg.getFile(WRAP_MODULE_PATH)
+        val fileResult = pkg.getFile(FileReader.WRAP_MODULE_PATH)
         assertContentEquals(fileResult.getOrNull(), wasmModule)
     }
 
@@ -49,7 +49,7 @@ class WasmPackageTest {
     fun createWrapper() = runTest {
         val manifest: ByteArray =  readTestResource(manifestPath).getOrThrow()
         val wasmModule: ByteArray = readTestResource(modulePath).getOrThrow()
-        val fileReader = FileReader.fromMemory(
+        val fileReader = FileReaderFactory.fromMemory(
             manifest = manifest,
             wasmModule = wasmModule,
             baseFileReader = baseFileReader

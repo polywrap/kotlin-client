@@ -1,28 +1,27 @@
-package eth.krisbitney.polywrap.uriResolvers.util
+package eth.krisbitney.polywrap.uriResolvers
 
 import eth.krisbitney.polywrap.core.resolution.*
-import eth.krisbitney.polywrap.core.types.Invoker
+import eth.krisbitney.polywrap.core.types.Client
 
 abstract class UriResolverAggregator : UriResolver {
 
     abstract suspend fun getUriResolvers(
         uri: Uri,
-        invoker: Invoker,
+        client: Client,
         resolutionContext: UriResolutionContext
     ): Result<List<UriResolver>>
 
     override suspend fun tryResolveUri(
         uri: Uri,
-        invoker: Invoker,
+        client: Client,
         resolutionContext: UriResolutionContext
     ): Result<UriPackageOrWrapper> {
-        val resolverResult = getUriResolvers(uri, invoker, resolutionContext)
+        val resolverResult = getUriResolvers(uri, client, resolutionContext)
         if (resolverResult.isFailure) {
-            val exception = resolverResult.exceptionOrNull() ?: Exception("Failed to obtain aggregated URI resolvers")
-            return Result.failure(exception)
+            return Result.failure(resolverResult.exceptionOrNull()!!)
         }
         val resolvers = resolverResult.getOrThrow()
-        return tryResolveUriWithResolvers(uri, invoker, resolvers, resolutionContext)
+        return tryResolveUriWithResolvers(uri, client, resolvers, resolutionContext)
     }
 
     protected abstract fun getStepDescription(
@@ -32,14 +31,14 @@ abstract class UriResolverAggregator : UriResolver {
 
     protected suspend fun tryResolveUriWithResolvers(
         uri: Uri,
-        invoker: Invoker,
+        client: Client,
         resolvers: List<UriResolver>,
         resolutionContext: UriResolutionContext
     ): Result<UriPackageOrWrapper> {
         val subContext = resolutionContext.createSubHistoryContext()
 
         for (resolver in resolvers) {
-            val result = resolver.tryResolveUri(uri, invoker, subContext)
+            val result = resolver.tryResolveUri(uri, client, subContext)
             val resultVal = result.getOrNull()
             if (!(resultVal is UriPackageOrWrapper.UriValue && resultVal.uri == uri)) {
                 resolutionContext.trackStep(

@@ -1,6 +1,6 @@
 package eth.krisbitney.polywrap.core.resolution
 
-import eth.krisbitney.polywrap.core.types.Invoker
+import eth.krisbitney.polywrap.core.types.Client
 
 /**
  * Defines an entity capable of resolving a wrap URI
@@ -10,13 +10,13 @@ interface UriResolver {
    * Resolve a URI to a wrap package, a wrapper, or a uri
    *
    * @param uri - The URI to resolve
-   * @param invoker - An Invoker instance that may be used to invoke a wrapper that implements the UriResolver interface
+   * @param client - An Invoker instance that may be used to invoke a wrapper that implements the UriResolver interface
    * @param resolutionContext - The current URI resolution context
    * @return A Promise with a Result containing either a wrap package, a wrapper, or a URI if successful
    */
   suspend fun tryResolveUri(
       uri: Uri,
-      invoker: Invoker,
+      client: Client,
       resolutionContext: UriResolutionContext
   ): Result<UriPackageOrWrapper>
 }

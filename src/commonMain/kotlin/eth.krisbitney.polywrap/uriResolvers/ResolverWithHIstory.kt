@@ -1,7 +1,7 @@
-package eth.krisbitney.polywrap.uriResolvers.util
+package eth.krisbitney.polywrap.uriResolvers
 
 import eth.krisbitney.polywrap.core.resolution.*
-import eth.krisbitney.polywrap.core.types.Invoker
+import eth.krisbitney.polywrap.core.types.Client
 
 /**
  * An abstract class that implements [UriResolver] and provides additional history tracking
@@ -14,12 +14,12 @@ abstract class ResolverWithHistory : UriResolver {
      * in [resolutionContext], and returns the result.
      *
      * @param uri The URI to resolve.
-     * @param invoker The [Invoker] instance used to invoke a wrapper implementing the [UriResolver] interface.
+     * @param client The [Client] instance used to invoke a wrapper implementing the [UriResolver] interface.
      * @param resolutionContext The current URI resolution context.
      * @return A [Result] containing a wrap package, a wrapper, or a URI if successful.
      */
-    override suspend fun tryResolveUri(uri: Uri, invoker: Invoker, resolutionContext: UriResolutionContext): Result<UriPackageOrWrapper> {
-        val result = this._tryResolveUri(uri, invoker, resolutionContext)
+    override suspend fun tryResolveUri(uri: Uri, client: Client, resolutionContext: UriResolutionContext): Result<UriPackageOrWrapper> {
+        val result = this._tryResolveUri(uri, client, resolutionContext)
 
         resolutionContext.trackStep(
             UriResolutionStep(
@@ -44,9 +44,9 @@ abstract class ResolverWithHistory : UriResolver {
     /**
      * The actual URI resolution implementation. Must be implemented by subclasses.
      * @param uri The URI to resolve.
-     * @param invoker The [Invoker] instance used to invoke a wrapper implementing the [UriResolver] interface.
+     * @param client The [Client] instance used to invoke a wrapper implementing the [UriResolver] interface.
      * @param resolutionContext The current URI resolution context.
      * @return A [Result] containing a wrap package, a wrapper, or a URI if successful.
      */
-    protected abstract suspend fun _tryResolveUri(uri: Uri, invoker: Invoker, resolutionContext: UriResolutionContext): Result<UriPackageOrWrapper>
+    protected abstract suspend fun _tryResolveUri(uri: Uri, client: Client, resolutionContext: UriResolutionContext): Result<UriPackageOrWrapper>
 }

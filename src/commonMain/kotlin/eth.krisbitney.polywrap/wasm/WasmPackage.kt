@@ -1,5 +1,6 @@
 package eth.krisbitney.polywrap.wasm
 
+import eth.krisbitney.polywrap.core.types.FileReader
 import eth.krisbitney.polywrap.core.types.WrapPackage
 import eth.krisbitney.polywrap.core.types.Wrapper
 import eth.krisbitney.polywrap.core.wrap.WrapManifest
@@ -19,7 +20,7 @@ data class WasmPackage(private val fileReader: FileReader) : WrapPackage {
      * @param fileReader a file reader used to read other package files
      */
     constructor(manifestBuffer: ByteArray, wasmModule: ByteArray, fileReader: FileReader? = null)
-            : this(FileReader.fromMemory(manifestBuffer, wasmModule, fileReader))
+            : this(FileReaderFactory.fromMemory(manifestBuffer, wasmModule, fileReader))
 
     /**
      * Creates a new [WasmPackage] instance with the given manifest buffer and file reader.
@@ -27,7 +28,7 @@ data class WasmPackage(private val fileReader: FileReader) : WrapPackage {
      * @param manifestBuffer the manifest buffer
      * @param fileReader a file reader used to read other package files
      */
-    constructor(manifestBuffer: ByteArray, fileReader: FileReader) : this(FileReader.fromManifest(manifestBuffer, fileReader))
+    constructor(manifestBuffer: ByteArray, fileReader: FileReader) : this(FileReaderFactory.fromManifest(manifestBuffer, fileReader))
 
     /**
      * Produce an instance of the WrapPackage's WRAP manifest
@@ -35,7 +36,7 @@ data class WasmPackage(private val fileReader: FileReader) : WrapPackage {
      * @return A [WrapManifest] instance
      */
     override suspend fun getManifest(): Result<WrapManifest> {
-        val result = fileReader.readFile(WRAP_MANIFEST_PATH)
+        val result = fileReader.readFile(FileReader.WRAP_MANIFEST_PATH)
         if (result.isFailure) {
             return Result.failure(Error("Wrapper does not contain a WRAP manifest"))
         }
@@ -76,7 +77,7 @@ data class WasmPackage(private val fileReader: FileReader) : WrapPackage {
      * @return The Wasm module bytes
      */
     suspend fun getWasmModule(): Result<ByteArray> {
-        val result = fileReader.readFile(WRAP_MODULE_PATH)
+        val result = fileReader.readFile(FileReader.WRAP_MODULE_PATH)
         if (!result.isSuccess) {
             return Result.failure(Error("Wrapper does not contain a Wasm module"))
         }

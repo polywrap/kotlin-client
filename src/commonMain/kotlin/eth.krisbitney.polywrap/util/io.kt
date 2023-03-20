@@ -1,5 +1,6 @@
 package eth.krisbitney.polywrap.util
 
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import okio.FileSystem
@@ -25,13 +26,13 @@ expect object FileSystemFactory {
  *
  * @return A [Result] containing either the file's contents as a [ByteArray] on success or an [Exception] on failure.
  */
-suspend fun readFile(filePath: String): Result<ByteArray> = runCatching {
-    coroutineScope {
-        val absPath = filePath.toPath(true)
-        val asyncBytes = async {
-            FileSystemFactory.create().read(absPath) { readByteArray() }
+suspend fun readFile(filePath: String): Deferred<Result<ByteArray>> = coroutineScope {
+    async {
+        runCatching {
+            val absPath = filePath.toPath(true)
+            val asyncBytes = FileSystemFactory.create().read(absPath) { readByteArray() }
+            asyncBytes
         }
-        asyncBytes.await()
     }
 }
 

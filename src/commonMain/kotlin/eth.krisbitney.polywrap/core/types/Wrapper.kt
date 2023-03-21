@@ -1,5 +1,7 @@
 package eth.krisbitney.polywrap.core.types
 
+import kotlinx.coroutines.Deferred
+
 /**
  * The Wrapper definition, which can be used to spawn
  * many invocations of this particular Wrapper. Internally
@@ -14,5 +16,5 @@ interface Wrapper : Invocable {
      * @param invoker The client instance requesting this invocation. This client will be used for any sub-invocations that occur.
      * @return The result of the invocation.
      */
-    override suspend fun invoke(options: InvokeOptions, invoker: Invoker): InvokeResult<ByteArray>
+    override suspend fun invoke(options: InvokeOptions, invoker: Invoker): Deferred<InvokeResult<ByteArray>>
 }

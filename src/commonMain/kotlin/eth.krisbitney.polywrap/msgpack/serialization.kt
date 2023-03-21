@@ -6,13 +6,15 @@ import com.ensarsarajcic.kotlinx.serialization.msgpack.MsgPackConfiguration
 
 
 val msgPack: MsgPack by lazy {
-    MsgPack(MsgPackConfiguration(
-        rawCompatibility = false,
-        strictTypes = false,
-        strictTypeWriting = false,
-        preventOverflows = true,
-        ignoreUnknownKeys = false
-    ))
+    MsgPack(
+        MsgPackConfiguration(
+            rawCompatibility = false,
+            strictTypes = false,
+            strictTypeWriting = false,
+            preventOverflows = true,
+            ignoreUnknownKeys = false
+        )
+    )
 }
 
 /**

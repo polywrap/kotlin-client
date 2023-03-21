@@ -4,6 +4,7 @@ import eth.krisbitney.polywrap.core.resolution.Uri
 import eth.krisbitney.polywrap.msgpack.msgPackEncode
 import eth.krisbitney.polywrap.core.types.InvokeOptions
 import eth.krisbitney.polywrap.core.types.Invoker
+import kotlinx.coroutines.Deferred
 
 object UriResolverExtensionInvoker {
     /**
@@ -17,7 +18,7 @@ object UriResolverExtensionInvoker {
         invoker: Invoker,
         wrapper: Uri,
         uri: Uri
-    ): Result<MaybeUriOrManifest> {
+    ): Deferred<Result<MaybeUriOrManifest>> {
         return invoker.invoke(
             InvokeOptions(
                 uri = wrapper,
@@ -38,7 +39,7 @@ object UriResolverExtensionInvoker {
         invoker: Invoker,
         wrapper: Uri,
         path: String
-    ): Result<ByteArray?> {
+    ): Deferred<Result<ByteArray?>> {
         return invoker.invoke(
             InvokeOptions(
                 uri = wrapper,

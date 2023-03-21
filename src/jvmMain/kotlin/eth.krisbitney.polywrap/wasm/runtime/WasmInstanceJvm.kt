@@ -9,7 +9,7 @@ actual object WasmInstanceFactory {
 
 class WasmInstanceJvm(module: ByteArray, state: WasmModuleState) : WasmInstance(module, state) {
 
-    override fun invoke(method: String, args: ByteArray, env: ByteArray?): Result<ByteArray> {
+    override suspend fun invoke(method: String, args: ByteArray, env: ByteArray?): Result<ByteArray> {
         val engine = Engine()
         val store: Store<WasmModuleState> = Store(state, engine)
         val memory: Memory = createMemory(store, module).getOrThrow()

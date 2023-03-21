@@ -4,6 +4,7 @@ import eth.krisbitney.polywrap.core.wrap.WrapManifest
 import eth.krisbitney.polywrap.core.resolution.Uri
 import eth.krisbitney.polywrap.core.resolution.UriResolver
 import eth.krisbitney.polywrap.core.resolution.UriResolutionHandler
+import kotlinx.coroutines.Deferred
 
 /**
  * Core Client configuration that can be passed to the PolywrapClient or PolywrapCoreClient constructors.
@@ -59,7 +60,7 @@ interface Client : Invoker, UriResolutionHandler {
      * @param uri a wrap URI
      * @return a Result containing the eth.krisbitney.polywrap.core.WrapManifest if the request was successful
      */
-    suspend fun getManifest(uri: Uri): Result<WrapManifest>
+    suspend fun getManifest(uri: Uri): Deferred<Result<WrapManifest>>
 
     /**
      * Returns a file contained in a wrap package.
@@ -72,7 +73,7 @@ interface Client : Invoker, UriResolutionHandler {
         uri: Uri,
         path: String,
         encoding: String = "utf-8"
-    ): Result<String>
+    ): Deferred<Result<String>>
 
     /**
      * Validate a wrapper, given a URI.
@@ -86,5 +87,5 @@ interface Client : Invoker, UriResolutionHandler {
         uri: Uri,
         abi: Boolean = false,
         recursive: Boolean = false
-    ): Result<Boolean>
+    ): Deferred<Result<Boolean>>
 }

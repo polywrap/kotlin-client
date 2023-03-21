@@ -29,7 +29,7 @@ class ExtendableUriResolver(
                 extInterfaceUri,
                 false,
                 resolutionContext.createSubContext()
-            )
+            ).await()
 
             if (!getImplementationsResult.isSuccess) {
                 return Result.failure(getImplementationsResult.exceptionOrNull()!!)

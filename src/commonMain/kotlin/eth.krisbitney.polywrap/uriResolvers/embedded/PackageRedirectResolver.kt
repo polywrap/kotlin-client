@@ -38,7 +38,7 @@ class PackageRedirectResolver(val from: Uri, val pkg: WrapPackage) : ResolverWit
         return if (uri.uri != from.uri) {
             Result.success(UriPackageOrWrapper.UriValue(uri))
         } else {
-            Result.success(UriPackageOrWrapper.PackageValue(PackageRedirect(from, pkg)))
+            Result.success(UriPackageOrWrapper.PackageValue(from, pkg))
         }
     }
 }

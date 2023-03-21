@@ -27,7 +27,7 @@ abstract class WasmInstance(protected val module: ByteArray, protected val state
      * @param env an optional array of bytes representing the environment to be used during method invocation.
      * @return a Result object containing an array of bytes representing the result of the method invocation.
      */
-    abstract fun invoke(method: String, args: ByteArray, env: ByteArray?): Result<ByteArray>
+    abstract suspend fun invoke(method: String, args: ByteArray, env: ByteArray?): Result<ByteArray>
 
     protected fun processResult(isSuccess: Boolean): Result<ByteArray> {
         if (isSuccess) {

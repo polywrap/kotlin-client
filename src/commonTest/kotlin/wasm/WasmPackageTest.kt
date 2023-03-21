@@ -4,7 +4,10 @@ import eth.krisbitney.polywrap.core.types.FileReader
 import eth.krisbitney.polywrap.core.wrap.WrapManifest
 import eth.krisbitney.polywrap.wasm.FileReaderFactory
 import eth.krisbitney.polywrap.wasm.WasmPackage
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.test.runTest
 import readTestResource
 import kotlin.test.*
@@ -16,8 +19,10 @@ class WasmPackageTest {
     private val modulePath = "$wrapperPath/wrap.wasm"
 
     private val baseFileReader = object : FileReader() {
-        override suspend fun readFile(filePath: String): Result<ByteArray> {
-            return readTestResource("$wrapperPath/$filePath")
+        override suspend fun readFile(filePath: String): Deferred<Result<ByteArray>> = coroutineScope {
+            async {
+                readTestResource("$wrapperPath/$filePath")
+            }
         }
     }
 
@@ -40,7 +45,7 @@ class WasmPackageTest {
         val moduleResult = pkg.getWasmModule()
         assertContentEquals(moduleResult.getOrNull(), wasmModule)
 
-        val fileResult = pkg.getFile(FileReader.WRAP_MODULE_PATH)
+        val fileResult = pkg.getFile(FileReader.WRAP_MODULE_PATH).await()
         assertContentEquals(fileResult.getOrNull(), wasmModule)
     }
 

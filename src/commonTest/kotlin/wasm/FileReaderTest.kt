@@ -2,7 +2,10 @@ package wasm
 
 import eth.krisbitney.polywrap.core.types.FileReader
 import eth.krisbitney.polywrap.wasm.FileReaderFactory
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.test.runTest
 import readTestResource
 import kotlin.test.*
@@ -14,8 +17,10 @@ class FileReaderTest {
     private val modulePath = "$wrapperPath/wrap.wasm"
 
     private val baseFileReader = object : FileReader() {
-        override suspend fun readFile(filePath: String): Result<ByteArray> {
-            return readTestResource("$wrapperPath/$filePath")
+        override suspend fun readFile(filePath: String): Deferred<Result<ByteArray>> = coroutineScope {
+            async {
+                readTestResource("$wrapperPath/$filePath")
+            }
         }
     }
 
@@ -43,15 +48,15 @@ class FileReaderTest {
             wasmModule = wasmModule,
         )
 
-        val manifestResult = fileReader.readFile(FileReader.WRAP_MANIFEST_PATH)
+        val manifestResult = fileReader.readFile(FileReader.WRAP_MANIFEST_PATH).await()
         assertTrue(manifestResult.isSuccess)
         assertContentEquals(manifest, manifestResult.getOrNull())
 
-        val wasmModuleResult = fileReader.readFile(FileReader.WRAP_MODULE_PATH)
+        val wasmModuleResult = fileReader.readFile(FileReader.WRAP_MODULE_PATH).await()
         assertTrue(wasmModuleResult.isSuccess)
         assertContentEquals(wasmModule, wasmModuleResult.getOrNull())
 
-        val fileResult = fileReader.readFile("file.txt")
+        val fileResult = fileReader.readFile("file.txt").await()
         assertTrue(fileResult.isFailure)
         assertEquals("File not found at file.txt.", fileResult.exceptionOrNull()?.message)
     }
@@ -81,15 +86,15 @@ class FileReaderTest {
     }
 
     private suspend fun compareResult(fileReader: FileReader, manifest: ByteArray, wasmModule: ByteArray) {
-        val manifestResult = fileReader.readFile(FileReader.WRAP_MANIFEST_PATH)
+        val manifestResult = fileReader.readFile(FileReader.WRAP_MANIFEST_PATH).await()
         assertTrue(manifestResult.isSuccess)
         assertContentEquals(manifest, manifestResult.getOrNull())
 
-        val wasmModuleResult = fileReader.readFile(FileReader.WRAP_MODULE_PATH)
+        val wasmModuleResult = fileReader.readFile(FileReader.WRAP_MODULE_PATH).await()
         assertTrue(wasmModuleResult.isSuccess)
         assertContentEquals(wasmModule, wasmModuleResult.getOrNull())
 
-        val fileResult = fileReader.readFile("file.txt")
+        val fileResult = fileReader.readFile("file.txt").await()
         assertTrue(fileResult.isSuccess)
         assertEquals("file.txt content", fileResult.getOrNull()?.decodeToString())
     }

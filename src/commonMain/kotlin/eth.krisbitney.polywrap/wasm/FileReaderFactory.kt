@@ -1,6 +1,9 @@
 package eth.krisbitney.polywrap.wasm
 
 import eth.krisbitney.polywrap.core.types.FileReader
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 
 object FileReaderFactory {
 
@@ -19,12 +22,14 @@ object FileReaderFactory {
      */
     fun fromMemory(manifest: ByteArray, wasmModule: ByteArray, baseFileReader: FileReader? = null): FileReader {
         return object : FileReader() {
-            override suspend fun readFile(filePath: String): Result<ByteArray> {
-                return when {
-                    filePath == WRAP_MANIFEST_PATH -> Result.success(manifest)
-                    filePath == WRAP_MODULE_PATH -> Result.success(wasmModule)
-                    baseFileReader != null -> baseFileReader.readFile(filePath)
-                    else -> Result.failure(Error("File not found at $filePath."))
+            override suspend fun readFile(filePath: String): Deferred<Result<ByteArray>> = coroutineScope {
+                async {
+                    when {
+                        filePath == WRAP_MANIFEST_PATH -> Result.success(manifest)
+                        filePath == WRAP_MODULE_PATH -> Result.success(wasmModule)
+                        baseFileReader != null -> baseFileReader.readFile(filePath).await()
+                        else -> Result.failure(Error("File not found at $filePath."))
+                    }
                 }
             }
         }
@@ -43,11 +48,13 @@ object FileReaderFactory {
      */
     fun fromManifest(manifest: ByteArray, baseFileReader: FileReader): FileReader {
         return object : FileReader() {
-            override suspend fun readFile(filePath: String): Result<ByteArray> {
-                return if (filePath == WRAP_MANIFEST_PATH) {
-                    Result.success(manifest)
-                } else {
-                    baseFileReader.readFile(filePath)
+            override suspend fun readFile(filePath: String): Deferred<Result<ByteArray>> = coroutineScope {
+                async {
+                    if (filePath == WRAP_MANIFEST_PATH) {
+                        Result.success(manifest)
+                    } else {
+                        baseFileReader.readFile(filePath).await()
+                    }
                 }
             }
         }
@@ -66,11 +73,13 @@ object FileReaderFactory {
      */
     fun fromWasmModule(wasmModule: ByteArray, baseFileReader: FileReader): FileReader {
         return object : FileReader() {
-            override suspend fun readFile(filePath: String): Result<ByteArray> {
-                return if (filePath == WRAP_MODULE_PATH) {
-                    Result.success(wasmModule)
-                } else {
-                    baseFileReader.readFile(filePath)
+            override suspend fun readFile(filePath: String): Deferred<Result<ByteArray>> = coroutineScope {
+                async {
+                    if (filePath == WRAP_MODULE_PATH) {
+                        Result.success(wasmModule)
+                    } else {
+                        baseFileReader.readFile(filePath).await()
+                    }
                 }
             }
         }

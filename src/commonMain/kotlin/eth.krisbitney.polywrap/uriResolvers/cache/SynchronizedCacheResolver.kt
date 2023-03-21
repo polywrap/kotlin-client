@@ -71,7 +71,7 @@ class SynchronizedCacheResolver(
 
         // return from cache if available
         if (wrapper != null) {
-            val result = Result.success(UriPackageOrWrapper.WrapperValue(WrapperRedirect(uri, wrapper)))
+            val result = Result.success(UriPackageOrWrapper.WrapperValue(uri, wrapper))
             resolutionContext.trackStep(
                 UriResolutionStep(
                     sourceUri = uri,
@@ -122,8 +122,8 @@ class SynchronizedCacheResolver(
             is UriPackageOrWrapper.UriValue -> Result.success(uriPackageOrWrapper)
 
             is UriPackageOrWrapper.PackageValue -> {
-                val resolvedUri = uriPackageOrWrapper.pkg.uri
-                val wrapPackage = uriPackageOrWrapper.pkg.pkg
+                val resolvedUri = uriPackageOrWrapper.uri
+                val wrapPackage = uriPackageOrWrapper.pkg
                 val createResult = wrapPackage.createWrapper()
 
                 if (createResult.isFailure) {
@@ -135,12 +135,12 @@ class SynchronizedCacheResolver(
                         cache.set(uri, wrapper)
                     }
 
-                    Result.success(UriPackageOrWrapper.WrapperValue(WrapperRedirect(resolvedUri, wrapper)))
+                    Result.success(UriPackageOrWrapper.WrapperValue(resolvedUri, wrapper))
                 }
             }
 
             is UriPackageOrWrapper.WrapperValue -> {
-                val wrapper = uriPackageOrWrapper.wrapper.wrapper
+                val wrapper = uriPackageOrWrapper.wrapper
                 val resolutionPath = subContext.getResolutionPath()
                 for (uri: Uri in resolutionPath) {
                     cache.set(uri, wrapper)

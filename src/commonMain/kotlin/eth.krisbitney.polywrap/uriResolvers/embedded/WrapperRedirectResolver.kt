@@ -39,7 +39,7 @@ class WrapperRedirectResolver(val from: Uri, val wrapper: Wrapper) : ResolverWit
         return if (uri.uri != from.uri) {
             Result.success(UriPackageOrWrapper.UriValue(uri))
         } else {
-            Result.success(UriPackageOrWrapper.WrapperValue(WrapperRedirect(from, wrapper)))
+            Result.success(UriPackageOrWrapper.WrapperValue(from, wrapper))
         }
     }
 }

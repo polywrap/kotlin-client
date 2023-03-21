@@ -3,22 +3,30 @@ package core
 import eth.krisbitney.polywrap.core.resolution.*
 import eth.krisbitney.polywrap.core.types.InterfaceImplementations
 import eth.krisbitney.polywrap.core.resolution.algorithms.getImplementations
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlin.test.*
 import kotlinx.coroutines.test.*
 
 class GetImplementationsTest {
     private fun getUriResolutionHandler(redirects: List<UriRedirect>): UriResolutionHandler {
         return object : UriResolutionHandler {
-            override suspend fun tryResolveUri(uri: Uri, resolutionContext: UriResolutionContext?): Result<UriPackageOrWrapper> {
-                var currentUri = uri
-                while (true) {
-                    val redirect = redirects.find { it.from.uri == currentUri.uri }
-                    if (redirect != null) {
-                        currentUri = redirect.to
-                    } else {
-                        return Result.success(UriPackageOrWrapper.UriValue(currentUri))
+            override suspend fun tryResolveUri(uri: Uri, resolutionContext: UriResolutionContext?): Deferred<Result<UriPackageOrWrapper>> = coroutineScope {
+                async {
+                    var currentUri = uri
+                    val result: UriPackageOrWrapper
+                    while (true) {
+                        val redirect = redirects.find { it.from.uri == currentUri.uri }
+                        if (redirect != null) {
+                            currentUri = redirect.to
+                        } else {
+                            result = UriPackageOrWrapper.UriValue(currentUri)
+                            break
+                        }
                     }
+                    Result.success(result)
                 }
             }
         }

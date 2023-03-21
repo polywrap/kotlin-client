@@ -49,7 +49,7 @@ class WrapImportsJvm(private val store: Store<WasmModuleState>, private val memo
             val method = readBytes(memoryBuffer, methodPtr, methodLen).decodeToString()
             val args = readBytes(memoryBuffer, argsPtr, argsLen)
 
-            val result = runBlocking { state.invoker.invoke<ByteArray>(InvokeOptions(Uri(uri), method, args,)) }
+            val result = runBlocking { state.invoker.invoke<ByteArray>(InvokeOptions(Uri(uri), method, args,)).await() }
 
             if (result.isSuccess) {
                 state.subinvoke.result = result.getOrThrow()
@@ -108,10 +108,10 @@ class WrapImportsJvm(private val store: Store<WasmModuleState>, private val memo
             val state = store.data()
             val memoryBuffer = memory.buffer(store).array()
             if (state.method.isEmpty()) {
-                state.abortWithInternalError("__wrap_invoke_args: method is not set");
+                state.abortWithInternalError("__wrap_invoke_args: method is not set")
             }
             if (state.args.isEmpty()) {
-                state.abortWithInternalError("__wrap_invoke_args: args is not set");
+                state.abortWithInternalError("__wrap_invoke_args: args is not set")
             }
             writeBytes(state.method.encodeToByteArray(), memoryBuffer, methodPtr)
             writeBytes(state.args, memoryBuffer, argsPtr)
@@ -138,7 +138,7 @@ class WrapImportsJvm(private val store: Store<WasmModuleState>, private val memo
             val memoryBuffer = memory.buffer(store).array()
 
             val uri = readBytes(memoryBuffer, uriPtr, uriLen).decodeToString()
-            val result = runBlocking { state.invoker.getImplementations(Uri(uri)) }
+            val result = runBlocking { state.invoker.getImplementations(Uri(uri)).await() }
             if (result.isFailure) {
                 state.abortWithInternalError(result.exceptionOrNull().toString())
             }
@@ -190,7 +190,7 @@ class WrapImportsJvm(private val store: Store<WasmModuleState>, private val memo
         return {
             val state = store.data()
             val memoryBuffer = memory.buffer(store).array()
-            writeBytes(state.env, memoryBuffer, it);
+            writeBytes(state.env, memoryBuffer, it)
         }
     }
 }

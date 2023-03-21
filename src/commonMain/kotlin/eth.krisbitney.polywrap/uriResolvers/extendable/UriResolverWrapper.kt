@@ -1,6 +1,5 @@
 package eth.krisbitney.polywrap.uriResolvers.extendable
 
-import eth.krisbitney.polywrap.core.resolution.PackageRedirect
 import eth.krisbitney.polywrap.core.resolution.Uri
 import eth.krisbitney.polywrap.core.resolution.UriPackageOrWrapper
 import eth.krisbitney.polywrap.core.resolution.UriResolutionContext
@@ -39,7 +38,7 @@ class UriResolverWrapper(private val implementationUri: Uri) : ResolverWithHisto
                 UriResolverExtensionFileReader(implementationUri, uri, client)
             )
 
-            return Result.success(UriPackageOrWrapper.PackageValue(PackageRedirect(uri, wrapPackage)))
+            return Result.success(UriPackageOrWrapper.PackageValue(uri, wrapPackage))
         }
 
         return Result.success(UriPackageOrWrapper.UriValue(uri))
@@ -62,7 +61,7 @@ class UriResolverWrapper(private val implementationUri: Uri) : ResolverWithHisto
 
         val env = getEnvFromUriHistory(subContext.getResolutionPath(), client)
 
-        return client.invokeWrapper(
+        return client.invokeWrapper<MaybeUriOrManifest>(
             wrapper = extensionWrapper,
             InvokeOptions(
                 uri = implementationUri,
@@ -75,7 +74,7 @@ class UriResolverWrapper(private val implementationUri: Uri) : ResolverWithHisto
                 ),
                 env = if (env != null) msgPackEncode(env.env) else null
             )
-        )
+        ).await()
     }
 
     private suspend fun loadResolverExtension(
@@ -84,7 +83,7 @@ class UriResolverWrapper(private val implementationUri: Uri) : ResolverWithHisto
         client: Client,
         resolutionContext: UriResolutionContext
     ): Result<Wrapper> {
-        val result = client.tryResolveUri(resolverExtensionUri, resolutionContext)
+        val result = client.tryResolveUri(resolverExtensionUri, resolutionContext).await()
 
         return when (val uriPackageOrWrapper = result.getOrNull()) {
             is UriPackageOrWrapper.UriValue -> {
@@ -94,8 +93,8 @@ class UriResolverWrapper(private val implementationUri: Uri) : ResolverWithHisto
                     )
                 )
             }
-            is UriPackageOrWrapper.PackageValue -> uriPackageOrWrapper.pkg.pkg.createWrapper()
-            is UriPackageOrWrapper.WrapperValue -> Result.success(uriPackageOrWrapper.wrapper.wrapper)
+            is UriPackageOrWrapper.PackageValue -> uriPackageOrWrapper.pkg.createWrapper()
+            is UriPackageOrWrapper.WrapperValue -> Result.success(uriPackageOrWrapper.wrapper)
             else ->  Result.failure(result.exceptionOrNull()!!)
         }
     }

@@ -2,6 +2,7 @@ package eth.krisbitney.polywrap.core.types
 
 import eth.krisbitney.polywrap.core.resolution.Uri
 import eth.krisbitney.polywrap.core.resolution.UriResolutionContext
+import kotlinx.coroutines.Deferred
 
 /**
  * Options required for a wrapper invocation.
@@ -69,7 +70,7 @@ interface Invoker {
      * @param TData Type of the invoke result data.
      * @return A Promise with a Result containing the return value or an error.
      */
-    suspend fun <TData>invokeWrapper(wrapper: Wrapper, options: InvokeOptions): InvokeResult<TData>
+    suspend fun <TData>invokeWrapper(wrapper: Wrapper, options: InvokeOptions): Deferred<InvokeResult<TData>>
 
     /**
      * Invoke a wrapper.
@@ -80,7 +81,7 @@ interface Invoker {
      * @param TData Type of the invoke result data.
      * @return A Promise with a Result containing the return value or an error.
      */
-    suspend fun <TData>invoke(options: InvokeOptions): InvokeResult<TData>
+    suspend fun <TData>invoke(options: InvokeOptions): Deferred<InvokeResult<TData>>
 
     /**
      * Returns the interface implementations associated with an interface URI from the
@@ -95,7 +96,7 @@ interface Invoker {
         uri: Uri,
         applyResolution: Boolean = false,
         resolutionContext: UriResolutionContext? = null,
-    ): Result<List<Uri>>
+    ): Deferred<Result<List<Uri>>>
 }
 
 /** An invocable entity, such as a wrapper. */
@@ -105,7 +106,7 @@ interface Invocable {
      *
      * @param options Invoke options to set.
      * @param invoker An [Invoker], capable of invoking this object.
-     * @return A Promise with a [InvokeResult] containing the return value or an error.
+     * @return An [InvokeResult] containing the return value or an error.
      */
-    suspend fun invoke(options: InvokeOptions, invoker: Invoker): InvokeResult<ByteArray>
+    suspend fun invoke(options: InvokeOptions, invoker: Invoker): Deferred<InvokeResult<ByteArray>>
 }

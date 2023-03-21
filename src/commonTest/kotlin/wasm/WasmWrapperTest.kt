@@ -9,6 +9,7 @@ import eth.krisbitney.polywrap.core.types.Wrapper
 import eth.krisbitney.polywrap.msgpack.msgPackDecode
 import eth.krisbitney.polywrap.msgpack.msgPackEncode
 import eth.krisbitney.polywrap.wasm.WasmWrapper
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import readTestResource
@@ -32,11 +33,11 @@ class WasmWrapperTest {
         )
 
         val invoker = object : Invoker {
-            override suspend fun <TData> invokeWrapper(wrapper: Wrapper, options: InvokeOptions): InvokeResult<TData> {
+            override suspend fun <TData> invokeWrapper(wrapper: Wrapper, options: InvokeOptions): Deferred<InvokeResult<TData>> {
                 TODO("Not yet implemented")
             }
 
-            override suspend fun <TData> invoke(options: InvokeOptions): InvokeResult<TData> {
+            override suspend fun <TData> invoke(options: InvokeOptions): Deferred<InvokeResult<TData>> {
                 TODO("Not yet implemented")
             }
 
@@ -44,12 +45,12 @@ class WasmWrapperTest {
                 uri: Uri,
                 applyResolution: Boolean,
                 resolutionContext: UriResolutionContext?
-            ): Result<List<Uri>> {
+            ): Deferred<Result<List<Uri>>> {
                 TODO("Not yet implemented")
             }
         }
 
-        val result = wrapper.invoke(invocation, invoker)
+        val result = wrapper.invoke(invocation, invoker).await()
         assertTrue(result.isSuccess)
 
         val data = msgPackDecode<Int>(result.getOrThrow()).getOrNull()

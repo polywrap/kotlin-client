@@ -31,13 +31,13 @@ class StaticResolver(val uriMap: Map<String, UriPackageOrWrapper>) : UriResolver
                     is StaticResolverLike.PackageRedirectValue -> {
                         val uri = staticResolverLike.pkg.uri
                         val pkg = staticResolverLike.pkg.pkg
-                        uriMap[uri.uri] = UriPackageOrWrapper.PackageValue(PackageRedirect(uri, pkg))
+                        uriMap[uri.uri] = UriPackageOrWrapper.PackageValue(uri, pkg)
                     }
 
                     is StaticResolverLike.WrapperRedirectValue -> {
                         val uri = staticResolverLike.wrapper.uri
                         val wrapper = staticResolverLike.wrapper.wrapper
-                        uriMap[uri.uri] = UriPackageOrWrapper.WrapperValue(WrapperRedirect(uri, wrapper))
+                        uriMap[uri.uri] = UriPackageOrWrapper.WrapperValue(uri, wrapper)
                     }
                 }
             }

@@ -1,6 +1,7 @@
 package eth.krisbitney.polywrap.core.types
 
 import eth.krisbitney.polywrap.core.wrap.WrapManifest
+import kotlinx.coroutines.Deferred
 
 /**
  * A wrap package, capable of producing instances of a wrapper and its manifest
@@ -12,7 +13,7 @@ interface WrapPackage {
      * @param path The path to the file.
      * @return The result of the file retrieval.
      */
-    suspend fun getFile(path: String): Result<ByteArray>
+    suspend fun getFile(path: String): Deferred<Result<ByteArray>>
 
     /**
      * Produce an instance of the wrap manifest

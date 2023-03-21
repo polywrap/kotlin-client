@@ -21,7 +21,7 @@ data class ImportedModuleDefinition(
     override val type: String,
     override val kind: Int,
     override val name: String? = null,
-    override val required: Boolean? = null,
+    override val required: Boolean? = false,
     override val uri: String,
     override val namespace: String,
     override val nativeType: String,

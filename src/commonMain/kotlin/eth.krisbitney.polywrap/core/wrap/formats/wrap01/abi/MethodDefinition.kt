@@ -19,7 +19,7 @@ data class MethodDefinition(
     override val type: String,
     override val kind: Int,
     override val name: String? = null,
-    override val required: Boolean? = null,
+    override val required: Boolean? = false,
     override val comment: String? = null,
     val arguments: List<PropertyDefinition>? = null,
     val env: EnvRequired? = null,

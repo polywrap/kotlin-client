@@ -3,6 +3,9 @@ package core
 import eth.krisbitney.polywrap.core.wrap.WrapManifest
 import eth.krisbitney.polywrap.core.wrap.formats.wrap01.WrapManifest01
 import eth.krisbitney.polywrap.core.wrap.formats.wrap01.abi.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
+import readTestResource
 import kotlin.test.*
 
 class WrapManifestTest {
@@ -141,5 +144,91 @@ class WrapManifestTest {
         assertFailsWith<IllegalArgumentException>("Unsupported WrapManifest type: true. Supported types: wasm, plugin, interface") {
             testManifest.copy(type = "true")
         }
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun shouldSerializeAndDeserializeManifest_Asyncify() = runTest {
+        val testCase = "wrappers/asyncify/implementations/as/wrap.info"
+        testSerializeAndDeserializeManifest(testCase)
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun shouldSerializeAndDeserializeManifest_BigNumberType() = runTest {
+        val testCase = "wrappers/bignumber-type/implementations/as/wrap.info"
+        testSerializeAndDeserializeManifest(testCase)
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun shouldSerializeAndDeserializeManifest_BytesType() = runTest {
+        val testCase = "wrappers/bytes-type/implementations/as/wrap.info"
+        testSerializeAndDeserializeManifest(testCase)
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun shouldSerializeAndDeserializeManifest_EnumType() = runTest {
+        val testCase = "wrappers/enum-type/implementations/as/wrap.info"
+        testSerializeAndDeserializeManifest(testCase)
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun shouldSerializeAndDeserializeManifest_EnvType() = runTest {
+        val testCaseExternal = "wrappers/env-type/00-external/implementations/as/wrap.info"
+        testSerializeAndDeserializeManifest(testCaseExternal)
+
+        val testCaseMain = "wrappers/env-type/01-main/implementations/as/wrap.info"
+        testSerializeAndDeserializeManifest(testCaseMain)
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun shouldSerializeAndDeserializeManifest_InterfaceInvoke() = runTest {
+        val testCaseInterface = "wrappers/interface-invoke/00-interface/wrap.info"
+        testSerializeAndDeserializeManifest(testCaseInterface)
+
+        val testCaseImplementation = "wrappers/interface-invoke/01-implementation/implementations/as/wrap.info"
+        testSerializeAndDeserializeManifest(testCaseImplementation)
+
+        val testCaseWrapper = "wrappers/interface-invoke/02-wrapper/implementations/as/wrap.info"
+        testSerializeAndDeserializeManifest(testCaseWrapper)
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun shouldSerializeAndDeserializeManifest_JsonType() = runTest {
+        val testCase = "wrappers/json-type/implementations/as/wrap.info"
+        testSerializeAndDeserializeManifest(testCase)
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun shouldSerializeAndDeserializeManifest_MapType() = runTest {
+        val testCase = "wrappers/map-type/implementations/as/wrap.info"
+        testSerializeAndDeserializeManifest(testCase)
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun shouldSerializeAndDeserializeManifest_NumbersType() = runTest {
+        val testCase = "wrappers/numbers-type/implementations/as/wrap.info"
+        testSerializeAndDeserializeManifest(testCase)
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun shouldSerializeAndDeserializeManifest_ObjectType() = runTest {
+        val testCase = "wrappers/object-type/implementations/as/wrap.info"
+        testSerializeAndDeserializeManifest(testCase)
+    }
+
+    private suspend fun testSerializeAndDeserializeManifest(testCase: String) {
+        val bytes = readTestResource(testCase).getOrThrow()
+        val manifest = WrapManifest.deserialize(bytes).getOrThrow()
+        WrapManifest.serialize(manifest)
+//        assertEquals(encoded, bytes)
     }
 }

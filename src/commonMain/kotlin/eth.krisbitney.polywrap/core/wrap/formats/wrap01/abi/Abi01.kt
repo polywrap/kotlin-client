@@ -16,6 +16,7 @@ import kotlinx.serialization.Serializable
  * */
 @Serializable
 data class Abi01(
+    val version: String = "0.1",
     val objectTypes: List<ObjectDefinition>? = null,
     val moduleType: ModuleDefinition? = null,
     val enumTypes: List<EnumDefinition>? = null,
@@ -25,4 +26,8 @@ data class Abi01(
     val importedEnumTypes: List<ImportedEnumDefinition>? = null,
     val importedEnvTypes: List<ImportedEnvDefinition>? = null,
     val envType: EnvDefinition? = null
-)
+) {
+    init {
+        require(version == "0.1") { "Unsupported Abi version: $version. Expected version: 0.1" }
+    }
+}

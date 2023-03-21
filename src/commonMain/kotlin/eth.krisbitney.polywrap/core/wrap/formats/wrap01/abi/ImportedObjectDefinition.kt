@@ -21,7 +21,7 @@ data class ImportedObjectDefinition(
     override val type: String,
     override val kind: Int,
     override val name: String? = null,
-    override val required: Boolean? = null,
+    override val required: Boolean? = false,
     override val comment: String? = null,
     override val uri: String,
     override val namespace: String,

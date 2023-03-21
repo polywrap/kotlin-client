@@ -24,7 +24,7 @@ data class MapDefinition(
     override val type: String,
     override val kind: Int,
     override val name: String? = null,
-    override val required: Boolean? = null,
+    override val required: Boolean? = false,
     override val comment: String? = null,
     override val array: ArrayDefinition? = null,
     override val scalar: ScalarDefinition? = null,

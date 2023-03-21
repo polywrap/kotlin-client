@@ -23,7 +23,7 @@ data class ArrayDefinition(
     override val type: String,
     override val kind: Int,
     override val name: String? = null,
-    override val required: Boolean? = null,
+    override val required: Boolean? = false,
     override val array: ArrayDefinition? = null,
     override val map: MapDefinition? = null,
     override val scalar: ScalarDefinition? = null,
@@ -31,5 +31,5 @@ data class ArrayDefinition(
     override val _object: GenericDefinition? = null,
     override val enum: GenericDefinition? = null,
     override val unresolvedObjectOrEnum: GenericDefinition? = null,
-    val item: IGenericDefinition? = null
+    val item: GenericDefinition? = null
 ) : AnyDefinition

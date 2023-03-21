@@ -20,5 +20,5 @@ sealed interface AnyDefinition : IGenericDefinition {
     @SerialName("object")
     val _object: GenericDefinition?
     val enum: GenericDefinition?
-    val unresolvedObjectOrEnum: IGenericDefinition?
+    val unresolvedObjectOrEnum: GenericDefinition?
 }

@@ -1,0 +1,813 @@
+{
+  "version": "0.1",
+  "name": "map-type",
+  "type": "wasm",
+  "abi": {
+    "version": "0.1",
+    "objectTypes": [
+      {
+        "type": "CustomMap",
+        "kind": 1,
+        "properties": [
+          {
+            "type": "Map<String, Int>",
+            "name": "map",
+            "map": {
+              "type": "Map<String, Int>",
+              "scalar": {
+                "name": "map",
+                "type": "Int",
+                "required": true,
+                "kind": 4
+              },
+              "kind": 262146,
+              "name": "map",
+              "key": {
+                "name": "map",
+                "type": "String",
+                "required": true,
+                "kind": 4
+              },
+              "value": {
+                "name": "map",
+                "type": "Int",
+                "required": true,
+                "kind": 4
+              },
+              "required": true
+            },
+            "required": true,
+            "kind": 34
+          },
+          {
+            "type": "Map<String, Map<String, Int>>",
+            "name": "nestedMap",
+            "map": {
+              "type": "Map<String, Map<String, Int>>",
+              "map": {
+                "type": "Map<String, Int>",
+                "name": "nestedMap",
+                "key": {
+                  "name": "nestedMap",
+                  "type": "String",
+                  "required": true,
+                  "kind": 4
+                },
+                "value": {
+                  "name": "nestedMap",
+                  "type": "Int",
+                  "required": true,
+                  "kind": 4
+                },
+                "required": true,
+                "scalar": {
+                  "name": "nestedMap",
+                  "type": "Int",
+                  "required": true,
+                  "kind": 4
+                },
+                "kind": 262146
+              },
+              "kind": 262146,
+              "name": "nestedMap",
+              "key": {
+                "name": "nestedMap",
+                "type": "String",
+                "required": true,
+                "kind": 4
+              },
+              "value": {
+                "type": "Map<String, Int>",
+                "name": "nestedMap",
+                "key": {
+                  "name": "nestedMap",
+                  "type": "String",
+                  "required": true,
+                  "kind": 4
+                },
+                "value": {
+                  "name": "nestedMap",
+                  "type": "Int",
+                  "required": true,
+                  "kind": 4
+                },
+                "required": true,
+                "scalar": {
+                  "name": "nestedMap",
+                  "type": "Int",
+                  "required": true,
+                  "kind": 4
+                },
+                "kind": 262146
+              },
+              "required": true
+            },
+            "required": true,
+            "kind": 34
+          }
+        ]
+      }
+    ],
+    "moduleType": {
+      "imports": [
+        {
+          "type": "Imported_Module"
+        },
+        {
+          "type": "Imported_CustomMap"
+        }
+      ],
+      "type": "Module",
+      "kind": 128,
+      "methods": [
+        {
+          "name": "getKey",
+          "return": {
+            "type": "Int",
+            "name": "getKey",
+            "required": true,
+            "kind": 34,
+            "scalar": {
+              "name": "getKey",
+              "type": "Int",
+              "required": true,
+              "kind": 4
+            }
+          },
+          "type": "Method",
+          "kind": 64,
+          "required": true,
+          "arguments": [
+            {
+              "type": "String",
+              "name": "key",
+              "required": true,
+              "kind": 34,
+              "scalar": {
+                "name": "key",
+                "type": "String",
+                "required": true,
+                "kind": 4
+              }
+            },
+            {
+              "type": "CustomMap",
+              "name": "foo",
+              "required": true,
+              "kind": 34,
+              "object": {
+                "name": "foo",
+                "required": true,
+                "type": "CustomMap",
+                "kind": 8192
+              }
+            }
+          ]
+        },
+        {
+          "name": "returnMap",
+          "return": {
+            "type": "Map<String, Int>",
+            "name": "returnMap",
+            "map": {
+              "type": "Map<String, Int>",
+              "scalar": {
+                "name": "returnMap",
+                "type": "Int",
+                "required": true,
+                "kind": 4
+              },
+              "kind": 262146,
+              "name": "returnMap",
+              "key": {
+                "name": "returnMap",
+                "type": "String",
+                "required": true,
+                "kind": 4
+              },
+              "value": {
+                "name": "returnMap",
+                "type": "Int",
+                "required": true,
+                "kind": 4
+              },
+              "required": true
+            },
+            "required": true,
+            "kind": 34
+          },
+          "type": "Method",
+          "kind": 64,
+          "required": true,
+          "arguments": [
+            {
+              "type": "Map<String, Int>",
+              "name": "map",
+              "map": {
+                "type": "Map<String, Int>",
+                "scalar": {
+                  "name": "map",
+                  "type": "Int",
+                  "required": true,
+                  "kind": 4
+                },
+                "kind": 262146,
+                "name": "map",
+                "key": {
+                  "name": "map",
+                  "type": "String",
+                  "required": true,
+                  "kind": 4
+                },
+                "value": {
+                  "name": "map",
+                  "type": "Int",
+                  "required": true,
+                  "kind": 4
+                },
+                "required": true
+              },
+              "required": true,
+              "kind": 34
+            }
+          ]
+        },
+        {
+          "name": "returnCustomMap",
+          "return": {
+            "type": "CustomMap",
+            "name": "returnCustomMap",
+            "required": true,
+            "kind": 34,
+            "object": {
+              "name": "returnCustomMap",
+              "required": true,
+              "type": "CustomMap",
+              "kind": 8192
+            }
+          },
+          "type": "Method",
+          "kind": 64,
+          "required": true,
+          "arguments": [
+            {
+              "type": "CustomMap",
+              "name": "foo",
+              "required": true,
+              "kind": 34,
+              "object": {
+                "name": "foo",
+                "required": true,
+                "type": "CustomMap",
+                "kind": 8192
+              }
+            }
+          ]
+        },
+        {
+          "name": "returnNestedMap",
+          "return": {
+            "type": "Map<String, Map<String, Int>>",
+            "name": "returnNestedMap",
+            "map": {
+              "type": "Map<String, Map<String, Int>>",
+              "map": {
+                "type": "Map<String, Int>",
+                "name": "returnNestedMap",
+                "key": {
+                  "name": "returnNestedMap",
+                  "type": "String",
+                  "required": true,
+                  "kind": 4
+                },
+                "value": {
+                  "name": "returnNestedMap",
+                  "type": "Int",
+                  "required": true,
+                  "kind": 4
+                },
+                "required": true,
+                "scalar": {
+                  "name": "returnNestedMap",
+                  "type": "Int",
+                  "required": true,
+                  "kind": 4
+                },
+                "kind": 262146
+              },
+              "kind": 262146,
+              "name": "returnNestedMap",
+              "key": {
+                "name": "returnNestedMap",
+                "type": "String",
+                "required": true,
+                "kind": 4
+              },
+              "value": {
+                "type": "Map<String, Int>",
+                "name": "returnNestedMap",
+                "key": {
+                  "name": "returnNestedMap",
+                  "type": "String",
+                  "required": true,
+                  "kind": 4
+                },
+                "value": {
+                  "name": "returnNestedMap",
+                  "type": "Int",
+                  "required": true,
+                  "kind": 4
+                },
+                "required": true,
+                "scalar": {
+                  "name": "returnNestedMap",
+                  "type": "Int",
+                  "required": true,
+                  "kind": 4
+                },
+                "kind": 262146
+              },
+              "required": true
+            },
+            "required": true,
+            "kind": 34
+          },
+          "type": "Method",
+          "kind": 64,
+          "required": true,
+          "arguments": [
+            {
+              "type": "Map<String, Map<String, Int>>",
+              "name": "foo",
+              "map": {
+                "type": "Map<String, Map<String, Int>>",
+                "map": {
+                  "type": "Map<String, Int>",
+                  "name": "foo",
+                  "key": {
+                    "name": "foo",
+                    "type": "String",
+                    "required": true,
+                    "kind": 4
+                  },
+                  "value": {
+                    "name": "foo",
+                    "type": "Int",
+                    "required": true,
+                    "kind": 4
+                  },
+                  "required": true,
+                  "scalar": {
+                    "name": "foo",
+                    "type": "Int",
+                    "required": true,
+                    "kind": 4
+                  },
+                  "kind": 262146
+                },
+                "kind": 262146,
+                "name": "foo",
+                "key": {
+                  "name": "foo",
+                  "type": "String",
+                  "required": true,
+                  "kind": 4
+                },
+                "value": {
+                  "type": "Map<String, Int>",
+                  "name": "foo",
+                  "key": {
+                    "name": "foo",
+                    "type": "String",
+                    "required": true,
+                    "kind": 4
+                  },
+                  "value": {
+                    "name": "foo",
+                    "type": "Int",
+                    "required": true,
+                    "kind": 4
+                  },
+                  "required": true,
+                  "scalar": {
+                    "name": "foo",
+                    "type": "Int",
+                    "required": true,
+                    "kind": 4
+                  },
+                  "kind": 262146
+                },
+                "required": true
+              },
+              "required": true,
+              "kind": 34
+            }
+          ]
+        }
+      ]
+    },
+    "importedObjectTypes": [
+      {
+        "type": "Imported_CustomMap",
+        "uri": "wrap://ens/imported-map.eth",
+        "namespace": "Imported",
+        "nativeType": "CustomMap",
+        "kind": 1025,
+        "properties": [
+          {
+            "type": "Map<String, Int>",
+            "name": "map",
+            "map": {
+              "type": "Map<String, Int>",
+              "scalar": {
+                "name": "map",
+                "type": "Int",
+                "required": true,
+                "kind": 4
+              },
+              "kind": 262146,
+              "name": "map",
+              "key": {
+                "name": "map",
+                "type": "String",
+                "required": true,
+                "kind": 4
+              },
+              "value": {
+                "name": "map",
+                "type": "Int",
+                "required": true,
+                "kind": 4
+              },
+              "required": true
+            },
+            "required": true,
+            "kind": 34
+          },
+          {
+            "type": "Map<String, Map<String, Int>>",
+            "name": "nestedMap",
+            "map": {
+              "type": "Map<String, Map<String, Int>>",
+              "map": {
+                "type": "Map<String, Int>",
+                "name": "nestedMap",
+                "key": {
+                  "name": "nestedMap",
+                  "type": "String",
+                  "required": true,
+                  "kind": 4
+                },
+                "value": {
+                  "name": "nestedMap",
+                  "type": "Int",
+                  "required": true,
+                  "kind": 4
+                },
+                "required": true,
+                "scalar": {
+                  "name": "nestedMap",
+                  "type": "Int",
+                  "required": true,
+                  "kind": 4
+                },
+                "kind": 262146
+              },
+              "kind": 262146,
+              "name": "nestedMap",
+              "key": {
+                "name": "nestedMap",
+                "type": "String",
+                "required": true,
+                "kind": 4
+              },
+              "value": {
+                "type": "Map<String, Int>",
+                "name": "nestedMap",
+                "key": {
+                  "name": "nestedMap",
+                  "type": "String",
+                  "required": true,
+                  "kind": 4
+                },
+                "value": {
+                  "name": "nestedMap",
+                  "type": "Int",
+                  "required": true,
+                  "kind": 4
+                },
+                "required": true,
+                "scalar": {
+                  "name": "nestedMap",
+                  "type": "Int",
+                  "required": true,
+                  "kind": 4
+                },
+                "kind": 262146
+              },
+              "required": true
+            },
+            "required": true,
+            "kind": 34
+          }
+        ]
+      }
+    ],
+    "importedModuleTypes": [
+      {
+        "uri": "wrap://ens/imported-map.eth",
+        "namespace": "Imported",
+        "nativeType": "Module",
+        "isInterface": false,
+        "type": "Imported_Module",
+        "kind": 256,
+        "methods": [
+          {
+            "name": "getKey",
+            "return": {
+              "type": "Int",
+              "name": "getKey",
+              "required": true,
+              "kind": 34,
+              "scalar": {
+                "name": "getKey",
+                "type": "Int",
+                "required": true,
+                "kind": 4
+              }
+            },
+            "type": "Method",
+            "kind": 64,
+            "required": true,
+            "arguments": [
+              {
+                "type": "String",
+                "name": "key",
+                "required": true,
+                "kind": 34,
+                "scalar": {
+                  "name": "key",
+                  "type": "String",
+                  "required": true,
+                  "kind": 4
+                }
+              },
+              {
+                "type": "Imported_CustomMap",
+                "name": "foo",
+                "required": true,
+                "kind": 34,
+                "object": {
+                  "name": "foo",
+                  "required": true,
+                  "type": "Imported_CustomMap",
+                  "kind": 8192
+                }
+              }
+            ]
+          },
+          {
+            "name": "returnMap",
+            "return": {
+              "type": "Map<String, Int>",
+              "name": "returnMap",
+              "map": {
+                "type": "Map<String, Int>",
+                "scalar": {
+                  "name": "returnMap",
+                  "type": "Int",
+                  "required": true,
+                  "kind": 4
+                },
+                "kind": 262146,
+                "name": "returnMap",
+                "key": {
+                  "name": "returnMap",
+                  "type": "String",
+                  "required": true,
+                  "kind": 4
+                },
+                "value": {
+                  "name": "returnMap",
+                  "type": "Int",
+                  "required": true,
+                  "kind": 4
+                },
+                "required": true
+              },
+              "required": true,
+              "kind": 34
+            },
+            "type": "Method",
+            "kind": 64,
+            "required": true,
+            "arguments": [
+              {
+                "type": "Map<String, Int>",
+                "name": "map",
+                "map": {
+                  "type": "Map<String, Int>",
+                  "scalar": {
+                    "name": "map",
+                    "type": "Int",
+                    "required": true,
+                    "kind": 4
+                  },
+                  "kind": 262146,
+                  "name": "map",
+                  "key": {
+                    "name": "map",
+                    "type": "String",
+                    "required": true,
+                    "kind": 4
+                  },
+                  "value": {
+                    "name": "map",
+                    "type": "Int",
+                    "required": true,
+                    "kind": 4
+                  },
+                  "required": true
+                },
+                "required": true,
+                "kind": 34
+              }
+            ]
+          },
+          {
+            "name": "returnCustomMap",
+            "return": {
+              "type": "Imported_CustomMap",
+              "name": "returnCustomMap",
+              "required": true,
+              "kind": 34,
+              "object": {
+                "name": "returnCustomMap",
+                "required": true,
+                "type": "Imported_CustomMap",
+                "kind": 8192
+              }
+            },
+            "type": "Method",
+            "kind": 64,
+            "required": true,
+            "arguments": [
+              {
+                "type": "Imported_CustomMap",
+                "name": "foo",
+                "required": true,
+                "kind": 34,
+                "object": {
+                  "name": "foo",
+                  "required": true,
+                  "type": "Imported_CustomMap",
+                  "kind": 8192
+                }
+              }
+            ]
+          },
+          {
+            "name": "returnNestedMap",
+            "return": {
+              "type": "Map<String, Map<String, Int>>",
+              "name": "returnNestedMap",
+              "map": {
+                "type": "Map<String, Map<String, Int>>",
+                "map": {
+                  "type": "Map<String, Int>",
+                  "name": "returnNestedMap",
+                  "key": {
+                    "name": "returnNestedMap",
+                    "type": "String",
+                    "required": true,
+                    "kind": 4
+                  },
+                  "value": {
+                    "name": "returnNestedMap",
+                    "type": "Int",
+                    "required": true,
+                    "kind": 4
+                  },
+                  "required": true,
+                  "scalar": {
+                    "name": "returnNestedMap",
+                    "type": "Int",
+                    "required": true,
+                    "kind": 4
+                  },
+                  "kind": 262146
+                },
+                "kind": 262146,
+                "name": "returnNestedMap",
+                "key": {
+                  "name": "returnNestedMap",
+                  "type": "String",
+                  "required": true,
+                  "kind": 4
+                },
+                "value": {
+                  "type": "Map<String, Int>",
+                  "name": "returnNestedMap",
+                  "key": {
+                    "name": "returnNestedMap",
+                    "type": "String",
+                    "required": true,
+                    "kind": 4
+                  },
+                  "value": {
+                    "name": "returnNestedMap",
+                    "type": "Int",
+                    "required": true,
+                    "kind": 4
+                  },
+                  "required": true,
+                  "scalar": {
+                    "name": "returnNestedMap",
+                    "type": "Int",
+                    "required": true,
+                    "kind": 4
+                  },
+                  "kind": 262146
+                },
+                "required": true
+              },
+              "required": true,
+              "kind": 34
+            },
+            "type": "Method",
+            "kind": 64,
+            "required": true,
+            "arguments": [
+              {
+                "type": "Map<String, Map<String, Int>>",
+                "name": "foo",
+                "map": {
+                  "type": "Map<String, Map<String, Int>>",
+                  "map": {
+                    "type": "Map<String, Int>",
+                    "name": "foo",
+                    "key": {
+                      "name": "foo",
+                      "type": "String",
+                      "required": true,
+                      "kind": 4
+                    },
+                    "value": {
+                      "name": "foo",
+                      "type": "Int",
+                      "required": true,
+                      "kind": 4
+                    },
+                    "required": true,
+                    "scalar": {
+                      "name": "foo",
+                      "type": "Int",
+                      "required": true,
+                      "kind": 4
+                    },
+                    "kind": 262146
+                  },
+                  "kind": 262146,
+                  "name": "foo",
+                  "key": {
+                    "name": "foo",
+                    "type": "String",
+                    "required": true,
+                    "kind": 4
+                  },
+                  "value": {
+                    "type": "Map<String, Int>",
+                    "name": "foo",
+                    "key": {
+                      "name": "foo",
+                      "type": "String",
+                      "required": true,
+                      "kind": 4
+                    },
+                    "value": {
+                      "name": "foo",
+                      "type": "Int",
+                      "required": true,
+                      "kind": 4
+                    },
+                    "required": true,
+                    "scalar": {
+                      "name": "foo",
+                      "type": "Int",
+                      "required": true,
+                      "kind": 4
+                    },
+                    "kind": 262146
+                  },
+                  "required": true
+                },
+                "required": true,
+                "kind": 34
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

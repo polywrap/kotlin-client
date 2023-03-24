@@ -12,7 +12,7 @@ import kotlinx.coroutines.Deferred
  * @property interfaces set environmental variables for a wrapper
  * @property envs register interface implementations
  */
-data class CoreClientConfig(
+data class ClientConfig(
     val resolver: UriResolver,
     val interfaces: List<InterfaceImplementations>? = null,
     val envs: List<Env>? = null,
@@ -22,12 +22,6 @@ data class CoreClientConfig(
  * CoreClient invokes wrappers and interacts with wrap packages.
  */
 interface Client : Invoker, UriResolutionHandler {
-
-    /**
-     * Returns the configuration used to instantiate the client.
-     * @return an immutable core client config
-     */
-    fun getConfig(): CoreClientConfig
 
     /**
      * Returns all interfaces from the configuration used to instantiate the client.
@@ -66,14 +60,12 @@ interface Client : Invoker, UriResolutionHandler {
      * Returns a file contained in a wrap package.
      * @param uri a wrap URI
      * @param path file path from wrapper root
-     * @param encoding file encoding
      * @return a Result containing a file if the request was successful
      */
     suspend fun getFile(
         uri: Uri,
         path: String,
-        encoding: String = "utf-8"
-    ): Deferred<Result<String>>
+    ): Deferred<Result<ByteArray>>
 
     /**
      * Validate a wrapper, given a URI.

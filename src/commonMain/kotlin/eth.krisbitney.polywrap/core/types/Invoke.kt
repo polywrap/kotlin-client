@@ -67,10 +67,10 @@ interface Invoker {
      *
      * @param wrapper An instance of a Wrapper to invoke.
      * @param options Invoker options to set and a Wrapper instance to invoke.
-     * @param TData Type of the invoke result data.
      * @return A Promise with a Result containing the return value or an error.
      */
-    suspend fun <TData>invokeWrapper(wrapper: Wrapper, options: InvokeOptions): Deferred<InvokeResult<TData>>
+    suspend fun invokeWrapper(wrapper: Wrapper, options: InvokeOptions): Deferred<InvokeResult<ByteArray>>
+
 
     /**
      * Invoke a wrapper.
@@ -78,10 +78,9 @@ interface Invoker {
      * Unlike [invokeWrapper], this method automatically retrieves and caches the wrapper.
      *
      * @param options Invoker options to set.
-     * @param TData Type of the invoke result data.
      * @return A Promise with a Result containing the return value or an error.
      */
-    suspend fun <TData>invoke(options: InvokeOptions): Deferred<InvokeResult<TData>>
+    suspend fun invoke(options: InvokeOptions): Deferred<InvokeResult<ByteArray>>
 
     /**
      * Returns the interface implementations associated with an interface URI from the

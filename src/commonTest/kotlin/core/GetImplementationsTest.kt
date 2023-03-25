@@ -13,7 +13,7 @@ import kotlinx.coroutines.test.*
 class GetImplementationsTest {
     private fun getUriResolutionHandler(redirects: List<UriRedirect>): UriResolutionHandler {
         return object : UriResolutionHandler {
-            override suspend fun tryResolveUri(uri: Uri, resolutionContext: UriResolutionContext?): Deferred<Result<UriPackageOrWrapper>> = coroutineScope {
+            override suspend fun tryResolveUri(uri: Uri, resolutionContext: UriResolutionContext?, resolveToPackage: Boolean): Deferred<Result<UriPackageOrWrapper>> = coroutineScope {
                 async {
                     var currentUri = uri
                     val result: UriPackageOrWrapper

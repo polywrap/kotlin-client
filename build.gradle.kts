@@ -60,6 +60,7 @@ kotlin {
         val jsMain by getting {
             dependencies {
                 implementation("com.squareup.okio:okio-nodefilesystem:3.3.0")
+                implementation(npm("@polywrap/asyncify-js", "~0.10.0-pre"))
             }
         }
         val jsTest by getting

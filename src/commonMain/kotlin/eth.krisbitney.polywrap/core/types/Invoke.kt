@@ -67,10 +67,9 @@ interface Invoker {
      *
      * @param wrapper An instance of a Wrapper to invoke.
      * @param options Invoker options to set and a Wrapper instance to invoke.
-     * @return A Promise with a Result containing the return value or an error.
+     * @return A [Deferred] with [Result] containing a MsgPack encoded byte array or an error.
      */
-    suspend fun invokeWrapper(wrapper: Wrapper, options: InvokeOptions): Deferred<InvokeResult<ByteArray>>
-
+    suspend fun invokeWrapper(wrapper: Wrapper, options: InvokeOptions): Deferred<Result<ByteArray>>
 
     /**
      * Invoke a wrapper.
@@ -78,9 +77,10 @@ interface Invoker {
      * Unlike [invokeWrapper], this method automatically retrieves and caches the wrapper.
      *
      * @param options Invoker options to set.
-     * @return A Promise with a Result containing the return value or an error.
+     * @return A [Deferred] with [Result] containing a MsgPack encoded byte array or an error.
      */
-    suspend fun invoke(options: InvokeOptions): Deferred<InvokeResult<ByteArray>>
+    suspend fun invoke(options: InvokeOptions): Deferred<Result<ByteArray>>
+
 
     /**
      * Returns the interface implementations associated with an interface URI from the
@@ -105,7 +105,7 @@ interface Invocable {
      *
      * @param options Invoke options to set.
      * @param invoker An [Invoker], capable of invoking this object.
-     * @return An [InvokeResult] containing the return value or an error.
+     * @return A [Deferred] with [Result] containing a MsgPack encoded byte array or an error.
      */
-    suspend fun invoke(options: InvokeOptions, invoker: Invoker): Deferred<InvokeResult<ByteArray>>
+    suspend fun invoke(options: InvokeOptions, invoker: Invoker): Deferred<Result<ByteArray>>
 }

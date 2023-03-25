@@ -51,12 +51,14 @@ class StaticResolver(val uriMap: Map<String, UriPackageOrWrapper>) : UriResolver
      * @param uri The URI to resolve.
      * @param client The [Client] instance used to invoke a wrapper implementing the [UriResolver] interface.
      * @param resolutionContext The current URI resolution context.
+     * @param resolveToPackage Whether to resolve the URI to a wrap package (ignored by this resolver).
      * @return A [Result] containing a wrap package, a wrapper, or a URI if successful.
      */
     override suspend fun tryResolveUri(
         uri: Uri,
         client: Client,
-        resolutionContext: UriResolutionContext
+        resolutionContext: UriResolutionContext,
+        resolveToPackage: Boolean
     ): Result<UriPackageOrWrapper> {
         val uriPackageOrWrapper = uriMap[uri.uri]
         val result: Result<UriPackageOrWrapper>

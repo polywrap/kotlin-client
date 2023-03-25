@@ -4,7 +4,11 @@ import eth.krisbitney.polywrap.core.resolution.Uri
 import eth.krisbitney.polywrap.msgpack.msgPackEncode
 import eth.krisbitney.polywrap.core.types.InvokeOptions
 import eth.krisbitney.polywrap.core.types.Invoker
+import eth.krisbitney.polywrap.msgpack.msgPackDecode
 import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.serialization.serializer
 
 object UriResolverExtensionInvoker {
     /**
@@ -18,14 +22,20 @@ object UriResolverExtensionInvoker {
         invoker: Invoker,
         wrapper: Uri,
         uri: Uri
-    ): Deferred<Result<MaybeUriOrManifest>> {
-        return invoker.invoke(
-            InvokeOptions(
-                uri = wrapper,
-                method = "tryResolveUri",
-                args = msgPackEncode(mapOf("authority" to uri.authority, "path" to uri.path))
-            )
-        )
+    ): Deferred<Result<MaybeUriOrManifest>> = coroutineScope {
+        async {
+            val result = invoker.invoke(
+                InvokeOptions(
+                    uri = wrapper,
+                    method = "tryResolveUri",
+                    args = msgPackEncode(mapOf("authority" to uri.authority, "path" to uri.path))
+                )
+            ).await()
+            if (result.isFailure) {
+                Result.failure<MaybeUriOrManifest>(result.exceptionOrNull()!!)
+            }
+            msgPackDecode(serializer(), result.getOrThrow())
+        }
     }
 
     /**
@@ -39,13 +49,19 @@ object UriResolverExtensionInvoker {
         invoker: Invoker,
         wrapper: Uri,
         path: String
-    ): Deferred<Result<ByteArray?>> {
-        return invoker.invoke(
-            InvokeOptions(
-                uri = wrapper,
-                method = "getFile",
-                args = msgPackEncode(mapOf("path" to path))
-            )
-        )
+    ): Deferred<Result<ByteArray?>> = coroutineScope {
+        async {
+            val result = invoker.invoke(
+                InvokeOptions(
+                    uri = wrapper,
+                    method = "getFile",
+                    args = msgPackEncode(mapOf("path" to path))
+                )
+            ).await()
+            if (result.isFailure) {
+                Result.failure<MaybeUriOrManifest>(result.exceptionOrNull()!!)
+            }
+            msgPackDecode(serializer(), result.getOrThrow())
+        }
     }
 }

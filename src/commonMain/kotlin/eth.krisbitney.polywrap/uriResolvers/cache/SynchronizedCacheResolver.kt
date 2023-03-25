@@ -1,7 +1,7 @@
 package eth.krisbitney.polywrap.uriResolvers.cache
 
 import eth.krisbitney.polywrap.core.resolution.*
-import eth.krisbitney.polywrap.core.types.Client
+import eth.krisbitney.polywrap.core.types.*
 import eth.krisbitney.polywrap.uriResolvers.UriResolverFactory
 import eth.krisbitney.polywrap.uriResolvers.UriResolverLike
 import kotlinx.coroutines.sync.Mutex
@@ -9,11 +9,11 @@ import kotlinx.coroutines.sync.Mutex
 /**
  * A URI resolver that uses a synchronized cache to store and retrieve the results of resolved URIs.
  *
- * @property resolverToCache The [UriResolver] to use when resolving URIs.
+ * @property resolver The [UriResolver] to use when resolving URIs.
  * @property cache The cache to store and retrieve resolved URIs.
  */
 class SynchronizedCacheResolver(
-    private val resolverToCache: UriResolver,
+    private val resolver: UriResolver,
     private val cache: WrapperCache
 ) : UriResolver {
 
@@ -58,13 +58,20 @@ class SynchronizedCacheResolver(
      * @param uri The URI to resolve.
      * @param client The invoker of the resolution.
      * @param resolutionContext The context for the resolution.
+     * @param resolveToPackage If `true`, the resolver will resolve the URI to a [WrapPackage] instead of a [Wrapper].
      * @return A [Result] containing the resolved [UriPackageOrWrapper] on success, or an exception on failure.
      */
     override suspend fun tryResolveUri(
         uri: Uri,
         client: Client,
-        resolutionContext: UriResolutionContext
+        resolutionContext: UriResolutionContext,
+        resolveToPackage: Boolean
     ): Result<UriPackageOrWrapper> {
+        if (resolveToPackage) {
+            val subContext = resolutionContext.createSubHistoryContext()
+            return resolver.tryResolveUri(uri, client, subContext, resolveToPackage)
+        }
+
         acquireMutex(uri)
 
         val wrapper = cache.get(uri)
@@ -84,8 +91,7 @@ class SynchronizedCacheResolver(
 
         // resolve uri if not in cache
         val subContext = resolutionContext.createSubHistoryContext()
-
-        val result = resolverToCache.tryResolveUri(uri, client, subContext)
+        val result = resolver.tryResolveUri(uri, client, subContext, resolveToPackage)
 
         val finalResult = if (result.isSuccess) {
             val cachedResult = cacheResult(result.getOrThrow(), subContext)

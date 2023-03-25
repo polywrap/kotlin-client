@@ -14,7 +14,7 @@ interface Wrapper : Invocable {
      *
      * @param options Options for this invocation.
      * @param invoker The client instance requesting this invocation. This client will be used for any sub-invocations that occur.
-     * @return The result of the invocation.
+     * @return A [Deferred] with [Result] containing a MsgPack encoded byte array or an error.
      */
-    override suspend fun invoke(options: InvokeOptions, invoker: Invoker): Deferred<InvokeResult<ByteArray>>
+    override suspend fun invoke(options: InvokeOptions, invoker: Invoker): Deferred<Result<ByteArray>>
 }

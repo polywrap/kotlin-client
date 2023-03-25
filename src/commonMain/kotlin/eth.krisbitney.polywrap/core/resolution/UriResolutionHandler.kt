@@ -15,6 +15,7 @@ interface UriResolutionHandler {
      */
     suspend fun tryResolveUri(
         uri: Uri,
-        resolutionContext: UriResolutionContext? = null
+        resolutionContext: UriResolutionContext? = null,
+        resolveToPackage: Boolean = false
     ): Deferred<Result<UriPackageOrWrapper>>
 }

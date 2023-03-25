@@ -48,7 +48,8 @@ class ExtendableUriResolver(
     override suspend fun tryResolveUri(
         uri: Uri,
         client: Client,
-        resolutionContext: UriResolutionContext
+        resolutionContext: UriResolutionContext,
+        resolveToPackage: Boolean
     ): Result<UriPackageOrWrapper> {
         val result = getUriResolvers(uri, client, resolutionContext)
         if (result.isFailure) {
@@ -60,7 +61,7 @@ class ExtendableUriResolver(
             return Result.success(UriPackageOrWrapper.UriValue(uri))
         }
 
-        return super.tryResolveUriWithResolvers(uri, client, resolvers, resolutionContext)
+        return super.tryResolveUriWithResolvers(uri, client, resolvers, resolutionContext, resolveToPackage)
     }
 
     override fun getStepDescription(uri: Uri, result: Result<UriPackageOrWrapper>): String = resolverName

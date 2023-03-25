@@ -3,7 +3,6 @@ package wasm
 import eth.krisbitney.polywrap.core.resolution.Uri
 import eth.krisbitney.polywrap.core.resolution.UriResolutionContext
 import eth.krisbitney.polywrap.core.types.InvokeOptions
-import eth.krisbitney.polywrap.core.types.InvokeResult
 import eth.krisbitney.polywrap.core.types.Invoker
 import eth.krisbitney.polywrap.core.types.Wrapper
 import eth.krisbitney.polywrap.msgpack.msgPackDecode
@@ -33,11 +32,11 @@ class WasmWrapperTest {
         )
 
         val invoker = object : Invoker {
-            override suspend fun <TData> invokeWrapper(wrapper: Wrapper, options: InvokeOptions): Deferred<InvokeResult<TData>> {
+            override suspend fun invokeWrapper(wrapper: Wrapper, options: InvokeOptions): Deferred<Result<ByteArray>> {
                 TODO("Not yet implemented")
             }
 
-            override suspend fun <TData> invoke(options: InvokeOptions): Deferred<InvokeResult<TData>> {
+            override suspend fun invoke(options: InvokeOptions): Deferred<Result<ByteArray>> {
                 TODO("Not yet implemented")
             }
 

@@ -14,14 +14,15 @@ abstract class UriResolverAggregator : UriResolver {
     override suspend fun tryResolveUri(
         uri: Uri,
         client: Client,
-        resolutionContext: UriResolutionContext
+        resolutionContext: UriResolutionContext,
+        resolveToPackage: Boolean
     ): Result<UriPackageOrWrapper> {
         val resolverResult = getUriResolvers(uri, client, resolutionContext)
         if (resolverResult.isFailure) {
             return Result.failure(resolverResult.exceptionOrNull()!!)
         }
         val resolvers = resolverResult.getOrThrow()
-        return tryResolveUriWithResolvers(uri, client, resolvers, resolutionContext)
+        return tryResolveUriWithResolvers(uri, client, resolvers, resolutionContext, resolveToPackage)
     }
 
     protected abstract fun getStepDescription(
@@ -33,12 +34,13 @@ abstract class UriResolverAggregator : UriResolver {
         uri: Uri,
         client: Client,
         resolvers: List<UriResolver>,
-        resolutionContext: UriResolutionContext
+        resolutionContext: UriResolutionContext,
+        resolveToPackage: Boolean
     ): Result<UriPackageOrWrapper> {
         val subContext = resolutionContext.createSubHistoryContext()
 
         for (resolver in resolvers) {
-            val result = resolver.tryResolveUri(uri, client, subContext)
+            val result = resolver.tryResolveUri(uri, client, subContext, resolveToPackage)
             val resultVal = result.getOrNull()
             if (!(resultVal is UriPackageOrWrapper.UriValue && resultVal.uri == uri)) {
                 resolutionContext.trackStep(

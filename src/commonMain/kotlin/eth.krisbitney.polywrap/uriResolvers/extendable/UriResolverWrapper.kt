@@ -3,13 +3,13 @@ package eth.krisbitney.polywrap.uriResolvers.extendable
 import eth.krisbitney.polywrap.core.resolution.Uri
 import eth.krisbitney.polywrap.core.resolution.UriPackageOrWrapper
 import eth.krisbitney.polywrap.core.resolution.UriResolutionContext
-import eth.krisbitney.polywrap.core.types.Client
-import eth.krisbitney.polywrap.core.types.InvokeOptions
-import eth.krisbitney.polywrap.core.types.Wrapper
+import eth.krisbitney.polywrap.core.types.*
 import eth.krisbitney.polywrap.core.util.getEnvFromUriHistory
+import eth.krisbitney.polywrap.msgpack.msgPackDecode
 import eth.krisbitney.polywrap.msgpack.msgPackEncode
 import eth.krisbitney.polywrap.uriResolvers.ResolverWithHistory
 import eth.krisbitney.polywrap.wasm.WasmPackage
+import kotlinx.serialization.serializer
 
 class UriResolverWrapper(private val implementationUri: Uri) : ResolverWithHistory() {
 
@@ -19,7 +19,8 @@ class UriResolverWrapper(private val implementationUri: Uri) : ResolverWithHisto
     override suspend fun _tryResolveUri(
         uri: Uri,
         client: Client,
-        resolutionContext: UriResolutionContext
+        resolutionContext: UriResolutionContext,
+        resolveToPackage: Boolean
     ): Result<UriPackageOrWrapper> {
         val result = tryResolveUriWithImplementation(uri, implementationUri, client, resolutionContext)
 
@@ -51,19 +52,20 @@ class UriResolverWrapper(private val implementationUri: Uri) : ResolverWithHisto
         resolutionContext: UriResolutionContext
     ): Result<MaybeUriOrManifest> {
         val subContext = resolutionContext.createSubContext()
-        val result = loadResolverExtension(uri, implementationUri, client, subContext)
+        val loadExtensionResult = loadResolverExtension(uri, implementationUri, client, subContext)
 
-        if (result.isFailure) {
-            return Result.failure(result.exceptionOrNull()!!)
+        if (loadExtensionResult.isFailure) {
+            return Result.failure(loadExtensionResult.exceptionOrNull()!!)
         }
 
-        val extensionWrapper = result.getOrThrow()
+        val extensionWrapper = loadExtensionResult.getOrThrow()
 
         val env = getEnvFromUriHistory(subContext.getResolutionPath(), client)
+        val encodedEnv = env?.let { msgPackEncode(serializer(), env.env) }
 
-        return client.invokeWrapper<MaybeUriOrManifest>(
+        val result = client.invokeWrapper(
             wrapper = extensionWrapper,
-            InvokeOptions(
+            options = InvokeOptions(
                 uri = implementationUri,
                 method = "tryResolveUri",
                 args = msgPackEncode(
@@ -72,9 +74,13 @@ class UriResolverWrapper(private val implementationUri: Uri) : ResolverWithHisto
                         "path" to uri.path
                     )
                 ),
-                env = if (env != null) msgPackEncode(env.env) else null
-            )
+                env = encodedEnv
+            ),
         ).await()
+        if (result.isFailure) {
+            return Result.failure(result.exceptionOrNull()!!)
+        }
+        return msgPackDecode(serializer(), result.getOrThrow())
     }
 
     private suspend fun loadResolverExtension(

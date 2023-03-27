@@ -3,28 +3,27 @@ package eth.krisbitney.polywrap.wasm.runtime
 
 import eth.krisbitney.polywrap.externals.AsyncWasmInstance
 import kotlinx.coroutines.await
+import kotlin.js.Json
 
 actual object WasmInstanceFactory {
     actual fun createInstance(module: ByteArray, state: WasmModuleState): WasmInstance = WasmInstanceJs(module, state)
 }
 
-const val REQUIRED_EXPORT: String = "_wrap_invoke"
-
 class WasmInstanceJs(module: ByteArray, state: WasmModuleState) : WasmInstance(module, state) {
 
+    val REQUIRED_EXPORT: String = "_wrap_invoke"
+
     override suspend fun invoke(method: String, args: ByteArray, env: ByteArray?): Result<ByteArray> {
-        val memory = AsyncWasmInstance.createMemory(object {
-            val module: ByteArray = this@WasmInstanceJs.module
+        val memory = AsyncWasmInstance.createMemory(object : AsyncWasmInstance.createMemoryArgs {
+            override var module = this@WasmInstanceJs.module
         })
-        val importsFactory = WrapImportsFactoryJs(state, memory.buffer.unsafeCast<ByteArray>())
-        val imports = importsFactory.get()
-        val instance = AsyncWasmInstance.createInstance(object {
-            val module: ByteArray = this@WasmInstanceJs.module
-            val imports = imports
-            val requiredExports = arrayOf(REQUIRED_EXPORT)
+        val wrapImports = WrapImportsFactoryJs.get(state, memory)
+        val instance = AsyncWasmInstance.createInstance(object : AsyncWasmInstance.createInstanceArgs {
+            override var module = this@WasmInstanceJs.module
+            override var imports: Json = wrapImports
+            override var requiredExports: List<String>? = listOf(REQUIRED_EXPORT)
         }).await()
-        val exports = instance.exports as WrapExports
-        val isSuccess = exports._wrap_invoke(method.length, args.size, env?.size ?: 0)
+        val isSuccess = instance.exports._wrap_invoke(method.length, args.size, env?.size ?: 0).await()
         return processResult(isSuccess == 1)
     }
 }

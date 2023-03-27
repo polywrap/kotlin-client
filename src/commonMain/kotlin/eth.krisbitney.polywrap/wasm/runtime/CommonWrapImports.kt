@@ -11,7 +11,7 @@ import eth.krisbitney.polywrap.msgpack.msgPackEncode
  * @property memory The memory to be used by the WebAssembly module.
  * @constructor Creates an instance of [WrapImports] with the specified [state] and [memory].
  */
-open class CommonWrapImports(private val state: WasmModuleState, private val memory: ByteArray) : WrapImports {
+class CommonWrapImports(private val state: WasmModuleState, private val memory: ByteArray) : WrapImports {
 
     override suspend fun __wrap_subinvoke(uriPtr: Int, uriLen: Int, methodPtr: Int, methodLen: Int, argsPtr: Int, argsLen: Int): Int {
         state.subinvoke.result = null

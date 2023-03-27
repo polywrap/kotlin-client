@@ -14,8 +14,7 @@ class WasmInstanceJvm(module: ByteArray, state: WasmModuleState) : WasmInstance(
         val store: Store<WasmModuleState> = Store(state, engine)
         val memory: Memory = createMemory(store, module).getOrThrow()
         val wasmTimeModule: Module = Module.fromBinary(engine, module)
-        val importsFactory = WrapImportsFactoryJvm(store.data(), memory.buffer(store).array())
-        val imports = importsFactory.get(store)
+        val imports = WrapImportsFactoryJvm.get(store, memory.buffer(store).array())
         val instance = Instance(store, wasmTimeModule, imports)
         instance.use {
             val func = instance.getFunc(store, "_wrap_invoke").get()

@@ -10,8 +10,7 @@ class PluginWrapper<TConfig>(val module: PluginModule<TConfig>) : Wrapper {
     override suspend fun invoke(options: InvokeOptions, invoker: Invoker): Deferred<InvokeResult<ByteArray>> = coroutineScope {
         async {
             val (uri, method, args, env, _) = options
-
-            if (module.getMethod(method) == null) {
+            if (module.methods[method] == null) {
                 val error = WrapError(
                     reason = "Plugin missing method \"$method\"",
                     code = WrapErrorCode.WRAPPER_METHOD_NOT_FOUND,

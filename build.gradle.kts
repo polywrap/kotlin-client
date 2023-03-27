@@ -41,30 +41,37 @@ kotlin {
                 implementation("com.ensarsarajcic.kotlinx:serialization-msgpack:0.5.4")
                 implementation("com.ensarsarajcic.kotlinx:serialization-msgpack-unsigned-support:0.5.4")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
-                implementation("com.squareup.okio:okio:3.3.0")
+                implementation("com.squareup.okio:okio:3.3.0") // fs plugin
+                implementation("io.ktor:ktor-client-core:2.2.4") // http plugin
             }
         }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
-                implementation("com.goncalossilva:resources:0.2.5")
+                implementation("com.goncalossilva:resources:0.2.5") // access resources in tests
             }
         }
         val jvmMain by getting {
             dependencies {
                 implementation("io.github.kawamuray.wasmtime:wasmtime-java:0.14.0")
+                implementation("io.ktor:ktor-client-cio:2.2.4") // http plugin
             }
         }
         val jvmTest by getting
         val jsMain by getting {
             dependencies {
-                implementation("com.squareup.okio:okio-nodefilesystem:3.3.0")
                 implementation(npm("@polywrap/asyncify-js", "~0.10.0-pre"))
+                implementation("io.ktor:ktor-client-js:2.2.4") // http plugin
+                implementation("com.squareup.okio:okio-nodefilesystem:3.3.0") // fs plugin
             }
         }
         val jsTest by getting
-        val nativeMain by getting
+        val nativeMain by getting {
+            dependencies {
+                implementation("io.ktor:ktor-client-cio:2.2.4") // http plugin
+            }
+        }
         val nativeTest by getting
     }
 }

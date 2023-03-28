@@ -50,6 +50,7 @@ kotlin {
                 implementation(kotlin("test"))
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
                 implementation("com.goncalossilva:resources:0.2.5") // access resources in tests
+                implementation("io.ktor:ktor-client-mock:2.2.4") // http plugin test
             }
         }
         val jvmMain by getting {

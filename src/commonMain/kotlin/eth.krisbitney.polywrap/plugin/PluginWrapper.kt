@@ -7,7 +7,7 @@ import kotlinx.coroutines.coroutineScope
 
 class PluginWrapper<TConfig>(val module: PluginModule<TConfig>) : Wrapper {
 
-    override suspend fun invoke(options: InvokeOptions, invoker: Invoker): Deferred<InvokeResult<ByteArray>> = coroutineScope {
+    override suspend fun invoke(options: InvokeOptions, invoker: Invoker): Deferred<Result<ByteArray>> = coroutineScope {
         async {
             val (uri, method, args, env, _) = options
             if (module.methods[method] == null) {

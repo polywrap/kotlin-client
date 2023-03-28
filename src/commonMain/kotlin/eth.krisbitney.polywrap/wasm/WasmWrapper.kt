@@ -9,7 +9,7 @@ import kotlinx.coroutines.coroutineScope
 
 data class WasmWrapper(val wasmModule: ByteArray) : Wrapper {
 
-    override suspend fun invoke(options: InvokeOptions, invoker: Invoker): Deferred<InvokeResult<ByteArray>> = coroutineScope {
+    override suspend fun invoke(options: InvokeOptions, invoker: Invoker): Deferred<Result<ByteArray>> = coroutineScope {
         async {
             val (_, method, args, env, _) = options
             val (abortWithInvokeAborted, abortWithInternalError) = createAborts(options)

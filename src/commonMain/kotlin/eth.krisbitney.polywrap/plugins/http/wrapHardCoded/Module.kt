@@ -9,11 +9,6 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.serializer
 
 @Serializable
-data class Env(
-    val url: String,
-)
-
-@Serializable
 data class ArgsGet(
     val url: String,
     val request: HttpRequest? = null
@@ -27,7 +22,7 @@ data class ArgsPost(
 
 abstract class Module<TConfig>(config: TConfig) : PluginModule<TConfig>(config) {
 
-    override val methods: Map<String, PluginMethod> = mapOf(
+    final override val methods: Map<String, PluginMethod> = mapOf(
         "get" to ::__get,
         "post" to ::__post
     )

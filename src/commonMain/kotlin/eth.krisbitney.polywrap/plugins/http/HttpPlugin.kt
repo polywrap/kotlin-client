@@ -87,6 +87,6 @@ class HttpPlugin(config: Config? = null) : Module<HttpPlugin.Config?>(config) {
 val httpPlugin: PluginFactory<HttpPlugin.Config?> = { config: HttpPlugin.Config? ->
     PluginPackage(
         pluginModule = HttpPlugin(config),
-        manifest = mockManifest
+        manifest = manifest
     )
 }

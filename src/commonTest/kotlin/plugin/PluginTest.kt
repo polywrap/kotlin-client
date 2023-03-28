@@ -1,31 +1,38 @@
-package wasm
+package plugin
 
 import emptyMockInvoker
 import eth.krisbitney.polywrap.core.resolution.Uri
 import eth.krisbitney.polywrap.core.types.InvokeOptions
 import eth.krisbitney.polywrap.msgpack.msgPackDecode
 import eth.krisbitney.polywrap.msgpack.msgPackEncode
-import eth.krisbitney.polywrap.wasm.WasmWrapper
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import readTestResource
-import kotlin.test.*
+import mockPlugin
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
-class WasmWrapperTest {
+class PluginPackageTest {
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun createWrapper() = runTest {
+        val pluginPackage = mockPlugin(null)
+        val result = pluginPackage.createWrapper()
+        assertTrue(result.isSuccess)
+    }
+}
 
-    private val wrapperPath = "wrappers/numbers-type/implementations/as"
-    private val modulePath = "$wrapperPath/wrap.wasm"
+class PluginWrapperTest {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun canInvokeWrapper() = runTest {
-        val wasmModule: ByteArray = readTestResource(modulePath).getOrThrow()
-        val wrapper = WasmWrapper(wasmModule)
+        val wrapper = mockPlugin(null).createWrapper().getOrThrow()
 
         val invocation = InvokeOptions(
-            uri = Uri("wrap://ens/WasmWrapperTest/canInvokeWrapper"),
-            method = "i32Method",
-            args = msgPackEncode(mapOf("first" to 1, "second" to 2)),
+            uri = Uri("wrap://plugin/mock"),
+            method = "add",
+            args = msgPackEncode(mapOf("num" to 1, "ber" to 2)),
         )
 
         val result = wrapper.invoke(invocation, emptyMockInvoker).await()

@@ -16,8 +16,20 @@ import io.ktor.util.*
 // TODO: I would like to re-use the same HttpClient instance for all requests,
 //  but I need to somehow close it when the plugin is unloaded.
 
+/**
+ * A plugin for making HTTP requests.
+ *
+ * @property config An optional configuration object for the plugin.
+ */
 class HttpPlugin(config: Config? = null) : Module<HttpPlugin.Config?>(config) {
 
+    /**
+     * Configuration class for HttpPlugin.
+     *
+     * @property httpClient An optional custom Ktor HttpClient instance to be used by the plugin.
+     * If not provided, a new instance will be created for each request.
+     * The plugin will not automatically close the custom client if it is provided.
+     */
     class Config(val httpClient: HttpClient? = null)
 
     override suspend fun get(args: ArgsGet, invoker: Invoker): HttpResponse? {

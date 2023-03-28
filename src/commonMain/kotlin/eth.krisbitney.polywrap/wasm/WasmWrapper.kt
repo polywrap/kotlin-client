@@ -7,8 +7,20 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 
+/**
+ * Represents a WebAssembly (Wasm) wrapper for executing Wasm code.
+ *
+ * @property wasmModule The WebAssembly module as a ByteArray.
+ */
 data class WasmWrapper(val wasmModule: ByteArray) : Wrapper {
 
+    /**
+     * Invokes a method in the WebAssembly module with the specified options and invoker.
+     *
+     * @param options The options for invoking the method.
+     * @param invoker The invoker instance.
+     * @return A [Deferred] [Result] containing the result as a [ByteArray] on success, or an error if one occurs.
+     */
     override suspend fun invoke(options: InvokeOptions, invoker: Invoker): Deferred<Result<ByteArray>> = coroutineScope {
         async {
             val (_, method, args, env, _) = options
@@ -26,6 +38,12 @@ data class WasmWrapper(val wasmModule: ByteArray) : Wrapper {
         }
     }
 
+    /**
+     * Creates abort functions for handling errors during method invocation.
+     *
+     * @param options The options for invoking the method.
+     * @return A pair of abort functions for handling invocation-aborted errors and internal errors.
+     */
     private fun createAborts(options: InvokeOptions): Pair<(String, ErrorSource?) -> Nothing, (String) -> Nothing> {
         val abortWithInvokeAborted: (String, ErrorSource?) -> Nothing = { message, source ->
             val prev = WrapError.parse(message)

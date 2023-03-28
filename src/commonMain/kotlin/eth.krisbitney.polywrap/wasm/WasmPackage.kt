@@ -47,7 +47,7 @@ data class WasmPackage(private val fileReader: FileReader) : WrapPackage {
     }
 
     /**
-     * Produce an instance of the package's Wasm wrapper
+     * Construct an instance of the package's Wasm Wrapper
      *
      * @return A [WasmWrapper] instance
      */
@@ -61,10 +61,10 @@ data class WasmPackage(private val fileReader: FileReader) : WrapPackage {
     }
 
     /**
-     * Get a file from the Wrapper package.
+     * Retrieves the file at the specified path within the Wrap package.
      *
      * @param path The path to the file.
-     * @return The result of the file retrieval.
+     * @return A [ByteArray] containing the file contents
      */
     override suspend fun getFile(path: String): Deferred<Result<ByteArray>> = coroutineScope {
         async {

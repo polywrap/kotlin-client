@@ -5,8 +5,21 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 
-class PluginWrapper<TConfig>(val module: PluginModule<TConfig>) : Wrapper {
+/**
+ * Represents a plugin wrapper, allowing the plugin module to be invoked as a [Wrapper].
+ *
+ * @param TConfig The type of the configuration object used by the plugin module.
+ * @property module The plugin module instance associated with the wrapper.
+ */
+data class PluginWrapper<TConfig>(val module: PluginModule<TConfig>) : Wrapper {
 
+    /**
+     * Invokes a method in the plugin module with the specified options and invoker.
+     *
+     * @param options The options for invoking the method.
+     * @param invoker The invoker instance.
+     * @return A [Deferred] [Result] containing the result as a [ByteArray] on success, or an error if one occurs.
+     */
     override suspend fun invoke(options: InvokeOptions, invoker: Invoker): Deferred<Result<ByteArray>> = coroutineScope {
         async {
             val (uri, method, args, env, _) = options

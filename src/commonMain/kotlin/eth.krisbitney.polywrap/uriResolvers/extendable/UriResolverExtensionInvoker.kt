@@ -28,13 +28,13 @@ object UriResolverExtensionInvoker {
                 InvokeOptions(
                     uri = wrapper,
                     method = "tryResolveUri",
-                    args = msgPackEncode(mapOf("authority" to uri.authority, "path" to uri.path))
+                    args = msgPackEncode(serializer(), mapOf("authority" to uri.authority, "path" to uri.path))
                 )
             ).await()
             if (result.isFailure) {
                 Result.failure<MaybeUriOrManifest>(result.exceptionOrNull()!!)
             }
-            msgPackDecode(serializer(), result.getOrThrow())
+            msgPackDecode(MaybeUriOrManifest.serializer(), result.getOrThrow())
         }
     }
 
@@ -55,7 +55,7 @@ object UriResolverExtensionInvoker {
                 InvokeOptions(
                     uri = wrapper,
                     method = "getFile",
-                    args = msgPackEncode(mapOf("path" to path))
+                    args = msgPackEncode(serializer(), mapOf("path" to path))
                 )
             ).await()
             if (result.isFailure) {

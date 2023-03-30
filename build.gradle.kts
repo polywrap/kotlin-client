@@ -77,6 +77,7 @@ kotlin {
     }
 }
 
+// print stdout during tests
 tasks.withType<Test> {
     this.testLogging {
         this.showStandardStreams = true

@@ -42,7 +42,8 @@ abstract class UriResolverAggregator : UriResolver {
         for (resolver in resolvers) {
             val result = resolver.tryResolveUri(uri, client, subContext, resolveToPackage)
             val resultVal = result.getOrNull()
-            if (!(resultVal is UriPackageOrWrapper.UriValue && resultVal.uri == uri)) {
+            val isUri = resultVal is UriPackageOrWrapper.UriValue && resultVal.uri == uri
+            if (!isUri) {
                 resolutionContext.trackStep(
                     UriResolutionStep(
                         sourceUri = uri,

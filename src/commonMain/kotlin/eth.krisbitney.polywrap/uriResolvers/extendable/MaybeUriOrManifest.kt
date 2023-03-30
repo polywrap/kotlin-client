@@ -1,10 +1,13 @@
 package eth.krisbitney.polywrap.uriResolvers.extendable
 
+import kotlinx.serialization.Serializable
+
 /**
  * Data class representing a Uri, a manifest, or neither.
  * @property uri the Wrap Uri associated with the resource, or null if the resource is not a Uri.
  * @property manifest the serialized Wrap manifest associated with the resource, or null if there is no manifest.
  */
+@Serializable
 data class MaybeUriOrManifest(
     val uri: String?,
     val manifest: ByteArray?

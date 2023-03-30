@@ -1,8 +1,8 @@
 package core
 
 import eth.krisbitney.polywrap.core.resolution.*
-import eth.krisbitney.polywrap.core.types.InterfaceImplementations
 import eth.krisbitney.polywrap.core.resolution.algorithms.getImplementations
+import eth.krisbitney.polywrap.uriResolvers.embedded.UriRedirect
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
@@ -18,9 +18,9 @@ class GetImplementationsTest {
                     var currentUri = uri
                     val result: UriPackageOrWrapper
                     while (true) {
-                        val redirect = redirects.find { it.from.uri == currentUri.uri }
+                        val redirect = redirects.find { it.first.uri == currentUri.uri }
                         if (redirect != null) {
-                            currentUri = redirect.to
+                            currentUri = redirect.second
                         } else {
                             result = UriPackageOrWrapper.UriValue(currentUri)
                             break
@@ -49,19 +49,10 @@ class GetImplementationsTest {
             UriRedirect(Uri(implementation2Uri), Uri(implementation3Uri))
         )
 
-        val interfaces = listOf(
-            InterfaceImplementations(
-                Uri(interface1Uri),
-                listOf(Uri(implementation1Uri), Uri(implementation2Uri))
-            ),
-            InterfaceImplementations(
-                Uri(interface2Uri),
-                listOf(Uri(implementation3Uri))
-            ),
-            InterfaceImplementations(
-                Uri(interface3Uri),
-                listOf(Uri(implementation3Uri))
-            )
+        val interfaces = mapOf(
+            Uri(interface1Uri) to listOf(Uri(implementation1Uri), Uri(implementation2Uri)),
+            Uri(interface2Uri) to listOf(Uri(implementation3Uri)),
+            Uri(interface3Uri) to listOf(Uri(implementation3Uri))
         )
 
         val getImplementationsResult1 = getImplementations(
@@ -120,11 +111,8 @@ class GetImplementationsTest {
             UriRedirect(Uri(implementation1Uri), Uri(implementation2Uri))
         )
 
-        val interfaces = listOf(
-            InterfaceImplementations(
-                Uri(interface1Uri),
-                listOf(Uri(implementation1Uri))
-            )
+        val interfaces = mapOf(
+            Uri(interface1Uri) to listOf(Uri(implementation1Uri))
         )
 
         val result = getImplementations(

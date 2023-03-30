@@ -9,12 +9,16 @@ import eth.krisbitney.polywrap.uriResolvers.UriResolverAggregator
 class ExtendableUriResolver(
     private val extInterfaceUris: List<Uri> = defaultExtInterfaceUris,
 ) : UriResolverAggregator() {
-    private val resolverName = "ExtendableUriResolver"
+
     companion object {
         val defaultExtInterfaceUris: List<Uri> = listOf(
             Uri("wrap://ens/wraps.eth:uri-resolver-ext@1.1.0"),
             Uri("wrap://ens/wraps.eth:uri-resolver-ext@1.0.0")
         )
+    }
+
+    override fun getStepDescription(uri: Uri, result: Result<UriPackageOrWrapper>): String {
+        return "ExtendableUriResolver"
     }
 
     override suspend fun getUriResolvers(
@@ -63,6 +67,4 @@ class ExtendableUriResolver(
 
         return super.tryResolveUriWithResolvers(uri, client, resolvers, resolutionContext, resolveToPackage)
     }
-
-    override fun getStepDescription(uri: Uri, result: Result<UriPackageOrWrapper>): String = resolverName
 }

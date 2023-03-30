@@ -2,6 +2,8 @@ package eth.krisbitney.polywrap.uriResolvers.embedded
 
 import eth.krisbitney.polywrap.core.resolution.*
 import eth.krisbitney.polywrap.core.types.Client
+import eth.krisbitney.polywrap.core.types.WrapPackage
+import eth.krisbitney.polywrap.core.types.Wrapper
 
 /**
  * A class that implements [UriResolver] using a predefined map of URIs to [UriPackageOrWrapper]s.
@@ -13,31 +15,25 @@ class StaticResolver(val uriMap: Map<String, UriPackageOrWrapper>) : UriResolver
     companion object {
 
         /**
-         * Creates a new [StaticResolver] instance from a list of [StaticResolverLike] objects.
+         * Creates a new [StaticResolver] instance from a list of Pair<Uri, Any> objects.
          *
-         * @param staticResolverLikes A list of [StaticResolverLike] objects to build the [StaticResolver].
+         * @param staticResolverLikes A list of Pair<Uri, Any> objects to build the [StaticResolver].
+         * The [Uri] is the URI to resolve, and the [Any] is either a [Uri], [WrapPackage], or [Wrapper].
          * @return A new [StaticResolver] instance with the specified URIs and corresponding [UriPackageOrWrapper]s.
          */
-        fun from(staticResolverLikes: List<StaticResolverLike>): StaticResolver {
+        fun from(staticResolverLikes: List<Pair<Uri, Any>>): StaticResolver {
             val uriMap = mutableMapOf<String, UriPackageOrWrapper>()
             for (staticResolverLike in staticResolverLikes) {
-                when (staticResolverLike) {
-                    is StaticResolverLike.UriRedirectValue -> {
-                        val from = staticResolverLike.redirect.from
-                        val to = staticResolverLike.redirect.to
-                        uriMap[from.uri] = UriPackageOrWrapper.UriValue(to)
+                val uri = staticResolverLike.first
+                when (val item = staticResolverLike.second) {
+                    is Uri -> {
+                        uriMap[uri.uri] = UriPackageOrWrapper.UriValue(item)
                     }
-
-                    is StaticResolverLike.PackageRedirectValue -> {
-                        val uri = staticResolverLike.pkg.uri
-                        val pkg = staticResolverLike.pkg.pkg
-                        uriMap[uri.uri] = UriPackageOrWrapper.PackageValue(uri, pkg)
+                    is WrapPackage -> {
+                        uriMap[uri.uri] = UriPackageOrWrapper.PackageValue(uri, item)
                     }
-
-                    is StaticResolverLike.WrapperRedirectValue -> {
-                        val uri = staticResolverLike.wrapper.uri
-                        val wrapper = staticResolverLike.wrapper.wrapper
-                        uriMap[uri.uri] = UriPackageOrWrapper.WrapperValue(uri, wrapper)
+                    is Wrapper -> {
+                        uriMap[uri.uri] = UriPackageOrWrapper.WrapperValue(uri, item)
                     }
                 }
             }

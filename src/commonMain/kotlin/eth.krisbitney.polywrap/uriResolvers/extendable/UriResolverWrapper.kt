@@ -61,7 +61,7 @@ class UriResolverWrapper(private val implementationUri: Uri) : ResolverWithHisto
         val extensionWrapper = loadExtensionResult.getOrThrow()
 
         val env = getEnvFromUriHistory(subContext.getResolutionPath(), client)
-        val encodedEnv = env?.let { msgPackEncode(serializer(), env.env) }
+        val encodedEnv = env?.let { msgPackEncode(serializer(), env) }
 
         val result = client.invokeWrapper(
             wrapper = extensionWrapper,
@@ -69,6 +69,7 @@ class UriResolverWrapper(private val implementationUri: Uri) : ResolverWithHisto
                 uri = implementationUri,
                 method = "tryResolveUri",
                 args = msgPackEncode(
+                    serializer(),
                     mapOf(
                         "authority" to uri.authority,
                         "path" to uri.path

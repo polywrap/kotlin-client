@@ -4,6 +4,7 @@ import eth.krisbitney.polywrap.core.resolution.Uri
 import eth.krisbitney.polywrap.core.types.ErrorSource
 import eth.krisbitney.polywrap.core.types.InvokeOptions
 import eth.krisbitney.polywrap.msgpack.msgPackEncode
+import kotlinx.serialization.serializer
 
 /**
  * A class for wrapping imports for a WebAssembly module.
@@ -86,7 +87,7 @@ class CommonWrapImports(private val state: WasmModuleState, private val memory: 
             state.abortWithInternalError(result.exceptionOrNull().toString())
         }
         val implementations = result.getOrThrow().map { it.uri }
-        state.getImplementationsResult = msgPackEncode(implementations)
+        state.getImplementationsResult = msgPackEncode(serializer(), implementations)
         return if (implementations.isNotEmpty()) 1 else 0
     }
 

@@ -2,8 +2,6 @@ package eth.krisbitney.polywrap.uriResolvers.cache
 
 import eth.krisbitney.polywrap.core.resolution.*
 import eth.krisbitney.polywrap.core.types.*
-import eth.krisbitney.polywrap.uriResolvers.UriResolverFactory
-import eth.krisbitney.polywrap.uriResolvers.UriResolverLike
 import kotlinx.coroutines.sync.Mutex
 
 /**
@@ -18,39 +16,6 @@ class SynchronizedCacheResolver(
 ) : UriResolver {
 
     private val locks = mutableMapOf<Uri, Mutex>()
-
-    companion object {
-        /**
-         * Creates a [SynchronizedCacheResolver] instance with the given resolver and cache.
-         *
-         * @param resolver The resolver to use for creating the SynchronizedCacheResolver instance.
-         * @param cache The cache to use for storing and retrieving resolved URIs.
-         * @return A new SynchronizedCacheResolver instance.
-         */
-        fun from(resolver: UriResolverLike, cache: WrapperCache): SynchronizedCacheResolver {
-            return SynchronizedCacheResolver(UriResolverFactory.from(resolver), cache)
-        }
-    }
-
-    /**
-     * Checks if the given URI is cached.
-     *
-     * @param uri The URI to check.
-     * @return `true` if the URI is cached, `false` otherwise.
-     */
-    fun isCached(uri: Uri): Boolean {
-        return cache.get(uri) != null
-    }
-
-    /**
-     * Checks if the given URI is locked.
-     *
-     * @param uri The URI to check.
-     * @return `true` if the URI is locked, `false` otherwise.
-     */
-    fun isLocked(uri: Uri): Boolean {
-        return locks.containsKey(uri)
-    }
 
     /**
      * Tries to resolve the given URI using a cache and returns the result.

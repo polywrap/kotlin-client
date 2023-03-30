@@ -6,6 +6,9 @@ import eth.krisbitney.polywrap.core.resolution.UriResolver
 import eth.krisbitney.polywrap.core.resolution.UriResolutionHandler
 import kotlinx.coroutines.Deferred
 
+/** A map of string-indexed, Msgpack-serializable environmental variables associated with a wrapper */
+typealias WrapperEnv = Map<String, Any>
+
 /**
  * Core Client configuration that can be passed to the PolywrapClient or PolywrapCoreClient constructors.
  * @property resolver configure URI resolution for redirects, packages, and wrappers
@@ -14,8 +17,8 @@ import kotlinx.coroutines.Deferred
  */
 data class ClientConfig(
     val resolver: UriResolver,
-    val interfaces: List<InterfaceImplementations>? = null,
-    val envs: List<Env>? = null,
+    val interfaces: Map<Uri, List<Uri>>? = null,
+    val envs: Map<Uri, WrapperEnv>? = null,
 )
 
 /**
@@ -27,13 +30,13 @@ interface Client : Invoker, UriResolutionHandler {
      * Returns all interfaces from the configuration used to instantiate the client.
      * @return an array of interfaces and their registered implementations
      */
-    fun getInterfaces(): List<InterfaceImplementations>?
+    fun getInterfaces(): Map<Uri, List<Uri>>?
 
     /**
      * Returns all env registrations from the configuration used to instantiate the client.
      * @return an array of env objects containing wrapper environmental variables
      */
-    fun getEnvs(): List<Env>?
+    fun getEnvs(): Map<Uri, WrapperEnv>?
 
     /**
      * Returns an env (a set of environmental variables) from the configuration
@@ -41,7 +44,7 @@ interface Client : Invoker, UriResolutionHandler {
      * @param uri the URI used to register the env
      * @return an env, or undefined if an env is not found at the given URI
      */
-    fun getEnvByUri(uri: Uri): Env?
+    fun getEnvByUri(uri: Uri): WrapperEnv?
 
     /**
      * Returns the URI resolver from the configuration used to instantiate the client.

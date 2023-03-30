@@ -16,11 +16,11 @@ import kotlinx.serialization.serializer
 
 class PolywrapClient(val config: ClientConfig) : Client {
 
-    override fun getInterfaces(): List<InterfaceImplementations>? {
+    override fun getInterfaces(): Map<Uri, List<Uri>>? {
         return config.interfaces
     }
 
-    override fun getEnvs(): List<Env>? {
+    override fun getEnvs(): Map<Uri, WrapperEnv>? {
         return config.envs
     }
 
@@ -28,10 +28,10 @@ class PolywrapClient(val config: ClientConfig) : Client {
         return config.resolver
     }
 
-    override fun getEnvByUri(uri: Uri): Env? {
+    override fun getEnvByUri(uri: Uri): WrapperEnv? {
         config.envs?.forEach { env ->
-            if (env.uri == uri) {
-                return env
+            if (env.key == uri) {
+                return env.value
             }
         }
         return null
@@ -93,7 +93,7 @@ class PolywrapClient(val config: ClientConfig) : Client {
         async {
             getImplementationsFromUri(
                 uri,
-                getInterfaces() ?: listOf(),
+                getInterfaces() ?: mapOf(),
                 if (applyResolution) this@PolywrapClient else null,
                 resolutionContext
             )
@@ -127,6 +127,7 @@ class PolywrapClient(val config: ClientConfig) : Client {
         }
     }
 
+    // TODO: rename to something better or change signature
     suspend inline fun <reified R> invokeWrapperInline(
         wrapper: Wrapper,
         options: InvokeOptions,
@@ -157,7 +158,7 @@ class PolywrapClient(val config: ClientConfig) : Client {
                 this@PolywrapClient
             )
 
-            val encodedEnv = env?.let { msgPackEncode(serializer(), env.env) }
+            val encodedEnv = env?.let { msgPackEncode(serializer(), env) }
 
             invokeWrapper(wrapper, options.copy(env = encodedEnv)).await()
         }
@@ -173,6 +174,7 @@ class PolywrapClient(val config: ClientConfig) : Client {
         }
     }
 
+    // TODO: rename to something better or change signature
     suspend inline fun <reified R> invokeInline(options: InvokeOptions): Deferred<InvokeResult<R>> = coroutineScope {
         async {
             val result = invoke(options).await()

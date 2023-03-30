@@ -15,21 +15,6 @@ import eth.krisbitney.polywrap.uriResolvers.util.InfiniteLoopException
 class RecursiveResolver(private val resolver: UriResolver) : UriResolver {
 
     /**
-     * Companion object that provides a factory method for creating [RecursiveResolver] instances.
-     */
-    companion object {
-        /**
-         * Creates a [RecursiveResolver] instance from a [UriResolverLike] type.
-         *
-         * @param resolver The [UriResolverLike] instance to be used for creating a [RecursiveResolver].
-         * @return A [RecursiveResolver] instance.
-         */
-        fun from(resolver: UriResolverLike): RecursiveResolver {
-            return RecursiveResolver(UriResolverFactory.from(resolver))
-        }
-    }
-
-    /**
      * Tries to resolve the given [Uri] recursively by trying to resolve it again if a redirect to another [Uri] occurs.
      *
      * @param uri The [Uri] to resolve.

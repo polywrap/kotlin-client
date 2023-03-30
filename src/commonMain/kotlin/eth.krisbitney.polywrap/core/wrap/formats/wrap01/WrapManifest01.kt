@@ -30,7 +30,7 @@ data class WrapManifest01(
      * Serializes the manifest to a [ByteArray] in MessagePack format.
      * @return the serialized manifest as a [ByteArray].
      */
-    fun serialize(): ByteArray = msgPackEncode(this)
+    fun serialize(): ByteArray = msgPackEncode(serializer(), this)
 
     companion object {
         /**
@@ -38,7 +38,7 @@ data class WrapManifest01(
          * @param manifest a [WrapManifest01]
          * @return the serialized manifest as a [ByteArray].
          */
-        fun serialize(manifest: WrapManifest01): ByteArray = msgPackEncode(manifest)
+        fun serialize(manifest: WrapManifest01): ByteArray = msgPackEncode(serializer(), manifest)
 
         /**
          * Deserializes a given [manifest] represented as a [ByteArray] to a [WrapManifest01] object.
@@ -47,7 +47,7 @@ data class WrapManifest01(
          * @throws Error if the given manifest is not a valid WrapManifest or if it's unable to be parsed.
          */
         fun deserialize(manifest: ByteArray): Result<WrapManifest01> {
-            val result: Result<WrapManifest01> = msgPackDecode(manifest)
+            val result: Result<WrapManifest01> = msgPackDecode(serializer(), manifest)
             if (result.isFailure) {
                 val err = result.exceptionOrNull()
                 val message = "Unable to parse WrapManifest: ${err?.message}"

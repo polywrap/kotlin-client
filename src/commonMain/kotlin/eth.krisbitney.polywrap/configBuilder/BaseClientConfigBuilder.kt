@@ -3,11 +3,10 @@ package eth.krisbitney.polywrap.configBuilder
 import eth.krisbitney.polywrap.core.resolution.Uri
 import eth.krisbitney.polywrap.core.resolution.UriResolver
 import eth.krisbitney.polywrap.core.types.ClientConfig
+import eth.krisbitney.polywrap.core.types.WrapPackage
+import eth.krisbitney.polywrap.core.types.Wrapper
 import eth.krisbitney.polywrap.core.types.WrapperEnv
 import eth.krisbitney.polywrap.uriResolvers.cache.WrapperCache
-import eth.krisbitney.polywrap.uriResolvers.embedded.PackageRedirect
-import eth.krisbitney.polywrap.uriResolvers.embedded.UriRedirect
-import eth.krisbitney.polywrap.uriResolvers.embedded.WrapperRedirect
 import kotlin.collections.Map
 
 abstract class BaseClientConfigBuilder : IClientConfigBuilder {
@@ -27,54 +26,54 @@ abstract class BaseClientConfigBuilder : IClientConfigBuilder {
 
     override fun add(config: BuilderConfig): IClientConfigBuilder = this.apply {
         addEnvs(config.envs)
-        config.redirects.forEach { addRedirect(Uri(it.key) to Uri(it.value)) }
-        config.wrappers.forEach { addWrapper(Uri(it.key) to it.value) }
-        config.packages.forEach { addPackage(Uri(it.key) to it.value) }
+        config.redirects.forEach { addRedirect(it.toPair()) }
+        config.wrappers.forEach { addWrapper(it.toPair()) }
+        config.packages.forEach { addPackage(it.toPair()) }
         config.interfaces.forEach { (interfaceUri, implementations) ->
             addInterfaceImplementations(interfaceUri, implementations.toList())
         }
         addResolvers(config.resolvers)
     }
 
-    override fun addWrapper(wrapper: WrapperRedirect): IClientConfigBuilder = this.apply {
-        config.wrappers[wrapper.first.uri] = wrapper.second
+    override fun addWrapper(wrapper: Pair<String, Wrapper>): IClientConfigBuilder = this.apply {
+        config.wrappers[Uri(wrapper.first).uri] = wrapper.second
     }
 
-    override fun addWrappers(wrappers: List<WrapperRedirect>): IClientConfigBuilder = this.apply {
-        wrappers.forEach { addWrapper(it) }
+    override fun addWrappers(wrappers: Map<String, Wrapper>): IClientConfigBuilder = this.apply {
+        wrappers.forEach { addWrapper(it.toPair()) }
     }
 
     override fun removeWrapper(uri: String): IClientConfigBuilder = this.apply {
         config.wrappers.remove(Uri(uri).uri)
     }
 
-    override fun addPackage(pkg: PackageRedirect): IClientConfigBuilder = this.apply {
-        config.packages[pkg.first.uri] = pkg.second
+    override fun addPackage(wrapPackage: Pair<String, WrapPackage>): IClientConfigBuilder = this.apply {
+        config.packages[Uri(wrapPackage.first).uri] = wrapPackage.second
     }
 
-    override fun addPackages(packages: List<PackageRedirect>): IClientConfigBuilder = this.apply {
-        packages.forEach { addPackage(it) }
+    override fun addPackages(packages: Map<String, WrapPackage>): IClientConfigBuilder = this.apply {
+        packages.forEach { addPackage(it.toPair()) }
     }
 
     override fun removePackage(uri: String): IClientConfigBuilder = this.apply {
         config.packages.remove(Uri(uri).uri)
     }
 
-    override fun addEnv(uri: String, env: WrapperEnv): IClientConfigBuilder = this.apply {
-        val sanitizedUri = Uri(uri).uri
-        config.envs[sanitizedUri] = (config.envs[sanitizedUri] ?: emptyMap()) + env
+    override fun addEnv(env: Pair<String, WrapperEnv>): IClientConfigBuilder = this.apply {
+        val sanitizedUri = Uri(env.first).uri
+        config.envs[sanitizedUri] = (config.envs[sanitizedUri] ?: emptyMap()) + env.second
     }
 
     override fun addEnvs(envs: Map<String, WrapperEnv>): IClientConfigBuilder = this.apply {
-        envs.forEach { (uri, env) -> addEnv(uri, env) }
+        envs.forEach { env -> addEnv(env.toPair()) }
     }
 
     override fun removeEnv(uri: String): IClientConfigBuilder = this.apply {
         config.envs.remove(Uri(uri).uri)
     }
 
-    override fun setEnv(uri: String, env: WrapperEnv): IClientConfigBuilder = this.apply {
-        config.envs[Uri(uri).uri] = env
+    override fun setEnv(env: Pair<String, WrapperEnv>): IClientConfigBuilder = this.apply {
+        config.envs[Uri(env.first).uri] = env.second
     }
 
     override fun addInterfaceImplementation(
@@ -120,12 +119,12 @@ abstract class BaseClientConfigBuilder : IClientConfigBuilder {
         }
     }
 
-    override fun addRedirect(redirect: UriRedirect): IClientConfigBuilder = this.apply {
-        this.config.redirects[redirect.first.uri] = redirect.second.uri
+    override fun addRedirect(redirect: Pair<String, String>): IClientConfigBuilder = this.apply {
+        this.config.redirects[Uri(redirect.first).uri] = Uri(redirect.second).uri
     }
 
-    override fun addRedirects(redirects: List<UriRedirect>): IClientConfigBuilder = this.apply {
-        redirects.forEach { addRedirect(it) }
+    override fun addRedirects(redirects: Map<String, String>): IClientConfigBuilder = this.apply {
+        redirects.forEach { addRedirect(it.toPair()) }
     }
 
     override fun removeRedirect(from: String): IClientConfigBuilder = this.apply {

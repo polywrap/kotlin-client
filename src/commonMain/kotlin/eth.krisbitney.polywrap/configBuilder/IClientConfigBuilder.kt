@@ -2,11 +2,10 @@ package eth.krisbitney.polywrap.configBuilder
 
 import eth.krisbitney.polywrap.core.resolution.UriResolver
 import eth.krisbitney.polywrap.core.types.ClientConfig
+import eth.krisbitney.polywrap.core.types.WrapPackage
+import eth.krisbitney.polywrap.core.types.Wrapper
 import eth.krisbitney.polywrap.core.types.WrapperEnv
 import eth.krisbitney.polywrap.uriResolvers.cache.WrapperCache
-import eth.krisbitney.polywrap.uriResolvers.embedded.PackageRedirect
-import eth.krisbitney.polywrap.uriResolvers.embedded.UriRedirect
-import eth.krisbitney.polywrap.uriResolvers.embedded.WrapperRedirect
 import kotlin.collections.Map
 import kotlin.collections.List
 
@@ -21,25 +20,25 @@ interface IClientConfigBuilder {
 
     fun addDefaults(): IClientConfigBuilder
 
-    fun addWrapper(wrapper: WrapperRedirect): IClientConfigBuilder
+    fun addWrapper(wrapper: Pair<String, Wrapper>): IClientConfigBuilder
 
-    fun addWrappers(wrappers: List<WrapperRedirect>): IClientConfigBuilder
+    fun addWrappers(wrappers: Map<String, Wrapper>): IClientConfigBuilder
 
     fun removeWrapper(uri: String): IClientConfigBuilder
 
-    fun addPackage(pkg: PackageRedirect): IClientConfigBuilder
+    fun addPackage(wrapPackage: Pair<String, WrapPackage>): IClientConfigBuilder
 
-    fun addPackages(packages: List<PackageRedirect>): IClientConfigBuilder
+    fun addPackages(packages: Map<String, WrapPackage>): IClientConfigBuilder
 
     fun removePackage(uri: String): IClientConfigBuilder
 
-    fun addEnv(uri: String, env: WrapperEnv): IClientConfigBuilder
+    fun addEnv(env: Pair<String, WrapperEnv>): IClientConfigBuilder
 
     fun addEnvs(envs: Map<String, WrapperEnv>): IClientConfigBuilder
 
     fun removeEnv(uri: String): IClientConfigBuilder
 
-    fun setEnv(uri: String, env: WrapperEnv): IClientConfigBuilder
+    fun setEnv(env: Pair<String, WrapperEnv>): IClientConfigBuilder
 
     fun addInterfaceImplementation(interfaceUri: String, implementationUri: String): IClientConfigBuilder
 
@@ -47,9 +46,9 @@ interface IClientConfigBuilder {
 
     fun removeInterfaceImplementation(interfaceUri: String, implementationUri: String): IClientConfigBuilder
 
-    fun addRedirect(redirect: UriRedirect): IClientConfigBuilder
+    fun addRedirect(redirect: Pair<String, String>): IClientConfigBuilder
 
-    fun addRedirects(redirects: List<UriRedirect>): IClientConfigBuilder
+    fun addRedirects(redirects: Map<String, String>): IClientConfigBuilder
 
     fun removeRedirect(from: String): IClientConfigBuilder
 

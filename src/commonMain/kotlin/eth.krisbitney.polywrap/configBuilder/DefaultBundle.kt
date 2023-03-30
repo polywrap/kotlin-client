@@ -70,22 +70,22 @@ class DefaultBundle {
 
             // Add all embedded packages
             for (embed in embeds.values) {
-                builder.addPackage(embed.uri to embed.pkg)
+                builder.addPackage(embed.uri.uri to embed.pkg)
 
                 // Add source redirect
-                builder.addRedirect(embed.source to embed.uri)
+                builder.addRedirect(embed.source.uri to embed.uri.uri)
 
                 // Add source implementation
                 builder.addInterfaceImplementation(embed.source.uri, embed.uri.uri)
             }
 
             for (plugin in plugins.values) {
-                builder.addPackage(plugin.uri to plugin.plugin)
+                builder.addPackage(plugin.uri.uri to plugin.plugin)
 
                 // Add all interface implementations & redirects
                 for (interfaceUri in plugin.implements) {
                     builder.addInterfaceImplementation(interfaceUri.uri, plugin.uri.uri)
-                    builder.addRedirect(interfaceUri to plugin.uri)
+                    builder.addRedirect(interfaceUri.uri to plugin.uri.uri)
                 }
             }
 
@@ -94,13 +94,15 @@ class DefaultBundle {
                 ExtendableUriResolver.defaultExtInterfaceUris[0].uri,
                 uriResolverExts.map { it.uri }
             )
-            builder.addRedirect(textRecordResolverRedirect.first to textRecordResolverRedirect.second)
+            builder.addRedirect(textRecordResolverRedirect.first.uri to textRecordResolverRedirect.second.uri)
 
             // Configure the ipfs-uri-resolver provider endpoints & retry counts
-            builder.addEnv(embeds["ipfsResolver"]!!.source.uri, mapOf(
-                "provider" to ipfsProviders[0],
-                "fallbackProviders" to ipfsProviders.slice(1 until ipfsProviders.size),
-                "retries" to mapOf("tryResolveUri" to 2, "getFile" to 2),
+            builder.addEnv(
+                embeds["ipfsResolver"]!!.source.uri to
+                mapOf(
+                    "provider" to ipfsProviders[0],
+                    "fallbackProviders" to ipfsProviders.slice(1 until ipfsProviders.size),
+                    "retries" to mapOf("tryResolveUri" to 2, "getFile" to 2),
                 )
             )
 

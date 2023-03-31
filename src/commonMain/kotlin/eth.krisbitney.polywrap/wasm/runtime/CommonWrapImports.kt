@@ -8,11 +8,38 @@ import kotlinx.serialization.serializer
 
 /**
  * A class for wrapping imports for a WebAssembly module.
+ * @param TMemory The type of the memory buffer used by the platform's Web Assembly runtime.
  * @property state The WebAssembly module state.
  * @property memory The memory to be used by the WebAssembly module.
  * @constructor Creates an instance of [WrapImports] with the specified [state] and [memory].
  */
-class CommonWrapImports(private val state: WasmModuleState, private val memory: ByteArray) : WrapImports {
+abstract class CommonWrapImports<TMemory>(private val state: WasmModuleState, private val memory: TMemory) : WrapImports {
+
+    /**
+     * Reads a specified number of bytes from the source memory buffer, starting at
+     * the specified offset, into a new byte array. The resulting byte array contains
+     * the bytes read from the source memory buffer, starting at the specified offset and
+     * continuing for the specified length.
+     *
+     * @param source the source buffer to read from
+     * @param srcOffset the offset in the source array at which to start reading
+     * @param length the number of bytes to read from the source array
+     * @return a new byte array containing the bytes read from the source array
+     */
+    abstract fun readBytes(source: TMemory, srcOffset: Int, length: Int): ByteArray
+
+    /**
+     * Writes the contents of the source byte array to the destination memory buffer,
+     * starting at the specified destination offset. The source byte array is copied
+     * into the destination buffer, overwriting any existing data in the destination
+     * array at and after the specified offset.
+     *
+     * @param source the source byte array to be copied
+     * @param destination the destination buffer to copy the source array to
+     * @param dstOffset the offset in the destination array at which to start writing
+     * @return the destination buffer
+     */
+    abstract fun writeBytes(source: ByteArray, destination: TMemory, dstOffset: Int): TMemory
 
     override suspend fun __wrap_subinvoke(uriPtr: Int, uriLen: Int, methodPtr: Int, methodLen: Int, argsPtr: Int, argsLen: Int): Int {
         state.subinvoke.result = null

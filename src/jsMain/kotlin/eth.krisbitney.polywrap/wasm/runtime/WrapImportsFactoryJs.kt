@@ -3,7 +3,6 @@ package eth.krisbitney.polywrap.wasm.runtime
 import eth.krisbitney.polywrap.externals.AsyncWasmInstance
 import eth.krisbitney.polywrap.externals.WebAssembly
 import eth.krisbitney.polywrap.util.jsObject
-import org.khronos.webgl.Int8Array
 import kotlin.js.Json
 
 /**
@@ -19,8 +18,7 @@ class WrapImportsFactoryJs {
          * @return An object with WebAssembly imports for use with the asyncify package
          */
          fun get(state: WasmModuleState, webAssemblyMemory: WebAssembly.Memory): AsyncWasmInstance.Imports {
-            val buffer: ByteArray = Int8Array(webAssemblyMemory.buffer).unsafeCast<ByteArray>()
-            val commonWrapImports = CommonWrapImports(state, buffer)
+            val commonWrapImports = WrapImportsJs(state, webAssemblyMemory)
             val wrapImports = jsObject<Json> {
                 this["__wrap_subinvoke"] = commonWrapImports::__wrap_subinvoke
                 this["__wrap_subinvoke_result_len"] = commonWrapImports::__wrap_subinvoke_result_len

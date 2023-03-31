@@ -23,11 +23,11 @@ external class AsyncWasmInstance {
         var memory: WebAssembly.Memory
     }
 
-    interface createMemoryArgs {
+    interface createMemoryArgs: Json {
         var module: ByteArray
     }
 
-    interface createInstanceArgs {
+    interface createInstanceArgs: Json {
         var module: ByteArray
         var imports: Json
         var requiredExports: List<String>?

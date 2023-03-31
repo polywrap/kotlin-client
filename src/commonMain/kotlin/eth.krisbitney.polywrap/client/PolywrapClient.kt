@@ -7,7 +7,6 @@ import eth.krisbitney.polywrap.core.types.*
 import eth.krisbitney.polywrap.core.util.getEnvFromUriHistory
 import eth.krisbitney.polywrap.core.wrap.WrapManifest
 import eth.krisbitney.polywrap.msgpack.msgPackDecode
-import eth.krisbitney.polywrap.msgpack.msgPackEncode
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -158,9 +157,7 @@ class PolywrapClient(val config: ClientConfig) : Client {
                 this@PolywrapClient
             )
 
-            val encodedEnv = env?.let { msgPackEncode(serializer(), env) }
-
-            invokeWrapper(wrapper, options.copy(env = encodedEnv)).await()
+            invokeWrapper(wrapper, options.copy(env = env)).await()
         }
     }
 

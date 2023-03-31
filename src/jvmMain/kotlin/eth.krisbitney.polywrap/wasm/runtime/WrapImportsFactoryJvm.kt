@@ -15,8 +15,8 @@ class WrapImportsFactoryJvm {
          * @property memory The memory to be used by the WebAssembly module.
          * @return A collection of WasmTime [Extern] objects.
          */
-        fun get(store: Store<WasmModuleState>, memory: ByteArray): Collection<Extern> {
-            val wrapImports = CommonWrapImports(store.data(), memory)
+        fun get(store: Store<WasmModuleState>, memory: Memory): Collection<Extern> {
+            val wrapImports = WrapImportsJvm(store, memory)
             return listOf(
                 WasmFunctions.wrap(
                     store,

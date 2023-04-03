@@ -84,3 +84,13 @@ tasks.withType<Test> {
         this.showStandardStreams = true
     }
 }
+
+configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
+    filter {
+        exclude("**/generated/**")
+        exclude("**/commonTest/**")
+        exclude("**/jvmTest/**")
+        exclude("**/jsTest/**")
+        exclude("**/nativeTest/**")
+    }
+}

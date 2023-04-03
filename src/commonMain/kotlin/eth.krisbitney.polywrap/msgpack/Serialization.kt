@@ -2,7 +2,10 @@ package eth.krisbitney.polywrap.msgpack
 
 import com.ensarsarajcic.kotlinx.serialization.msgpack.MsgPack
 import com.ensarsarajcic.kotlinx.serialization.msgpack.MsgPackConfiguration
+import com.ensarsarajcic.kotlinx.serialization.msgpack.MsgPackDynamicSerializer
 import kotlinx.serialization.*
+import kotlinx.serialization.builtins.MapSerializer
+import kotlinx.serialization.builtins.serializer
 
 /**
  * A lazily initialized MsgPack instance with a custom configuration.
@@ -18,6 +21,8 @@ val msgPack: MsgPack by lazy {
         )
     )
 }
+
+val EnvSerializer = MapSerializer(String.serializer(), MsgPackDynamicSerializer)
 
 /**
  * Encodes a given object into a msgpack byte array using the reified type's serializer.

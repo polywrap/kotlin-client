@@ -1,5 +1,6 @@
 package msgpack
 
+import eth.krisbitney.polywrap.msgpack.EnvSerializer
 import eth.krisbitney.polywrap.msgpack.MsgPackMap
 import eth.krisbitney.polywrap.msgpack.msgPackDecode
 import eth.krisbitney.polywrap.msgpack.msgPackEncode
@@ -104,5 +105,28 @@ class MsgPackTest {
         val expectedValues = msgPackMap.map.values.map { it.contentToString() }
         val receivedValues = decoded.map.values.map { it.contentToString() }
         assertEquals(expectedValues, receivedValues)
+    }
+
+    @Test
+    fun shouldEncodeAndDecodeMapOfStringAny() {
+        val env: Map<String, Any> = mapOf(
+            "firstKey" to "firstValue",
+            "secondKey" to "secondValue"
+        )
+
+        val expectedBytes = intArrayOf(
+            130, 168, 102, 105, 114, 115, 116, 75,
+            101, 121, 170, 102, 105, 114, 115, 116,
+            86, 97, 108, 117, 101, 169, 115, 101,
+            99, 111, 110, 100, 75, 101, 121, 171,
+            115, 101, 99, 111, 110, 100, 86, 97,
+            108, 117, 101
+        ).map(Int::toByte).toByteArray()
+
+        val encoded = msgPackEncode(EnvSerializer, env)
+        assertTrue(encoded.contentEquals(expectedBytes))
+
+        val decoded: Result<Map<String, Any>> = msgPackDecode(EnvSerializer, encoded)
+        assertEquals(env, decoded.getOrThrow())
     }
 }

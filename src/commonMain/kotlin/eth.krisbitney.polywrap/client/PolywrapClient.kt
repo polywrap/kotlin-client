@@ -1,11 +1,11 @@
 package eth.krisbitney.polywrap.client
 
-import com.ensarsarajcic.kotlinx.serialization.msgpack.MsgPackDynamicSerializer
 import eth.krisbitney.polywrap.core.resolution.*
 import eth.krisbitney.polywrap.core.resolution.algorithms.buildCleanUriHistory
 import eth.krisbitney.polywrap.core.types.*
 import eth.krisbitney.polywrap.core.util.getEnvFromUriHistory
 import eth.krisbitney.polywrap.core.wrap.WrapManifest
+import eth.krisbitney.polywrap.msgpack.EnvSerializer
 import eth.krisbitney.polywrap.msgpack.msgPackDecode
 import eth.krisbitney.polywrap.msgpack.msgPackEncode
 import kotlinx.coroutines.Deferred
@@ -145,7 +145,7 @@ class PolywrapClient(val config: ClientConfig) : Client {
             uri = uri,
             method = method,
             args = args?.let { msgPackEncode(serializer<T>(), it) },
-            env = env?.let { msgPackEncode(MsgPackDynamicSerializer, it) },
+            env = env?.let { msgPackEncode(EnvSerializer, it) },
             resolutionContext = resolutionContext
         )
         async {

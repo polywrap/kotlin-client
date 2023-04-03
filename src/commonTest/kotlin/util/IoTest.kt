@@ -12,9 +12,9 @@ class IoTest {
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun readFileReturnsFileContents() = runTest {
-        val path = "".toPath().resolve("src/commonTest/resources/util/test.txt").absolute()
+        val path = "".toPath().resolve("src/commonTest/resources/util/test.txt").absolute().getOrThrow()
         val result = readFile(path.toString()).await()
-        assertTrue(result.isSuccess)
+        assertNull(result.exceptionOrNull())
 
         val expected = "Hello, world!".encodeToByteArray()
         assertContentEquals(expected, result.getOrNull())

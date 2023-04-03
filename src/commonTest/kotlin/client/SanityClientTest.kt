@@ -8,7 +8,7 @@ import eth.krisbitney.polywrap.msgpack.msgPackEncode
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
-import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 
 class SanityClientTest {
 
@@ -21,7 +21,7 @@ class SanityClientTest {
         val client = PolywrapClient(config)
         val result = client.tryResolveUri(uri = sha3Uri).await()
 
-        assertNotNull(result.exceptionOrNull())
+        assertNull(result.exceptionOrNull())
         println(result.getOrThrow())
     }
 
@@ -38,7 +38,7 @@ class SanityClientTest {
             )
         ).await()
 
-        assertNotNull(result.exceptionOrNull())
+        assertNull(result.exceptionOrNull())
         println(result.getOrThrow())
     }
 }

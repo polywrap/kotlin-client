@@ -10,16 +10,22 @@ actual object WasmInstanceFactory {
 class WasmInstanceJvm(module: ByteArray, state: WasmModuleState) : WasmInstance(module, state) {
 
     override suspend fun invoke(method: String, args: ByteArray, env: ByteArray?): Result<ByteArray> {
-        val engine = Engine()
+        val config = Config().maxWasmStack(1024 * 1024 * 2)
+        val engine = Engine(config)
         val store: Store<WasmModuleState> = Store(state, engine)
         val memory: Memory = createMemory(store, module).getOrThrow()
         val wasmTimeModule: Module = Module.fromBinary(engine, module)
-        val imports = WrapImportsFactoryJvm.get(store, memory)
+
+        val linker = Linker(engine)
+        val importNames = wasmTimeModule.imports().map { it.name() }
+        val imports = WrapImportsFactoryJvm.get(store, memory, importNames, linker)
+        linker.module(store, "wrap", wasmTimeModule)
+
         val instance = Instance(store, wasmTimeModule, imports)
         instance.use {
-            val func = instance.getFunc(store, "_wrap_invoke").get()
-            func.use {
-                val fn = WasmFunctions.func(store, func, WasmValType.I32, WasmValType.I32, WasmValType.I32, WasmValType.I32)
+            val export = linker.get(store, "wrap", "_wrap_invoke").get().func()
+            export.use {
+                val fn = WasmFunctions.func(store, export, WasmValType.I32, WasmValType.I32, WasmValType.I32, WasmValType.I32)
                 val isSuccess = fn.call(method.length, args.size, env?.size ?: 0)
                 return processResult(isSuccess == 1)
             }

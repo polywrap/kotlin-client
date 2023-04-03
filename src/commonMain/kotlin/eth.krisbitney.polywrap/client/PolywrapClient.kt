@@ -1,15 +1,16 @@
 package eth.krisbitney.polywrap.client
 
+import com.ensarsarajcic.kotlinx.serialization.msgpack.MsgPackDynamicSerializer
 import eth.krisbitney.polywrap.core.resolution.*
 import eth.krisbitney.polywrap.core.resolution.algorithms.buildCleanUriHistory
 import eth.krisbitney.polywrap.core.types.*
 import eth.krisbitney.polywrap.core.util.getEnvFromUriHistory
 import eth.krisbitney.polywrap.core.wrap.WrapManifest
 import eth.krisbitney.polywrap.msgpack.msgPackDecode
+import eth.krisbitney.polywrap.msgpack.msgPackEncode
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
-import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.serializer
 import eth.krisbitney.polywrap.core.resolution.algorithms.getImplementations as getImplementationsFromUri
 
@@ -112,34 +113,6 @@ class PolywrapClient(val config: ClientConfig) : Client {
         }
     }
 
-    suspend fun <R> invokeWrapper(
-        wrapper: Wrapper,
-        options: InvokeOptions,
-        deserializationStrategy: DeserializationStrategy<R>
-    ): Deferred<InvokeResult<R>> = coroutineScope {
-        async {
-            val result = invokeWrapper(wrapper, options).await()
-            if (result.isFailure) {
-                Result.failure<R>(result.exceptionOrNull()!!)
-            }
-            msgPackDecode(deserializationStrategy, result.getOrThrow())
-        }
-    }
-
-    // TODO: rename to something better or change signature
-    suspend inline fun <reified R> invokeWrapperInline(
-        wrapper: Wrapper,
-        options: InvokeOptions
-    ): Deferred<InvokeResult<R>> = coroutineScope {
-        async {
-            val result = invokeWrapper(wrapper, options).await()
-            if (result.isFailure) {
-                Result.failure<R>(result.exceptionOrNull()!!)
-            }
-            msgPackDecode(serializer(), result.getOrThrow())
-        }
-    }
-
     override suspend fun invoke(options: InvokeOptions): Deferred<Result<ByteArray>> = coroutineScope {
         async {
             val resolutionContext = options.resolutionContext ?: BasicUriResolutionContext()
@@ -161,24 +134,26 @@ class PolywrapClient(val config: ClientConfig) : Client {
         }
     }
 
-    suspend fun <R> invoke(options: InvokeOptions, deserializationStrategy: DeserializationStrategy<R>): Deferred<InvokeResult<R>> = coroutineScope {
+    suspend inline fun <reified T, reified R> invoke(
+        uri: Uri,
+        method: String,
+        args: T? = null,
+        env: Map<String, Any>? = null,
+        resolutionContext: UriResolutionContext? = null
+    ): Deferred<InvokeResult<R>> = coroutineScope {
+        val options = InvokeOptions(
+            uri = uri,
+            method = method,
+            args = args?.let { msgPackEncode(serializer<T>(), it) },
+            env = env?.let { msgPackEncode(MsgPackDynamicSerializer, it) },
+            resolutionContext = resolutionContext
+        )
         async {
             val result = invoke(options).await()
             if (result.isFailure) {
                 Result.failure<R>(result.exceptionOrNull()!!)
             }
-            msgPackDecode(deserializationStrategy, result.getOrThrow())
-        }
-    }
-
-    // TODO: rename to something better or change signature
-    suspend inline fun <reified R> invokeInline(options: InvokeOptions): Deferred<InvokeResult<R>> = coroutineScope {
-        async {
-            val result = invoke(options).await()
-            if (result.isFailure) {
-                Result.failure<R>(result.exceptionOrNull()!!)
-            }
-            msgPackDecode(serializer(), result.getOrThrow())
+            msgPackDecode(serializer<R>(), result.getOrThrow())
         }
     }
 

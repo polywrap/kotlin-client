@@ -5,6 +5,7 @@ import eth.krisbitney.polywrap.configBuilder.ClientConfigBuilder
 import eth.krisbitney.polywrap.core.resolution.Uri
 import eth.krisbitney.polywrap.core.types.InvokeOptions
 import eth.krisbitney.polywrap.msgpack.msgPackEncode
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
@@ -37,7 +38,21 @@ class SanityClientTest {
                 args = msgPackEncode(mapOf("message" to "Hello World!"))
             )
         ).await()
+        assertNull(result.exceptionOrNull())
+        println(result.getOrThrow())
+    }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun invokeWithReifiedTypes() = runTest {
+        val config = ClientConfigBuilder().addDefaults().build()
+        val client = PolywrapClient(config)
+        val deferred: Deferred<Result<String>> = client.invoke(
+            uri = sha3Uri,
+            method = "keccak_256",
+            args = mapOf("message" to "Hello World!")
+        )
+        val result = deferred.await()
         assertNull(result.exceptionOrNull())
         println(result.getOrThrow())
     }

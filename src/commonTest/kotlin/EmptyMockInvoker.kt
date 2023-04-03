@@ -7,11 +7,11 @@ import kotlinx.coroutines.Deferred
 
 val emptyMockInvoker = object : Invoker {
     override suspend fun invokeWrapper(wrapper: Wrapper, options: InvokeOptions): Deferred<Result<ByteArray>> {
-        TODO("Not yet implemented")
+        throw NotImplementedError()
     }
 
     override suspend fun invoke(options: InvokeOptions): Deferred<Result<ByteArray>> {
-        TODO("Not yet implemented")
+        throw NotImplementedError()
     }
 
     override suspend fun getImplementations(
@@ -19,6 +19,6 @@ val emptyMockInvoker = object : Invoker {
         applyResolution: Boolean,
         resolutionContext: UriResolutionContext?
     ): Deferred<Result<List<Uri>>> {
-        TODO("Not yet implemented")
+        throw NotImplementedError()
     }
 }

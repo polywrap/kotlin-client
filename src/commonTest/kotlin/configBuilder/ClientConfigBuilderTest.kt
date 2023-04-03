@@ -27,21 +27,21 @@ class ClientConfigBuilderTest {
             resolutionContext: UriResolutionContext,
             resolveToPackage: Boolean
         ): Result<UriPackageOrWrapper> {
-            TODO("Not yet implemented")
+            throw NotImplementedError()
         }
     }
 
     val mockWrapPackage: WrapPackage = object : WrapPackage {
-        override suspend fun createWrapper() = TODO("Not yet implemented")
-        override suspend fun getManifest() = TODO("Not yet implemented")
+        override suspend fun createWrapper() = throw NotImplementedError()
+        override suspend fun getManifest() = throw NotImplementedError()
         override suspend fun getFile(path: String): Deferred<Result<ByteArray>> {
-            TODO("Not yet implemented")
+            throw NotImplementedError()
         }
     }
 
     val mockWrapper: Wrapper = object : Wrapper {
         override suspend fun invoke(options: InvokeOptions, invoker: Invoker): Deferred<Result<ByteArray>> {
-            TODO("Not yet implemented")
+            throw NotImplementedError()
         }
     }
 

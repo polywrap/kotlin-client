@@ -39,6 +39,6 @@ data class PluginPackage<TConfig>(
      * Not Implemented. Throws a NotImplementedError.
      */
     override suspend fun getFile(path: String): Deferred<Result<ByteArray>> {
-        TODO("Not implemented")
+        throw NotImplementedError()
     }
 }

@@ -1,8 +1,8 @@
 package eth.krisbitney.polywrap.msgpack
 
-import kotlinx.serialization.*
 import com.ensarsarajcic.kotlinx.serialization.msgpack.MsgPack
 import com.ensarsarajcic.kotlinx.serialization.msgpack.MsgPackConfiguration
+import kotlinx.serialization.*
 
 /**
  * A lazily initialized MsgPack instance with a custom configuration.
@@ -29,7 +29,6 @@ val msgPack: MsgPack by lazy {
 inline fun <reified T : Any> msgPackEncode(value: T): ByteArray {
     return msgPack.encodeToByteArray(serializer(), value)
 }
-
 
 /**
  * Encodes a given object into a msgpack byte array using the provided serializer.

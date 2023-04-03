@@ -17,6 +17,7 @@ sealed interface AnyDefinition : IGenericDefinition {
     val array: ArrayDefinition?
     val scalar: ScalarDefinition?
     val map: MapDefinition?
+
     @SerialName("object")
     val _object: GenericDefinition?
     val enum: GenericDefinition?

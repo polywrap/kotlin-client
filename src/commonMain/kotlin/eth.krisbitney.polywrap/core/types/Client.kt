@@ -1,9 +1,9 @@
 package eth.krisbitney.polywrap.core.types
 
-import eth.krisbitney.polywrap.core.wrap.WrapManifest
 import eth.krisbitney.polywrap.core.resolution.Uri
-import eth.krisbitney.polywrap.core.resolution.UriResolver
 import eth.krisbitney.polywrap.core.resolution.UriResolutionHandler
+import eth.krisbitney.polywrap.core.resolution.UriResolver
+import eth.krisbitney.polywrap.core.wrap.WrapManifest
 import kotlinx.coroutines.Deferred
 
 /** A map of string-indexed, Msgpack-serializable environmental variables associated with a wrapper */
@@ -18,7 +18,7 @@ typealias WrapperEnv = Map<String, Any>
 data class ClientConfig(
     val resolver: UriResolver,
     val interfaces: Map<Uri, List<Uri>>? = null,
-    val envs: Map<Uri, WrapperEnv>? = null,
+    val envs: Map<Uri, WrapperEnv>? = null
 )
 
 /**
@@ -67,7 +67,7 @@ interface Client : Invoker, UriResolutionHandler {
      */
     suspend fun getFile(
         uri: Uri,
-        path: String,
+        path: String
     ): Deferred<Result<ByteArray>>
 
     /**

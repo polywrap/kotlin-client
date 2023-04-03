@@ -28,7 +28,7 @@ data class MapKeyDefinition(
     @SerialName("object")
     override val _object: GenericDefinition? = null,
     override val enum: GenericDefinition? = null,
-    override val unresolvedObjectOrEnum: GenericDefinition? = null,
+    override val unresolvedObjectOrEnum: GenericDefinition? = null
 ) : AnyDefinition {
 
     /**

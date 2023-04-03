@@ -9,9 +9,9 @@ import io.ktor.client.*
 import io.ktor.client.plugins.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
-import io.ktor.client.statement.HttpResponse as KtorHttpResponse
 import io.ktor.http.*
 import io.ktor.util.*
+import io.ktor.client.statement.HttpResponse as KtorHttpResponse
 
 // TODO: I would like to re-use the same HttpClient instance for all requests,
 //  but I need to somehow close it when the plugin is unloaded.

@@ -58,8 +58,9 @@ fun Path.isFile(): Boolean =
  * @return The absolute path
  */
 fun Path.absolute(): Result<Path> = runCatching {
-    if (isAbsolute) this
-    else {
+    if (isAbsolute) {
+        this
+    } else {
         val currentDir = "".toPath()
         FileSystemFactory.create().canonicalize(currentDir) / (this)
     }

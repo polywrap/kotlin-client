@@ -25,5 +25,5 @@ data class ImportedEnumDefinition(
     override val uri: String,
     override val namespace: String,
     override val nativeType: String,
-    val constants: List<String>? = null,
+    val constants: List<String>? = null
 ) : IGenericDefinition, WithComment, ImportedDefinition

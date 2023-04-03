@@ -2,7 +2,6 @@ package eth.krisbitney.polywrap.client
 
 import eth.krisbitney.polywrap.core.resolution.*
 import eth.krisbitney.polywrap.core.resolution.algorithms.buildCleanUriHistory
-import eth.krisbitney.polywrap.core.resolution.algorithms.getImplementations as getImplementationsFromUri
 import eth.krisbitney.polywrap.core.types.*
 import eth.krisbitney.polywrap.core.util.getEnvFromUriHistory
 import eth.krisbitney.polywrap.core.wrap.WrapManifest
@@ -12,6 +11,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.serializer
+import eth.krisbitney.polywrap.core.resolution.algorithms.getImplementations as getImplementationsFromUri
 
 class PolywrapClient(val config: ClientConfig) : Client {
 
@@ -59,7 +59,7 @@ class PolywrapClient(val config: ClientConfig) : Client {
 
     override suspend fun getFile(
         uri: Uri,
-        path: String,
+        path: String
     ): Deferred<Result<ByteArray>> = coroutineScope {
         async {
             val load = loadPackage(uri).await()
@@ -87,7 +87,7 @@ class PolywrapClient(val config: ClientConfig) : Client {
     override suspend fun getImplementations(
         uri: Uri,
         applyResolution: Boolean,
-        resolutionContext: UriResolutionContext?,
+        resolutionContext: UriResolutionContext?
     ): Deferred<Result<List<Uri>>> = coroutineScope {
         async {
             getImplementationsFromUri(
@@ -101,7 +101,7 @@ class PolywrapClient(val config: ClientConfig) : Client {
 
     override suspend fun invokeWrapper(
         wrapper: Wrapper,
-        options: InvokeOptions,
+        options: InvokeOptions
     ): Deferred<Result<ByteArray>> = coroutineScope {
         async {
             val result = wrapper.invoke(options, this@PolywrapClient).await()
@@ -115,7 +115,7 @@ class PolywrapClient(val config: ClientConfig) : Client {
     suspend fun <R> invokeWrapper(
         wrapper: Wrapper,
         options: InvokeOptions,
-        deserializationStrategy: DeserializationStrategy<R>,
+        deserializationStrategy: DeserializationStrategy<R>
     ): Deferred<InvokeResult<R>> = coroutineScope {
         async {
             val result = invokeWrapper(wrapper, options).await()
@@ -129,7 +129,7 @@ class PolywrapClient(val config: ClientConfig) : Client {
     // TODO: rename to something better or change signature
     suspend inline fun <reified R> invokeWrapperInline(
         wrapper: Wrapper,
-        options: InvokeOptions,
+        options: InvokeOptions
     ): Deferred<InvokeResult<R>> = coroutineScope {
         async {
             val result = invokeWrapper(wrapper, options).await()

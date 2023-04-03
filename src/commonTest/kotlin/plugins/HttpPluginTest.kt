@@ -4,8 +4,8 @@ import emptyMockInvoker
 import eth.krisbitney.polywrap.plugins.http.HttpPlugin
 import eth.krisbitney.polywrap.plugins.http.wrapHardCoded.ArgsGet
 import eth.krisbitney.polywrap.plugins.http.wrapHardCoded.ArgsPost
-import eth.krisbitney.polywrap.plugins.http.wrapHardCoded.HttpResponseType
 import eth.krisbitney.polywrap.plugins.http.wrapHardCoded.HttpRequest
+import eth.krisbitney.polywrap.plugins.http.wrapHardCoded.HttpResponseType
 import io.ktor.client.*
 import io.ktor.client.engine.mock.*
 import io.ktor.client.plugins.*
@@ -201,7 +201,7 @@ class HttpPluginTest {
             request = HttpRequest(
                 responseType = HttpResponseType.TEXT,
                 body = "Hello World"
-            ),
+            )
         )
         val response = httpPlugin.post(args, emptyMockInvoker)
 

@@ -30,7 +30,7 @@ fun buildCleanUriHistory(history: List<UriResolutionStep>, depth: Int? = null): 
         if (step.result.isSuccess) {
             val uriPackageOrWrapper = step.result.getOrThrow()
             val to = uriPackageOrWrapper.uri
-            
+
             when (uriPackageOrWrapper) {
                 is UriPackageOrWrapper.UriValue -> {
                     if (from == to.uri) {
@@ -42,23 +42,23 @@ fun buildCleanUriHistory(history: List<UriResolutionStep>, depth: Int? = null): 
                     } else {
                         cleanHistory.add(
                             step.description?.let {
-                                "$from => $it => uri (${to})"
-                            } ?: "$from => uri (${to})"
+                                "$from => $it => uri ($to)"
+                            } ?: "$from => uri ($to)"
                         )
                     }
                 }
                 is UriPackageOrWrapper.PackageValue -> {
                     cleanHistory.add(
                         step.description?.let {
-                            "$from => $it => package (${to})"
-                        } ?: "$from => package (${to})"
+                            "$from => $it => package ($to)"
+                        } ?: "$from => package ($to)"
                     )
                 }
                 is UriPackageOrWrapper.WrapperValue -> {
                     cleanHistory.add(
                         step.description?.let {
-                            "$from => $it => wrapper (${to})"
-                        } ?: "$from => wrapper (${to})"
+                            "$from => $it => wrapper ($to)"
+                        } ?: "$from => wrapper ($to)"
                     )
                 }
             }

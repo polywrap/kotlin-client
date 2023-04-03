@@ -33,7 +33,7 @@ suspend fun getImplementations(
                 reason = "Failed to resolve redirects",
                 cause = redirectsResult.exceptionOrNull(),
                 uri = wrapperInterfaceUri.uri,
-                code = WrapErrorCode.CLIENT_GET_IMPLEMENTATIONS_ERROR,
+                code = WrapErrorCode.CLIENT_GET_IMPLEMENTATIONS_ERROR
             )
             return Result.failure(error)
         }
@@ -60,7 +60,7 @@ private suspend fun addAllImplementationsFromImplementationsArray(
     implementationsMap: Map<Uri, List<Uri>>,
     wrapperInterfaceUri: Uri,
     uriResolutionHandler: UriResolutionHandler? = null,
-    resolutionContext: UriResolutionContext? = null,
+    resolutionContext: UriResolutionContext? = null
 ): Result<Unit> {
     for (interfaceImplementations in implementationsMap) {
         // resolve redirects for the current interface URI
@@ -71,7 +71,7 @@ private suspend fun addAllImplementationsFromImplementationsArray(
                     reason = "Failed to resolve redirects",
                     cause = redirectsResult.exceptionOrNull(),
                     uri = interfaceImplementations.key.uri,
-                    code = WrapErrorCode.CLIENT_GET_IMPLEMENTATIONS_ERROR,
+                    code = WrapErrorCode.CLIENT_GET_IMPLEMENTATIONS_ERROR
                 )
                 return Result.failure(error)
             }

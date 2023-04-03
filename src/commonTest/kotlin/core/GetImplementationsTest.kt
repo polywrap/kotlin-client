@@ -7,8 +7,8 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
-import kotlin.test.*
 import kotlinx.coroutines.test.*
+import kotlin.test.*
 
 class GetImplementationsTest {
     private fun getUriResolutionHandler(redirects: List<UriRedirect>): UriResolutionHandler {

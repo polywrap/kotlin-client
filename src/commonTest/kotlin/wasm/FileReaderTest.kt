@@ -27,7 +27,7 @@ class FileReaderTest {
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun fromMemoryWithBaseFileReader() = runTest {
-        val manifest: ByteArray =  readTestResource(manifestPath).getOrThrow()
+        val manifest: ByteArray = readTestResource(manifestPath).getOrThrow()
         val wasmModule: ByteArray = readTestResource(modulePath).getOrThrow()
         val fileReader = FileReaderFactory.fromMemory(
             manifest = manifest,
@@ -40,12 +40,12 @@ class FileReaderTest {
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun fromMemoryWithoutBaseFileReader() = runTest {
-        val manifest: ByteArray =  readTestResource(manifestPath).getOrThrow()
+        val manifest: ByteArray = readTestResource(manifestPath).getOrThrow()
         val wasmModule: ByteArray = readTestResource(modulePath).getOrThrow()
 
         val fileReader = FileReaderFactory.fromMemory(
             manifest = manifest,
-            wasmModule = wasmModule,
+            wasmModule = wasmModule
         )
 
         val manifestResult = fileReader.readFile(FileReader.WRAP_MANIFEST_PATH).await()
@@ -64,7 +64,7 @@ class FileReaderTest {
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun fromManifest() = runTest {
-        val manifest: ByteArray =  readTestResource(manifestPath).getOrThrow()
+        val manifest: ByteArray = readTestResource(manifestPath).getOrThrow()
         val wasmModule: ByteArray = readTestResource(modulePath).getOrThrow()
         val fileReader = FileReaderFactory.fromManifest(
             manifest = manifest,
@@ -76,7 +76,7 @@ class FileReaderTest {
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun fromWasmModule() = runTest {
-        val manifest: ByteArray =  readTestResource(manifestPath).getOrThrow()
+        val manifest: ByteArray = readTestResource(manifestPath).getOrThrow()
         val wasmModule: ByteArray = readTestResource(modulePath).getOrThrow()
         val fileReader = FileReaderFactory.fromWasmModule(
             wasmModule = wasmModule,

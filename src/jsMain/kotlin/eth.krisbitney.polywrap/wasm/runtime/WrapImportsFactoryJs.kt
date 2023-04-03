@@ -17,7 +17,7 @@ class WrapImportsFactoryJs {
          * @property webAssemblyMemory The memory to be used by the WebAssembly module.
          * @return An object with WebAssembly imports for use with the asyncify package
          */
-         fun get(state: WasmModuleState, webAssemblyMemory: WebAssembly.Memory): AsyncWasmInstance.Imports {
+        fun get(state: WasmModuleState, webAssemblyMemory: WebAssembly.Memory): AsyncWasmInstance.Imports {
             val commonWrapImports = WrapImportsJs(state, webAssemblyMemory)
             val wrapImports = jsObject<Json> {
                 this["__wrap_subinvoke"] = commonWrapImports::__wrap_subinvoke

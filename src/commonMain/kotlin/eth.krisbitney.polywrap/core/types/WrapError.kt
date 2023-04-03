@@ -3,7 +3,7 @@ package eth.krisbitney.polywrap.core.types
 class ErrorSource(
     val file: String?,
     val row: Int?,
-    val col: Int?,
+    val col: Int?
 )
 
 /**
@@ -200,12 +200,12 @@ class WrapError(
                 method = method,
                 args = args?.trim(),
                 source = source,
-                resolutionStack = resolutionStack,
+                resolutionStack = resolutionStack
             )
         }
 
         private fun stringify(
-            reason: String, 
+            reason: String,
             cause: Throwable?,
             code: WrapErrorCode,
             uri: String,

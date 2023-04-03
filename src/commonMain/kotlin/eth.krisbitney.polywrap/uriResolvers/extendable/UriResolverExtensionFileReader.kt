@@ -11,7 +11,7 @@ import kotlinx.coroutines.coroutineScope
 class UriResolverExtensionFileReader(
     private val resolverExtensionUri: Uri,
     private val wrapperUri: Uri,
-    private val invoker: Invoker,
+    private val invoker: Invoker
 ) : FileReader() {
 
     override suspend fun readFile(filePath: String): Deferred<Result<ByteArray>> = coroutineScope {

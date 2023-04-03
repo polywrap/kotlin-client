@@ -6,8 +6,8 @@ import eth.krisbitney.polywrap.core.types.WrapPackage
 import eth.krisbitney.polywrap.core.types.Wrapper
 import eth.krisbitney.polywrap.core.types.WrapperEnv
 import eth.krisbitney.polywrap.uriResolvers.cache.WrapperCache
-import kotlin.collections.Map
 import kotlin.collections.List
+import kotlin.collections.Map
 
 interface IClientConfigBuilder {
     val config: BuilderConfig

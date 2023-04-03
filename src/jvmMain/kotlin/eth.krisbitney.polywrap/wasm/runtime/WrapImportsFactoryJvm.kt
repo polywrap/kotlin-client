@@ -49,7 +49,7 @@ class WrapImportsFactoryJvm {
             "__wrap_getImplementations_result" to ::__wrap_getImplementations_result,
             "__wrap_abort" to ::__wrap_abort,
             "__wrap_debug_log" to ::__wrap_debug_log,
-            "__wrap_load_env" to ::__wrap_load_env,
+            "__wrap_load_env" to ::__wrap_load_env
         )
 
         private fun __wrap_subinvoke(store: Store<WasmModuleState>, wrapImports: WrapImportsJvm): Extern {

@@ -20,7 +20,7 @@ class ClientConfigBuilderTest {
 
     val emptyBuilderConfig = ClientConfigBuilder().config
 
-    class MockUriResolver(val from: String, val to: String): UriResolver {
+    class MockUriResolver(val from: String, val to: String) : UriResolver {
         override suspend fun tryResolveUri(
             uri: Uri,
             client: Client,
@@ -78,12 +78,12 @@ class ClientConfigBuilderTest {
 
     val testInterfaces: MutableMap<String, MutableSet<String>> = mutableMapOf(
         testInterface1,
-        testInterface2,
+        testInterface2
     )
 
     val testUriRedirects: MutableMap<String, String> = mutableMapOf(
         testUriRedirect1,
-        testUriRedirect2,
+        testUriRedirect2
     )
 
     val testUriResolver: UriResolver = MockUriResolver(
@@ -102,12 +102,13 @@ class ClientConfigBuilderTest {
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun shouldSuccessfullyAddConfigObjectAndBuild() = runTest {
-        val configObject = BuilderConfig(testEnvs,
+        val configObject = BuilderConfig(
+            testEnvs,
             testInterfaces,
             testUriRedirects,
             mutableMapOf(),
             mutableMapOf(),
-            mutableListOf(testUriResolver),
+            mutableListOf(testUriResolver)
         )
 
         val builder = ClientConfigBuilder().add(configObject)
@@ -648,7 +649,7 @@ class ClientConfigBuilderTest {
     fun shouldAddMultipleWrappers() = runTest {
         val uri1 = "wrap://ens/some1.wrapper.eth"
         val uri2 = "wrap://ens/some2.wrapper.eth"
-        
+
         val builderConfig = ClientConfigBuilder().addWrappers(
             mapOf(
                 uri1 to mockWrapper,
@@ -781,7 +782,7 @@ class ClientConfigBuilderTest {
     fun shouldSanitizeIncomingUrisForPackages() = runTest {
         val shortUri = "ens/some1.package.eth"
         val longUri = "wrap://ens/some2.package.eth"
-        
+
         val builderConfig1 = ClientConfigBuilder().addPackages(
             mapOf(
                 shortUri to mockWrapPackage,

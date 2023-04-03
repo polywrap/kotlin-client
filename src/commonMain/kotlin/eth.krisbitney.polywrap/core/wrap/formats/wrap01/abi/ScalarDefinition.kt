@@ -17,7 +17,7 @@ data class ScalarDefinition(
     override val type: String,
     override val kind: Int,
     override val name: String? = null,
-    override val required: Boolean? = false,
+    override val required: Boolean? = false
 ) : IGenericDefinition {
 
     /**

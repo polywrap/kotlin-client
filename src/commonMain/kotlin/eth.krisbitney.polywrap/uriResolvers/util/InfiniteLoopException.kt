@@ -10,9 +10,11 @@ import eth.krisbitney.polywrap.core.resolution.UriResolutionStep
  * @param uri The URI that caused the infinite loop.
  * @param history A list of [UriResolutionStep] objects representing the resolution history.
  */
-class InfiniteLoopException(uri: Uri, history: List<UriResolutionStep>)
-    : Exception("An infinite loop was detected while resolving the URI: ${uri.uri}\n" +
-        "History: ${getUriResolutionPath(history)}") {
+class InfiniteLoopException(uri: Uri, history: List<UriResolutionStep>) :
+    Exception(
+        "An infinite loop was detected while resolving the URI: ${uri.uri}\n" +
+            "History: ${getUriResolutionPath(history)}"
+    ) {
     companion object {
 
         /**

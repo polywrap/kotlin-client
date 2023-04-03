@@ -25,7 +25,7 @@ class DefaultBundle {
     companion object {
         val ipfsProviders: List<String> = listOf(
             "https://ipfs.wrappers.io",
-            "https://ipfs.io",
+            "https://ipfs.io"
         )
 
         val embeds: Map<String, IDefaultEmbed> = mapOf(
@@ -38,7 +38,7 @@ class DefaultBundle {
                 override val uri = Uri("embed/async-ipfs-uri-resolver-ext@1.0.0")
                 override val pkg = getIpfsResolverWrap()
                 override val source = Uri("ens/wraps.eth:async-ipfs-uri-resolver-ext@1.0.0")
-            },
+            }
         )
 
         val textRecordResolverRedirect: UriRedirect =
@@ -99,15 +99,14 @@ class DefaultBundle {
             // Configure the ipfs-uri-resolver provider endpoints & retry counts
             builder.addEnv(
                 embeds["ipfsResolver"]!!.source.uri to
-                mapOf(
-                    "provider" to ipfsProviders[0],
-                    "fallbackProviders" to ipfsProviders.slice(1 until ipfsProviders.size),
-                    "retries" to mapOf("tryResolveUri" to 2, "getFile" to 2),
-                )
+                    mapOf(
+                        "provider" to ipfsProviders[0],
+                        "fallbackProviders" to ipfsProviders.slice(1 until ipfsProviders.size),
+                        "retries" to mapOf("tryResolveUri" to 2, "getFile" to 2)
+                    )
             )
 
             return builder.config
         }
-
     }
 }

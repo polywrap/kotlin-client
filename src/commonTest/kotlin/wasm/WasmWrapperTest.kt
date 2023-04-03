@@ -25,7 +25,7 @@ class WasmWrapperTest {
         val invocation = InvokeOptions(
             uri = Uri("wrap://ens/WasmWrapperTest/canInvokeWrapper"),
             method = "i32Method",
-            args = msgPackEncode(mapOf("first" to 1, "second" to 2)),
+            args = msgPackEncode(mapOf("first" to 1, "second" to 2))
         )
 
         val result = wrapper.invoke(invocation, emptyMockInvoker).await()

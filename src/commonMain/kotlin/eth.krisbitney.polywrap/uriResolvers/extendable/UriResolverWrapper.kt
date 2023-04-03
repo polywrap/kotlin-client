@@ -75,7 +75,7 @@ class UriResolverWrapper(private val implementationUri: Uri) : ResolverWithHisto
                     )
                 ),
                 env = env
-            ),
+            )
         ).await()
         if (result.isFailure) {
             return Result.failure(result.exceptionOrNull()!!)
@@ -101,7 +101,7 @@ class UriResolverWrapper(private val implementationUri: Uri) : ResolverWithHisto
             }
             is UriPackageOrWrapper.PackageValue -> uriPackageOrWrapper.pkg.createWrapper()
             is UriPackageOrWrapper.WrapperValue -> Result.success(uriPackageOrWrapper.wrapper)
-            else ->  Result.failure(result.exceptionOrNull()!!)
+            else -> Result.failure(result.exceptionOrNull()!!)
         }
     }
 }

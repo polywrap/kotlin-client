@@ -18,7 +18,7 @@ data class InvokeOptions(
     val method: String,
     val args: ByteArray? = null,
     val env: ByteArray? = null,
-    val resolutionContext: UriResolutionContext? = null,
+    val resolutionContext: UriResolutionContext? = null
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -81,7 +81,6 @@ interface Invoker {
      */
     suspend fun invoke(options: InvokeOptions): Deferred<Result<ByteArray>>
 
-
     /**
      * Returns the interface implementations associated with an interface URI from the
      * configuration used to instantiate the client.
@@ -94,7 +93,7 @@ interface Invoker {
     suspend fun getImplementations(
         uri: Uri,
         applyResolution: Boolean = false,
-        resolutionContext: UriResolutionContext? = null,
+        resolutionContext: UriResolutionContext? = null
     ): Deferred<Result<List<Uri>>>
 }
 

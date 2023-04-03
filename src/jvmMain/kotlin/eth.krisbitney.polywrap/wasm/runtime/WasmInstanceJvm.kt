@@ -36,16 +36,19 @@ class WasmInstanceJvm(module: ByteArray, state: WasmModuleState) : WasmInstance(
         val idx = Collections.indexOfSubList(module.toList(), ENV_MEMORY_IMPORTS_SIGNATURE.toList())
 
         if (idx == -1) {
-            val error = Error("Unable to find Wasm memory import section. " +
+            val error = Error(
+                "Unable to find Wasm memory import section. " +
                     "Modules must import memory from the \"env\" module's " +
                     "\"memory\" field like so: " +
-                    "(import \"env\" \"memory\" (memory (;0;) #))")
+                    "(import \"env\" \"memory\" (memory (;0;) #))"
+            )
             return Result.failure(error)
         }
 
         val memoryInitialLimits = module[idx + ENV_MEMORY_IMPORTS_SIGNATURE.size + 1].toLong()
-        val memory = Memory(store,
-            MemoryType(memoryInitialLimits,false)
+        val memory = Memory(
+            store,
+            MemoryType(memoryInitialLimits, false)
         )
 
         return Result.success(memory)

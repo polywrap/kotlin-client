@@ -17,7 +17,6 @@ data class PluginPackage<TConfig>(
     private val manifest: WrapManifest
 ) : WrapPackage {
 
-
     /**
      * Produce an instance of the WrapPackage's WRAP manifest
      *

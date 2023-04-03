@@ -38,9 +38,13 @@ class MsgPackMapExtensionSerializer<K, V>(
         val mapSerializer = MapSerializer(keySerializer, valueSerializer)
         val data = msgPack.encodeToByteArray(mapSerializer, extension.map)
 
-        val type = if (data.size <= UByte.MAX_VALUE.toInt()) MsgPackExtension.Type.EXT8
-        else if (data.size <= Short.MAX_VALUE.toInt()) MsgPackExtension.Type.EXT16
-        else MsgPackExtension.Type.EXT32
+        val type = if (data.size <= UByte.MAX_VALUE.toInt()) {
+            MsgPackExtension.Type.EXT8
+        } else if (data.size <= Short.MAX_VALUE.toInt()) {
+            MsgPackExtension.Type.EXT16
+        } else {
+            MsgPackExtension.Type.EXT32
+        }
 
         return MsgPackExtension(type, extTypeId, data)
     }

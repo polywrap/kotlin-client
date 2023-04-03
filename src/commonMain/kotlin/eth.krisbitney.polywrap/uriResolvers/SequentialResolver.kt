@@ -16,5 +16,4 @@ class SequentialResolver(private val resolvers: List<UriResolver>) : UriResolver
     ): Result<List<UriResolver>> {
         return Result.success(resolvers)
     }
-
 }

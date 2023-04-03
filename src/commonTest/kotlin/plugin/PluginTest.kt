@@ -32,7 +32,7 @@ class PluginWrapperTest {
         val invocation = InvokeOptions(
             uri = Uri("wrap://plugin/mock"),
             method = "add",
-            args = msgPackEncode(mapOf("num" to 1, "ber" to 2)),
+            args = msgPackEncode(mapOf("num" to 1, "ber" to 2))
         )
 
         val result = wrapper.invoke(invocation, emptyMockInvoker).await()

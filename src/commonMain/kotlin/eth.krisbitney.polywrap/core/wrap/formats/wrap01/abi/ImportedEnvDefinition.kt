@@ -27,5 +27,5 @@ data class ImportedEnvDefinition(
     override val namespace: String,
     override val nativeType: String,
     val properties: List<PropertyDefinition>? = null,
-    val interfaces: List<GenericDefinition>? = null,
+    val interfaces: List<GenericDefinition>? = null
 ) : IGenericDefinition, WithComment, ImportedDefinition

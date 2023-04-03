@@ -10,7 +10,7 @@ package eth.krisbitney.polywrap.core.resolution
 data class UriConfig(
     val uri: String,
     val authority: String,
-    val path: String,
+    val path: String
 )
 
 /**
@@ -149,12 +149,11 @@ class Uri(private val _config: UriConfig) {
         private fun getErr(uri: String): IllegalArgumentException {
             return IllegalArgumentException(
                 "URI is malformed, here are some examples of valid URIs:\n" +
-                        "wrap://ipfs/QmHASH\n" +
-                        "wrap://ens/domain.eth\n" +
-                        "ens/domain.eth\n\n" +
-                        "Invalid URI Received: $uri"
+                    "wrap://ipfs/QmHASH\n" +
+                    "wrap://ens/domain.eth\n" +
+                    "ens/domain.eth\n\n" +
+                    "Invalid URI Received: $uri"
             )
         }
     }
 }
-

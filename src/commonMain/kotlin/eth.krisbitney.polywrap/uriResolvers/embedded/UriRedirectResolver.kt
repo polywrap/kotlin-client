@@ -1,9 +1,9 @@
 package eth.krisbitney.polywrap.uriResolvers.embedded
 
-import eth.krisbitney.polywrap.core.resolution.UriResolver
 import eth.krisbitney.polywrap.core.resolution.Uri
 import eth.krisbitney.polywrap.core.resolution.UriPackageOrWrapper
 import eth.krisbitney.polywrap.core.resolution.UriResolutionContext
+import eth.krisbitney.polywrap.core.resolution.UriResolver
 import eth.krisbitney.polywrap.core.types.Client
 import eth.krisbitney.polywrap.uriResolvers.ResolverWithHistory
 

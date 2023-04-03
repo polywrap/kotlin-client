@@ -12,5 +12,5 @@ data class UriResolutionStep(
     val sourceUri: Uri,
     val result: Result<UriPackageOrWrapper>,
     val description: String? = null,
-    val subHistory: List<UriResolutionStep>? = null,
+    val subHistory: List<UriResolutionStep>? = null
 )

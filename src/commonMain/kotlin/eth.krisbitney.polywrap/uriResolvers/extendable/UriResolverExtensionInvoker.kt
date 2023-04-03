@@ -1,10 +1,10 @@
 package eth.krisbitney.polywrap.uriResolvers.extendable
 
 import eth.krisbitney.polywrap.core.resolution.Uri
-import eth.krisbitney.polywrap.msgpack.msgPackEncode
 import eth.krisbitney.polywrap.core.types.InvokeOptions
 import eth.krisbitney.polywrap.core.types.Invoker
 import eth.krisbitney.polywrap.msgpack.msgPackDecode
+import eth.krisbitney.polywrap.msgpack.msgPackEncode
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope

@@ -23,7 +23,6 @@ abstract class BaseClientConfigBuilder : IClientConfigBuilder {
     abstract override fun build(cache: WrapperCache?): ClientConfig
     abstract override fun build(resolver: UriResolver): ClientConfig
 
-
     override fun add(config: BuilderConfig): IClientConfigBuilder = this.apply {
         addEnvs(config.envs)
         config.redirects.forEach { addRedirect(it.toPair()) }

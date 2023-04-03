@@ -3,8 +3,8 @@ package eth.krisbitney.polywrap.configBuilder
 import eth.krisbitney.polywrap.core.resolution.*
 import eth.krisbitney.polywrap.core.types.ClientConfig
 import eth.krisbitney.polywrap.core.types.WrapperEnv
-import eth.krisbitney.polywrap.uriResolvers.SequentialResolver
 import eth.krisbitney.polywrap.uriResolvers.RecursiveResolver
+import eth.krisbitney.polywrap.uriResolvers.SequentialResolver
 import eth.krisbitney.polywrap.uriResolvers.cache.BasicWrapperCache
 import eth.krisbitney.polywrap.uriResolvers.cache.SynchronizedCacheResolver
 import eth.krisbitney.polywrap.uriResolvers.cache.WrapperCache

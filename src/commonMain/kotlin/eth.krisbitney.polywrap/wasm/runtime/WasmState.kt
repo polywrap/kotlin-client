@@ -26,7 +26,7 @@ class WasmModuleState(
     var getImplementationsResult: ByteArray? = null,
     val abortWithInvokeAborted: (message: String, source: ErrorSource?) -> Nothing,
     val abortWithInternalError: (message: String) -> Nothing,
-    val invoker: Invoker,
+    val invoker: Invoker
 ) {
 
     /**

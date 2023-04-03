@@ -49,7 +49,7 @@ abstract class CommonWrapImports<TMemory>(private val state: WasmModuleState, pr
         val method = readBytes(memory, methodPtr, methodLen).decodeToString()
         val args = readBytes(memory, argsPtr, argsLen)
 
-        val result =  state.invoker.invoke(InvokeOptions(Uri(uri), method, args)).await()
+        val result = state.invoker.invoke(InvokeOptions(Uri(uri), method, args)).await()
 
         if (result.isSuccess) {
             state.subinvoke.result = result.getOrThrow()
@@ -75,7 +75,7 @@ abstract class CommonWrapImports<TMemory>(private val state: WasmModuleState, pr
     }
 
     override fun __wrap_subinvoke_error_len(): Int {
-       return state.subinvoke.error?.length
+        return state.subinvoke.error?.length
             ?: state.abortWithInternalError("__wrap_subinvoke_error_len: subinvoke.error is not set")
     }
 

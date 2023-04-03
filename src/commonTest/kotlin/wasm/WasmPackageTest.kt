@@ -29,7 +29,7 @@ class WasmPackageTest {
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun getters() = runTest {
-        val manifest: ByteArray =  readTestResource(manifestPath).getOrThrow()
+        val manifest: ByteArray = readTestResource(manifestPath).getOrThrow()
         val wasmModule: ByteArray = readTestResource(modulePath).getOrThrow()
         val fileReader = FileReaderFactory.fromMemory(
             manifest = manifest,
@@ -52,7 +52,7 @@ class WasmPackageTest {
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun createWrapper() = runTest {
-        val manifest: ByteArray =  readTestResource(manifestPath).getOrThrow()
+        val manifest: ByteArray = readTestResource(manifestPath).getOrThrow()
         val wasmModule: ByteArray = readTestResource(modulePath).getOrThrow()
         val fileReader = FileReaderFactory.fromMemory(
             manifest = manifest,

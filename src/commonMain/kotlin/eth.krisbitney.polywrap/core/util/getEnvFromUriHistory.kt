@@ -1,8 +1,8 @@
 package eth.krisbitney.polywrap.core.util
 
 import com.ensarsarajcic.kotlinx.serialization.msgpack.MsgPackDynamicSerializer
-import eth.krisbitney.polywrap.core.types.Client
 import eth.krisbitney.polywrap.core.resolution.Uri
+import eth.krisbitney.polywrap.core.types.Client
 import eth.krisbitney.polywrap.msgpack.msgPackEncode
 
 /**
@@ -24,4 +24,3 @@ fun getEnvFromUriHistory(uriHistory: List<Uri>, client: Client): ByteArray? {
 
     return null
 }
-

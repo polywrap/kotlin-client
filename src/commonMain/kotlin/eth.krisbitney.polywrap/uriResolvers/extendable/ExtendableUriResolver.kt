@@ -7,7 +7,7 @@ import eth.krisbitney.polywrap.core.types.Client
 import eth.krisbitney.polywrap.uriResolvers.UriResolverAggregator
 
 class ExtendableUriResolver(
-    private val extInterfaceUris: List<Uri> = defaultExtInterfaceUris,
+    private val extInterfaceUris: List<Uri> = defaultExtInterfaceUris
 ) : UriResolverAggregator() {
 
     companion object {

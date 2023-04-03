@@ -1,10 +1,9 @@
 package util
 
 import eth.krisbitney.polywrap.util.readFile
-import kotlin.test.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.*
-
+import kotlin.test.*
 
 class IoTest {
 
@@ -25,5 +24,4 @@ class IoTest {
         assertTrue(result.isFailure)
         assertTrue(result.exceptionOrNull() is Throwable)
     }
-
 }

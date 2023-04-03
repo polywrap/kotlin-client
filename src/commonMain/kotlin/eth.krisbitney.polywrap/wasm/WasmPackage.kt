@@ -22,8 +22,8 @@ data class WasmPackage(private val fileReader: FileReader) : WrapPackage {
      * @param wasmModule the wasm module buffer
      * @param fileReader a file reader used to read other package files
      */
-    constructor(manifestBuffer: ByteArray, wasmModule: ByteArray, fileReader: FileReader? = null)
-            : this(FileReaderFactory.fromMemory(manifestBuffer, wasmModule, fileReader))
+    constructor(manifestBuffer: ByteArray, wasmModule: ByteArray, fileReader: FileReader? = null) :
+        this(FileReaderFactory.fromMemory(manifestBuffer, wasmModule, fileReader))
 
     /**
      * Creates a new [WasmPackage] instance with the given manifest buffer and file reader.

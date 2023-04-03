@@ -70,5 +70,4 @@ abstract class UriResolverAggregator : UriResolver {
 
         return result
     }
-
 }

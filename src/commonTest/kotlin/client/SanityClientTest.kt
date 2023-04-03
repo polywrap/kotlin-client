@@ -32,10 +32,11 @@ class SanityClientTest {
         val client = PolywrapClient(config)
         val result = client.invoke(
             InvokeOptions(
-            uri = sha3Uri,
-            method = "keccak_256",
-            args = msgPackEncode(mapOf("message" to "Hello World!")),
-        )).await()
+                uri = sha3Uri,
+                method = "keccak_256",
+                args = msgPackEncode(mapOf("message" to "Hello World!"))
+            )
+        ).await()
 
         assertNotNull(result.exceptionOrNull())
         println(result.getOrThrow())

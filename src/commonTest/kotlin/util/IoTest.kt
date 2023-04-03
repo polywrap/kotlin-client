@@ -1,8 +1,10 @@
 package util
 
+import eth.krisbitney.polywrap.util.absolute
 import eth.krisbitney.polywrap.util.readFile
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.*
+import okio.Path.Companion.toPath
 import kotlin.test.*
 
 class IoTest {
@@ -10,7 +12,8 @@ class IoTest {
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun readFileReturnsFileContents() = runTest {
-        val result = readFile("/Users/kris/IdeaProjects/krisbitney/polywrap-kt/src/commonTest/resources/util/test.txt").await()
+        val path = "".toPath().resolve("src/commonTest/resources/util/test.txt").absolute()
+        val result = readFile(path.toString()).await()
         assertTrue(result.isSuccess)
 
         val expected = "Hello, world!".encodeToByteArray()

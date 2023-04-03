@@ -25,7 +25,14 @@ class WasmInstanceJvm(module: ByteArray, state: WasmModuleState) : WasmInstance(
         instance.use {
             val export = linker.get(store, "wrap", "_wrap_invoke").get().func()
             export.use {
-                val fn = WasmFunctions.func(store, export, WasmValType.I32, WasmValType.I32, WasmValType.I32, WasmValType.I32)
+                val fn = WasmFunctions.func(
+                    store,
+                    export,
+                    WasmValType.I32,
+                    WasmValType.I32,
+                    WasmValType.I32,
+                    WasmValType.I32
+                )
                 val isSuccess = fn.call(method.length, args.size, env?.size ?: 0)
                 return processResult(isSuccess == 1)
             }

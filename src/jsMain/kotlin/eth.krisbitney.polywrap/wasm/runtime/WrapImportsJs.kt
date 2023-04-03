@@ -3,7 +3,10 @@ package eth.krisbitney.polywrap.wasm.runtime
 import eth.krisbitney.polywrap.externals.WebAssembly
 import org.khronos.webgl.Int8Array
 
-class WrapImportsJs(state: WasmModuleState, memory: WebAssembly.Memory) : CommonWrapImports<WebAssembly.Memory>(state, memory) {
+class WrapImportsJs(
+    state: WasmModuleState,
+    memory: WebAssembly.Memory
+) : CommonWrapImports<WebAssembly.Memory>(state, memory) {
     override fun readBytes(source: WebAssembly.Memory, srcOffset: Int, length: Int): ByteArray {
         val src: ByteArray = Int8Array(source.buffer).unsafeCast<ByteArray>()
         val destination = ByteArray(length)

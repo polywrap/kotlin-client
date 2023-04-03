@@ -1,7 +1,10 @@
 package eth.krisbitney.polywrap.wasm.runtime
 
 actual object WasmInstanceFactory {
-    actual fun createInstance(module: ByteArray, state: WasmModuleState): WasmInstance = WasmInstanceNative(module, state)
+    actual fun createInstance(
+        module: ByteArray,
+        state: WasmModuleState
+    ): WasmInstance = WasmInstanceNative(module, state)
 }
 
 class WasmInstanceNative(module: ByteArray, state: WasmModuleState) : WasmInstance(module, state) {

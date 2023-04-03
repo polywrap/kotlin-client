@@ -86,11 +86,15 @@ tasks.withType<Test> {
 }
 
 configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
+    // this rule is not getting picked up in .editorconfig for some reason
+    disabledRules.set(setOf("no-wildcard-imports"))
     filter {
         exclude("**/generated/**")
         exclude("**/commonTest/**")
         exclude("**/jvmTest/**")
         exclude("**/jsTest/**")
         exclude("**/nativeTest/**")
+        exclude("**/wrap/**")
+        exclude("**/wrapHardCoded/**")
     }
 }

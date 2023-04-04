@@ -65,6 +65,9 @@ class DefaultBundle {
             }
         )
 
+        /**
+         * Get the default Client configuration bundle
+         */
         fun getConfig(): BuilderConfig {
             val builder = ClientConfigBuilder()
 

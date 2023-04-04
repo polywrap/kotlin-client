@@ -14,12 +14,27 @@ import io.polywrap.uriResolvers.embedded.UriRedirect
 import io.polywrap.uriResolvers.embedded.WrapperRedirect
 import io.polywrap.uriResolvers.extendable.ExtendableUriResolver
 
+/**
+ * A concrete implementation of the [BaseClientConfigBuilder] class.
+ * This class builds [ClientConfig] instances using provided configurations.
+ */
 class ClientConfigBuilder : BaseClientConfigBuilder() {
 
+    /**
+     * Adds the default configuration bundle to the current configuration.
+     *
+     * @return This [ClientConfigBuilder] instance for chaining calls.
+     */
     override fun addDefaults(): IClientConfigBuilder {
         return add(DefaultBundle.getConfig())
     }
 
+    /**
+     * Builds a [ClientConfig] instance using the current configuration and an optional [WrapperCache].
+     *
+     * @param cache An optional [WrapperCache] to be used by the [ClientConfig] instance.
+     * @return A [ClientConfig] instance based on the current configuration.
+     */
     override fun build(cache: WrapperCache?): ClientConfig {
         val static = StaticResolver.from(
             buildRedirects() + buildWrappers() + buildPackages()
@@ -38,6 +53,12 @@ class ClientConfigBuilder : BaseClientConfigBuilder() {
         )
     }
 
+    /**
+     * Builds a [ClientConfig] instance using the current configuration and a custom [UriResolver].
+     *
+     * @param resolver A custom [UriResolver] to be used by the [ClientConfig] instance.
+     * @return A [ClientConfig] instance based on the current configuration.
+     */
     override fun build(resolver: UriResolver): ClientConfig {
         return ClientConfig(
             envs = buildEnvs(),

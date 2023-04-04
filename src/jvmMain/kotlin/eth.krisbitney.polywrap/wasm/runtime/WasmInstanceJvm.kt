@@ -22,21 +22,35 @@ class WasmInstanceJvm(module: ByteArray, state: WasmModuleState) : WasmInstance(
         linker.module(store, "wrap", wasmTimeModule)
 
         val instance = Instance(store, wasmTimeModule, imports)
-        instance.use {
+        val result: Result<ByteArray>
+        try {
             val export = linker.get(store, "wrap", "_wrap_invoke").get().func()
             export.use {
-                val fn = WasmFunctions.func(
+                val isSuccess = export.call(
                     store,
-                    export,
-                    WasmValType.I32,
-                    WasmValType.I32,
-                    WasmValType.I32,
-                    WasmValType.I32
-                )
-                val isSuccess = fn.call(method.length, args.size, env?.size ?: 0)
-                return processResult(isSuccess == 1)
+                    Val.fromI32(method.length),
+                    Val.fromI32(args.size),
+                    Val.fromI32(env?.size ?: 0)
+                )[0].i32()
+                result = processResult(isSuccess == 1)
+            }
+        } finally {
+            instance.close()
+            config.close()
+            engine.close()
+            store.close()
+            memory.close()
+            wasmTimeModule.close()
+            linker.close()
+            imports.forEach {
+                if (it.type() == Extern.Type.FUNC) {
+                    it.func().close()
+                } else {
+                    it.memory().close()
+                }
             }
         }
+        return result
     }
 
     private fun createMemory(store: Store<WasmModuleState>, module: ByteArray): Result<Memory> {

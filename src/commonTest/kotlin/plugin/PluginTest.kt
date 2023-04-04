@@ -1,10 +1,10 @@
 package plugin
 
 import emptyMockInvoker
-import eth.krisbitney.polywrap.core.resolution.Uri
-import eth.krisbitney.polywrap.core.types.InvokeOptions
-import eth.krisbitney.polywrap.msgpack.msgPackDecode
-import eth.krisbitney.polywrap.msgpack.msgPackEncode
+import io.polywrap.core.resolution.Uri
+import io.polywrap.core.types.InvokeOptions
+import io.polywrap.msgpack.msgPackDecode
+import io.polywrap.msgpack.msgPackEncode
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import mockPlugin

@@ -1,9 +1,9 @@
 package wasm
 
-import eth.krisbitney.polywrap.core.types.FileReader
-import eth.krisbitney.polywrap.core.wrap.WrapManifest
-import eth.krisbitney.polywrap.wasm.FileReaderFactory
-import eth.krisbitney.polywrap.wasm.WasmPackage
+import io.polywrap.core.types.FileReader
+import io.polywrap.core.wrap.WrapManifest
+import io.polywrap.wasm.FileReaderFactory
+import io.polywrap.wasm.WasmPackage
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async

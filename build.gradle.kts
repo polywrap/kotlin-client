@@ -5,7 +5,7 @@ plugins {
     id("org.jlleitschuh.gradle.ktlint") version "11.3.1"
 }
 
-group = "eth.krisbitney"
+group = "io.polywrap"
 version = "1.0-SNAPSHOT"
 
 repositories {

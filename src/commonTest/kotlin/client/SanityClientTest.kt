@@ -1,10 +1,10 @@
 package client
 
-import eth.krisbitney.polywrap.client.PolywrapClient
-import eth.krisbitney.polywrap.configBuilder.ClientConfigBuilder
-import eth.krisbitney.polywrap.core.resolution.Uri
-import eth.krisbitney.polywrap.core.types.InvokeOptions
-import eth.krisbitney.polywrap.msgpack.msgPackEncode
+import io.polywrap.client.PolywrapClient
+import io.polywrap.configBuilder.ClientConfigBuilder
+import io.polywrap.core.resolution.Uri
+import io.polywrap.core.types.InvokeOptions
+import io.polywrap.msgpack.msgPackEncode
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.Serializable

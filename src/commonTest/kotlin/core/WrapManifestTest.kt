@@ -1,8 +1,8 @@
 package core
 
-import eth.krisbitney.polywrap.core.wrap.WrapManifest
-import eth.krisbitney.polywrap.core.wrap.formats.wrap01.WrapManifest01
-import eth.krisbitney.polywrap.core.wrap.formats.wrap01.abi.*
+import io.polywrap.core.wrap.WrapManifest
+import io.polywrap.core.wrap.formats.wrap01.WrapManifest01
+import io.polywrap.core.wrap.formats.wrap01.abi.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import readTestResource
@@ -226,7 +226,7 @@ class WrapManifestTest {
         testSerializeAndDeserializeManifest(testCase)
     }
 
-    private suspend fun testSerializeAndDeserializeManifest(testCase: String) {
+    private fun testSerializeAndDeserializeManifest(testCase: String) {
         val bytes = readTestResource(testCase).getOrThrow()
         val manifest = WrapManifest.deserialize(bytes).getOrThrow()
         WrapManifest.serialize(manifest)

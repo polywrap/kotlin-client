@@ -1,8 +1,8 @@
-import eth.krisbitney.polywrap.core.resolution.Uri
-import eth.krisbitney.polywrap.core.resolution.UriResolutionContext
-import eth.krisbitney.polywrap.core.types.InvokeOptions
-import eth.krisbitney.polywrap.core.types.Invoker
-import eth.krisbitney.polywrap.core.types.Wrapper
+import io.polywrap.core.resolution.Uri
+import io.polywrap.core.resolution.UriResolutionContext
+import io.polywrap.core.types.InvokeOptions
+import io.polywrap.core.types.Invoker
+import io.polywrap.core.types.Wrapper
 import kotlinx.coroutines.Deferred
 
 val emptyMockInvoker = object : Invoker {

@@ -1,10 +1,10 @@
-import eth.krisbitney.polywrap.core.types.Invoker
-import eth.krisbitney.polywrap.msgpack.msgPackDecode
-import eth.krisbitney.polywrap.msgpack.msgPackEncode
-import eth.krisbitney.polywrap.plugin.PluginFactory
-import eth.krisbitney.polywrap.plugin.PluginMethod
-import eth.krisbitney.polywrap.plugin.PluginModule
-import eth.krisbitney.polywrap.plugin.PluginPackage
+import io.polywrap.core.types.Invoker
+import io.polywrap.msgpack.msgPackDecode
+import io.polywrap.msgpack.msgPackEncode
+import io.polywrap.plugin.PluginFactory
+import io.polywrap.plugin.PluginMethod
+import io.polywrap.plugin.PluginModule
+import io.polywrap.plugin.PluginPackage
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.serializer
 

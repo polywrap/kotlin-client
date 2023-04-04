@@ -1,7 +1,7 @@
 package util
 
-import eth.krisbitney.polywrap.util.absolute
-import eth.krisbitney.polywrap.util.readFile
+import io.polywrap.util.absolute
+import io.polywrap.util.readFile
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.*
 import okio.Path.Companion.toPath

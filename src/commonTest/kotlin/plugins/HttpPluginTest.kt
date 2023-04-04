@@ -1,15 +1,15 @@
 package plugins
 
 import emptyMockInvoker
-import eth.krisbitney.polywrap.plugins.http.HttpPlugin
-import eth.krisbitney.polywrap.plugins.http.wrapHardCoded.ArgsGet
-import eth.krisbitney.polywrap.plugins.http.wrapHardCoded.ArgsPost
-import eth.krisbitney.polywrap.plugins.http.wrapHardCoded.HttpRequest
-import eth.krisbitney.polywrap.plugins.http.wrapHardCoded.HttpResponseType
 import io.ktor.client.*
 import io.ktor.client.engine.mock.*
 import io.ktor.client.plugins.*
 import io.ktor.http.*
+import io.polywrap.plugins.http.HttpPlugin
+import io.polywrap.plugins.http.wrapHardCoded.ArgsGet
+import io.polywrap.plugins.http.wrapHardCoded.ArgsPost
+import io.polywrap.plugins.http.wrapHardCoded.HttpRequest
+import io.polywrap.plugins.http.wrapHardCoded.HttpResponseType
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test

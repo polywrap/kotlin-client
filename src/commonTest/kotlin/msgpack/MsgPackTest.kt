@@ -1,9 +1,9 @@
 package msgpack
 
-import eth.krisbitney.polywrap.msgpack.EnvSerializer
-import eth.krisbitney.polywrap.msgpack.MsgPackMap
-import eth.krisbitney.polywrap.msgpack.msgPackDecode
-import eth.krisbitney.polywrap.msgpack.msgPackEncode
+import io.polywrap.msgpack.EnvSerializer
+import io.polywrap.msgpack.MsgPackMap
+import io.polywrap.msgpack.msgPackDecode
+import io.polywrap.msgpack.msgPackEncode
 import kotlinx.serialization.Serializable
 import kotlin.test.*
 

@@ -1,13 +1,13 @@
 package configBuilder
 
-import eth.krisbitney.polywrap.configBuilder.BuilderConfig
-import eth.krisbitney.polywrap.configBuilder.ClientConfigBuilder
-import eth.krisbitney.polywrap.configBuilder.DefaultBundle
-import eth.krisbitney.polywrap.core.resolution.Uri
-import eth.krisbitney.polywrap.core.resolution.UriPackageOrWrapper
-import eth.krisbitney.polywrap.core.resolution.UriResolutionContext
-import eth.krisbitney.polywrap.core.resolution.UriResolver
-import eth.krisbitney.polywrap.core.types.*
+import io.polywrap.configBuilder.BuilderConfig
+import io.polywrap.configBuilder.ClientConfigBuilder
+import io.polywrap.configBuilder.DefaultBundle
+import io.polywrap.core.resolution.Uri
+import io.polywrap.core.resolution.UriPackageOrWrapper
+import io.polywrap.core.resolution.UriResolutionContext
+import io.polywrap.core.resolution.UriResolver
+import io.polywrap.core.types.*
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest

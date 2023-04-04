@@ -1,8 +1,8 @@
 package core
 
-import eth.krisbitney.polywrap.core.resolution.*
-import eth.krisbitney.polywrap.core.resolution.algorithms.getImplementations
-import eth.krisbitney.polywrap.uriResolvers.embedded.UriRedirect
+import io.polywrap.core.resolution.*
+import io.polywrap.core.resolution.algorithms.getImplementations
+import io.polywrap.uriResolvers.embedded.UriRedirect
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async

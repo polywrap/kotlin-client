@@ -8,12 +8,24 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 
+/**
+ * A file reader class for reading files from a URI Resolver Extension, which inherits from [FileReader].
+ *
+ * @property resolverExtensionUri The URI of the resolver extension.
+ * @property wrapperUri The URI of the wrapper containing the file.
+ * @property invoker The [Invoker] instance used for invoking the extension.
+ */
 class UriResolverExtensionFileReader(
     private val resolverExtensionUri: Uri,
     private val wrapperUri: Uri,
     private val invoker: Invoker
 ) : FileReader() {
 
+    /**
+     * Reads the file at the given file path within the wrapper specified by [wrapperUri].
+     * @param filePath The relative file path within the wrapper.
+     * @return A [Deferred] [Result] containing the file content as a [ByteArray] or an exception if the file is not found or cannot be read.
+     */
     override suspend fun readFile(filePath: String): Deferred<Result<ByteArray>> = coroutineScope {
         async {
             val path = combinePaths(wrapperUri.path, filePath)

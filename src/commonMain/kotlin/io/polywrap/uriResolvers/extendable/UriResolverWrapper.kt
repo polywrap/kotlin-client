@@ -11,11 +11,30 @@ import io.polywrap.uriResolvers.ResolverWithHistory
 import io.polywrap.wasm.WasmPackage
 import kotlinx.serialization.serializer
 
+/**
+ * A wrapper class for URI Resolver Extension implementations. Inherits from [ResolverWithHistory].
+ *
+ * @property implementationUri The URI of the implementation to be used for resolving.
+ */
 class UriResolverWrapper(private val implementationUri: Uri) : ResolverWithHistory() {
 
+    /**
+     * Returns the step description for this URI Resolver Extension.
+     * @param uri The URI being resolved.
+     * @param result The result of the URI resolution as a [Result] of [UriPackageOrWrapper].
+     * @return A string representing the step description.
+     */
     override suspend fun getStepDescription(uri: Uri, result: Result<UriPackageOrWrapper>): String =
         "ResolverExtension (${implementationUri.uri})"
 
+    /**
+     * Tries to resolve the given URI using the implementation specified by [implementationUri].
+     * @param uri The URI being resolved.
+     * @param client The [Client] instance for the current request.
+     * @param resolutionContext The [UriResolutionContext] for the current URI resolution process.
+     * @param resolveToPackage A flag indicating whether the URI should be resolved to a package or not.
+     * @return A [Result] containing a [UriPackageOrWrapper] instance.
+     */
     override suspend fun _tryResolveUri(
         uri: Uri,
         client: Client,

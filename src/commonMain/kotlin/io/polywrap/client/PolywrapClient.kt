@@ -14,20 +14,47 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.serialization.serializer
 import io.polywrap.core.resolution.algorithms.getImplementations as getImplementationsFromUri
 
+/**
+ * A client for interacting with Polywrap packages, providing high-level operations
+ * such as retrieving package files, invoking package methods, and resolving URIs.
+ *
+ * @property config The [ClientConfig] configuration for this client instance.
+ */
 class PolywrapClient(val config: ClientConfig) : Client {
 
+    /**
+     * Returns the interface implementations stored in the configuration.
+     *
+     * @return A map of interface URIs to a list of their respective implementation URIs.
+     */
     override fun getInterfaces(): Map<Uri, List<Uri>>? {
         return config.interfaces
     }
 
+    /**
+     * Returns the environments stored in the configuration.
+     *
+     * @return A map of environment URIs to their respective [WrapperEnv] instances.
+     */
     override fun getEnvs(): Map<Uri, WrapperEnv>? {
         return config.envs
     }
 
+    /**
+     * Returns the [UriResolver] stored in the configuration.
+     *
+     * @return The configured [UriResolver].
+     */
     override fun getResolver(): UriResolver {
         return config.resolver
     }
 
+    /**
+     * Retrieves the [WrapperEnv] associated with the specified URI.
+     *
+     * @param uri The URI of the wrapper environment to retrieve.
+     * @return The [WrapperEnv] associated with the given URI, or null if not found.
+     */
     override fun getEnvByUri(uri: Uri): WrapperEnv? {
         config.envs?.forEach { env ->
             if (env.key == uri) {
@@ -37,6 +64,12 @@ class PolywrapClient(val config: ClientConfig) : Client {
         return null
     }
 
+    /**
+     * Retrieves the manifest of the package at the specified URI.
+     *
+     * @param uri The URI of the package to retrieve the manifest for.
+     * @return A [Deferred] [Result] containing the [WrapManifest], or an error if the retrieval fails.
+     */
     override suspend fun getManifest(uri: Uri): Deferred<Result<WrapManifest>> = coroutineScope {
         async {
             val load = loadPackage(uri).await()
@@ -58,6 +91,13 @@ class PolywrapClient(val config: ClientConfig) : Client {
         }
     }
 
+    /**
+     * Retrieves the file at the specified path within the package at the specified URI.
+     *
+     * @param uri The URI of the package containing the file.
+     * @param path The path of the file within the package.
+     * @return A [Deferred] [Result] containing the file content as a [ByteArray], or an error if the retrieval fails.
+     */
     override suspend fun getFile(
         uri: Uri,
         path: String
@@ -85,6 +125,14 @@ class PolywrapClient(val config: ClientConfig) : Client {
         }
     }
 
+    /**
+     * Retrieves the list of implementation URIs for the specified interface URI.
+     *
+     * @param uri The URI of the interface for which implementations are being requested.
+     * @param applyResolution If true, the client will attempt to resolve URIs using its [UriResolver].
+     * @param resolutionContext The [UriResolutionContext] to be used during URI resolution, or null for a default context.
+     * @return A [Deferred] [Result] containing the list of implementation URIs.
+     */
     override suspend fun getImplementations(
         uri: Uri,
         applyResolution: Boolean,
@@ -100,6 +148,13 @@ class PolywrapClient(val config: ClientConfig) : Client {
         }
     }
 
+    /**
+     * Invokes the specified [Wrapper] with the provided [InvokeOptions].
+     *
+     * @param wrapper The [Wrapper] to be invoked.
+     * @param options The [InvokeOptions] specifying the URI, method, arguments, and other settings for the invocation.
+     * @return A [Deferred] [Result] containing the invocation result as a [ByteArray], or an error if the invocation fails.
+     */
     override suspend fun invokeWrapper(
         wrapper: Wrapper,
         options: InvokeOptions
@@ -113,6 +168,12 @@ class PolywrapClient(val config: ClientConfig) : Client {
         }
     }
 
+    /**
+     * Invokes the wrapper at the specified URI with the provided [InvokeOptions].
+     *
+     * @param options The [InvokeOptions] specifying the URI, method, arguments, and other settings for the invocation.
+     * @return A [Deferred] [Result] containing the invocation result as a [ByteArray], or an error if the invocation fails.
+     */
     override suspend fun invoke(options: InvokeOptions): Deferred<Result<ByteArray>> = coroutineScope {
         async {
             val resolutionContext = options.resolutionContext ?: BasicUriResolutionContext()
@@ -134,6 +195,16 @@ class PolywrapClient(val config: ClientConfig) : Client {
         }
     }
 
+    /**
+     * Invokes the wrapper at the specified URI with the provided method, arguments, and environment.
+     *
+     * @param uri The URI of the wrapper to be invoked.
+     * @param method The method to be called on the wrapper.
+     * @param args A map of arguments to be passed to the method.
+     * @param env A map representing the environment to be used during the invocation.
+     * @param resolutionContext The [UriResolutionContext] to be used during URI resolution, or null for a default context.
+     * @return A [Deferred] [InvokeResult] containing the invocation result of type [R], or an error if the invocation fails.
+     */
     suspend inline fun <reified R> invoke(
         uri: Uri,
         method: String,
@@ -157,6 +228,16 @@ class PolywrapClient(val config: ClientConfig) : Client {
         }
     }
 
+    /**
+     * Invokes the wrapper at the specified URI with the provided method and arguments of type [T], and environment.
+     *
+     * @param uri The URI of the wrapper to be invoked.
+     * @param method The method to be called on the wrapper.
+     * @param args An instance of type [T] representing the arguments to be passed to the method.
+     * @param env A map representing the environment to be used during the invocation.
+     * @param resolutionContext The [UriResolutionContext] to be used during URI resolution, or null for a default context.
+     * @return A [Deferred] [InvokeResult] containing the invocation result of type [R], or an error if the invocation fails.
+     */
     suspend inline fun <reified T, reified R> invoke(
         uri: Uri,
         method: String,
@@ -180,6 +261,14 @@ class PolywrapClient(val config: ClientConfig) : Client {
         }
     }
 
+    /**
+     * Attempts to resolve the specified URI using the client's [UriResolver].
+     *
+     * @param uri The URI to be resolved.
+     * @param resolutionContext The [UriResolutionContext] to be used during URI resolution, or null for a default context.
+     * @param resolveToPackage If true, the client will attempt to resolve the URI to a package rather than a wrapper.
+     * @return A [Deferred] [Result] containing the resolved [UriPackageOrWrapper], or an error if the resolution fails.
+     */
     override suspend fun tryResolveUri(
         uri: Uri,
         resolutionContext: UriResolutionContext?,
@@ -190,6 +279,22 @@ class PolywrapClient(val config: ClientConfig) : Client {
             val context = resolutionContext ?: BasicUriResolutionContext()
             uriResolver.tryResolveUri(uri, this@PolywrapClient, context, true)
         }
+    }
+
+    /**
+     * Validates the package at the specified URI.
+     *
+     * @param uri The URI of the package to validate.
+     * @param abi If true, ABI validation will be performed.
+     * @param recursive If true, validation will be performed recursively on all dependencies.
+     * @return A [Deferred] [Result] containing a boolean indicating the validation result, or an error if validation fails.
+     */
+    override suspend fun validate(
+        uri: Uri,
+        abi: Boolean,
+        recursive: Boolean
+    ): Deferred<Result<Boolean>> {
+        throw NotImplementedError("validate() is not yet implemented.")
     }
 
     private suspend fun loadWrapper(
@@ -282,13 +387,5 @@ class PolywrapClient(val config: ClientConfig) : Client {
                 }
             }
         }
-    }
-
-    override suspend fun validate(
-        uri: Uri,
-        abi: Boolean,
-        recursive: Boolean
-    ): Deferred<Result<Boolean>> {
-        throw NotImplementedError("validate() is not yet implemented.")
     }
 }

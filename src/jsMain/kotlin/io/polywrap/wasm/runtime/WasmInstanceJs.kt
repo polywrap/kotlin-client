@@ -6,9 +6,10 @@ import io.polywrap.util.jsObject
 import kotlinx.coroutines.await
 
 /**
- * A platform-specific object for creating [WasmInstance] objects in JavaScript.
+ * A platform-specific object for creating [WasmInstance] objects.
  */
 actual object WasmInstanceFactory {
+
     /**
      * Creates a [WasmInstance] using the provided module and state.
      *

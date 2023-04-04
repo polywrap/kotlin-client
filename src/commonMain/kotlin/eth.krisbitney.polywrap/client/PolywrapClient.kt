@@ -134,6 +134,29 @@ class PolywrapClient(val config: ClientConfig) : Client {
         }
     }
 
+    suspend inline fun <reified R> invoke(
+        uri: Uri,
+        method: String,
+        args: Map<String, Any>? = null,
+        env: Map<String, Any>? = null,
+        resolutionContext: UriResolutionContext? = null
+    ): Deferred<InvokeResult<R>> = coroutineScope {
+        async {
+            val options = InvokeOptions(
+                uri = uri,
+                method = method,
+                args = args?.let { msgPackEncode(EnvSerializer, it) },
+                env = env?.let { msgPackEncode(EnvSerializer, it) },
+                resolutionContext = resolutionContext
+            )
+            val result = invoke(options).await()
+            if (result.isFailure) {
+                Result.failure<R>(result.exceptionOrNull()!!)
+            }
+            msgPackDecode(serializer<R>(), result.getOrThrow())
+        }
+    }
+
     suspend inline fun <reified T, reified R> invoke(
         uri: Uri,
         method: String,
@@ -141,14 +164,14 @@ class PolywrapClient(val config: ClientConfig) : Client {
         env: Map<String, Any>? = null,
         resolutionContext: UriResolutionContext? = null
     ): Deferred<InvokeResult<R>> = coroutineScope {
-        val options = InvokeOptions(
-            uri = uri,
-            method = method,
-            args = args?.let { msgPackEncode(serializer<T>(), it) },
-            env = env?.let { msgPackEncode(EnvSerializer, it) },
-            resolutionContext = resolutionContext
-        )
         async {
+            val options = InvokeOptions(
+                uri = uri,
+                method = method,
+                args = args?.let { msgPackEncode(serializer<T>(), it) },
+                env = env?.let { msgPackEncode(EnvSerializer, it) },
+                resolutionContext = resolutionContext
+            )
             val result = invoke(options).await()
             if (result.isFailure) {
                 Result.failure<R>(result.exceptionOrNull()!!)

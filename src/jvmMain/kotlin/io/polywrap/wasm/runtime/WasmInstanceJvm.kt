@@ -61,12 +61,8 @@ class WasmInstanceJvm(module: ByteArray, state: WasmModuleState) : WasmInstance(
             }
         } finally {
             instance.close()
-            config.close()
-            engine.close()
-            store.close()
-            memory.close()
             wasmTimeModule.close()
-            linker.close()
+            memory.close()
             imports.forEach {
                 if (it.type() == Extern.Type.FUNC) {
                     it.func().close()
@@ -74,6 +70,9 @@ class WasmInstanceJvm(module: ByteArray, state: WasmModuleState) : WasmInstance(
                     it.memory().close()
                 }
             }
+            store.close()
+            linker.close()
+            engine.close()
         }
         return result
     }

@@ -3,7 +3,6 @@ package io.polywrap.wasm.runtime
 import io.polywrap.externals.WebAssembly
 import org.khronos.webgl.Int8Array
 
-
 /**
  * A concrete implementation of [CommonWrapImports] for JavaScript environments.
  * @param state The [WasmModuleState] instance associated with the current instance of the [WasmInstance].

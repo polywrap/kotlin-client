@@ -59,6 +59,7 @@ external class AsyncWasmInstance {
          * @return A [WebAssembly.Memory] object.
          */
         fun createMemory(config: createMemoryArgs): WebAssembly.Memory
+
         /**
          * Creates an asynchronous WebAssembly instance.
          * @param config The configuration object containing the module as a [ByteArray], imports, and an optional list of required exports.

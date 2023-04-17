@@ -5,8 +5,6 @@ import io.polywrap.configBuilder.ClientConfigBuilder
 import io.polywrap.core.resolution.Uri
 import io.polywrap.core.types.InvokeOptions
 import io.polywrap.msgpack.msgPackEncode
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.Serializable
 import kotlin.test.Test
 import kotlin.test.assertNull
@@ -15,20 +13,18 @@ class SanityClientTest {
 
     private val sha3Uri = Uri("ipfs/QmThRxFfr7Hj9Mq6WmcGXjkRrgqMG3oD93SLX27tinQWy5")
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun tryResolveUri() = runTest {
+    fun tryResolveUri() {
         val config = ClientConfigBuilder().addDefaults().build()
         val client = PolywrapClient(config)
-        val result = client.tryResolveUri(uri = sha3Uri).await()
+        val result = client.tryResolveUri(uri = sha3Uri)
 
         assertNull(result.exceptionOrNull())
         println(result.getOrThrow())
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun invoke() = runTest {
+    fun invoke() {
         val config = ClientConfigBuilder().addDefaults().build()
         val client = PolywrapClient(config)
         val result = client.invoke(
@@ -37,28 +33,26 @@ class SanityClientTest {
                 method = "keccak_256",
                 args = msgPackEncode(mapOf("message" to "Hello World!"))
             )
-        ).await()
+        )
         assertNull(result.exceptionOrNull())
         println(result.getOrThrow())
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun invokeWithMapStringAnyArgs() = runTest {
+    fun invokeWithMapStringAnyArgs() {
         val config = ClientConfigBuilder().addDefaults().build()
         val client = PolywrapClient(config)
         val result = client.invoke<String>(
             uri = sha3Uri,
             method = "keccak_256",
             args = mapOf("message" to "Hello World!")
-        ).await()
+        )
         assertNull(result.exceptionOrNull())
         println(result.getOrThrow())
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun invokeWithReifiedTypes() = runTest {
+    fun invokeWithReifiedTypes() {
         @Serializable
         data class MethodArgs(
             val firstKey: String,
@@ -70,7 +64,7 @@ class SanityClientTest {
             uri = sha3Uri,
             method = "keccak_256",
             args = MethodArgs("firstValue", "secondValue")
-        ).await()
+        )
         assertNull(result.exceptionOrNull())
         println(result.getOrThrow())
     }

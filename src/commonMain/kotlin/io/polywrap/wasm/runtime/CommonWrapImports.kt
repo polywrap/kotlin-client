@@ -41,7 +41,7 @@ abstract class CommonWrapImports<TMemory>(private val state: WasmModuleState, pr
      */
     abstract fun writeBytes(source: ByteArray, destination: TMemory, dstOffset: Int): TMemory
 
-    override suspend fun __wrap_subinvoke(uriPtr: Int, uriLen: Int, methodPtr: Int, methodLen: Int, argsPtr: Int, argsLen: Int): Int {
+    override fun __wrap_subinvoke(uriPtr: Int, uriLen: Int, methodPtr: Int, methodLen: Int, argsPtr: Int, argsLen: Int): Int {
         state.subinvoke.result = null
         state.subinvoke.error = null
 
@@ -49,7 +49,7 @@ abstract class CommonWrapImports<TMemory>(private val state: WasmModuleState, pr
         val method = readBytes(memory, methodPtr, methodLen).decodeToString()
         val args = readBytes(memory, argsPtr, argsLen)
 
-        val result = state.invoker.invoke(InvokeOptions(Uri(uri), method, args)).await()
+        val result = state.invoker.invoke(InvokeOptions(Uri(uri), method, args))
 
         if (result.isSuccess) {
             state.subinvoke.result = result.getOrThrow()
@@ -107,9 +107,9 @@ abstract class CommonWrapImports<TMemory>(private val state: WasmModuleState, pr
         state.invoke.error = readBytes(memory, ptr, len).decodeToString()
     }
 
-    override suspend fun __wrap_getImplementations(uriPtr: Int, uriLen: Int): Int {
+    override fun __wrap_getImplementations(uriPtr: Int, uriLen: Int): Int {
         val uri = readBytes(memory, uriPtr, uriLen).decodeToString()
-        val result = state.invoker.getImplementations(Uri(uri)).await()
+        val result = state.invoker.getImplementations(Uri(uri))
         if (result.isFailure) {
             state.abortWithInternalError(result.exceptionOrNull().toString())
         }

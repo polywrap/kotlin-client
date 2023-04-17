@@ -4,7 +4,6 @@ import io.polywrap.core.resolution.Uri
 import io.polywrap.core.resolution.UriResolutionHandler
 import io.polywrap.core.resolution.UriResolver
 import io.polywrap.core.wrap.WrapManifest
-import kotlinx.coroutines.Deferred
 
 /** A map of string-indexed, Msgpack-serializable environmental variables associated with a wrapper */
 typealias WrapperEnv = Map<String, Any>
@@ -57,7 +56,7 @@ interface Client : Invoker, UriResolutionHandler {
      * @param uri a wrap URI
      * @return a Result containing the io.polywrap.core.WrapManifest if the request was successful
      */
-    suspend fun getManifest(uri: Uri): Deferred<Result<WrapManifest>>
+    fun getManifest(uri: Uri): Result<WrapManifest>
 
     /**
      * Returns a file contained in a wrap package.
@@ -65,10 +64,10 @@ interface Client : Invoker, UriResolutionHandler {
      * @param path file path from wrapper root
      * @return a Result containing a file if the request was successful
      */
-    suspend fun getFile(
+    fun getFile(
         uri: Uri,
         path: String
-    ): Deferred<Result<ByteArray>>
+    ): Result<ByteArray>
 
     /**
      * Validate a wrapper, given a URI.
@@ -78,9 +77,9 @@ interface Client : Invoker, UriResolutionHandler {
      * @param recursive recursively validate imports
      * @return a Result containing a boolean or Error
      */
-    suspend fun validate(
+    fun validate(
         uri: Uri,
         abi: Boolean = false,
         recursive: Boolean = false
-    ): Deferred<Result<Boolean>>
+    ): Result<Boolean>
 }

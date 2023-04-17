@@ -6,7 +6,7 @@ import io.polywrap.core.types.WrapperEnv
 import io.polywrap.uriResolvers.RecursiveResolver
 import io.polywrap.uriResolvers.SequentialResolver
 import io.polywrap.uriResolvers.cache.BasicWrapperCache
-import io.polywrap.uriResolvers.cache.SynchronizedCacheResolver
+import io.polywrap.uriResolvers.cache.CacheResolver
 import io.polywrap.uriResolvers.cache.WrapperCache
 import io.polywrap.uriResolvers.embedded.PackageRedirect
 import io.polywrap.uriResolvers.embedded.StaticResolver
@@ -43,7 +43,7 @@ class ClientConfigBuilder : BaseClientConfigBuilder() {
             envs = buildEnvs(),
             interfaces = buildInterfaces(),
             resolver = RecursiveResolver(
-                SynchronizedCacheResolver(
+                CacheResolver(
                     SequentialResolver(
                         listOf(static) + config.resolvers + listOf(ExtendableUriResolver())
                     ),

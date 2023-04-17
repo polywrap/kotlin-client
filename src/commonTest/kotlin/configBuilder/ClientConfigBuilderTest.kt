@@ -8,9 +8,6 @@ import io.polywrap.core.resolution.UriPackageOrWrapper
 import io.polywrap.core.resolution.UriResolutionContext
 import io.polywrap.core.resolution.UriResolver
 import io.polywrap.core.types.*
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -18,10 +15,10 @@ import kotlin.test.fail
 
 class ClientConfigBuilderTest {
 
-    val emptyBuilderConfig = ClientConfigBuilder().config
+    private val emptyBuilderConfig = ClientConfigBuilder().config
 
     class MockUriResolver(val from: String, val to: String) : UriResolver {
-        override suspend fun tryResolveUri(
+        override fun tryResolveUri(
             uri: Uri,
             client: Client,
             resolutionContext: UriResolutionContext,
@@ -31,16 +28,16 @@ class ClientConfigBuilderTest {
         }
     }
 
-    val mockWrapPackage: WrapPackage = object : WrapPackage {
-        override suspend fun createWrapper() = throw NotImplementedError()
-        override suspend fun getManifest() = throw NotImplementedError()
-        override suspend fun getFile(path: String): Deferred<Result<ByteArray>> {
+    private val mockWrapPackage: WrapPackage = object : WrapPackage {
+        override fun createWrapper() = throw NotImplementedError()
+        override fun getManifest() = throw NotImplementedError()
+        override fun getFile(path: String): Result<ByteArray> {
             throw NotImplementedError()
         }
     }
 
-    val mockWrapper: Wrapper = object : Wrapper {
-        override suspend fun invoke(options: InvokeOptions, invoker: Invoker): Deferred<Result<ByteArray>> {
+    private val mockWrapper: Wrapper = object : Wrapper {
+        override fun invoke(options: InvokeOptions, invoker: Invoker): Result<ByteArray> {
             throw NotImplementedError()
         }
     }
@@ -91,17 +88,15 @@ class ClientConfigBuilderTest {
         "wrap://ens/testTo.eth"
     )
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun shouldBuildAnEmptyPartialConfig() = runTest {
+    fun shouldBuildAnEmptyPartialConfig() {
         val config = ClientConfigBuilder().build()
         assertEquals(config.interfaces, mapOf())
         assertEquals(config.envs, mapOf())
     }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
+    
     @Test
-    fun shouldSuccessfullyAddConfigObjectAndBuild() = runTest {
+    fun shouldSuccessfullyAddConfigObjectAndBuild() {
         val configObject = BuilderConfig(
             testEnvs,
             testInterfaces,
@@ -135,9 +130,9 @@ class ClientConfigBuilderTest {
         assertEquals(configObject, builderConfig)
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
+    
     @Test
-    fun shouldSuccessfullyAddTheDefaultConfig() = runTest {
+    fun shouldSuccessfullyAddTheDefaultConfig() {
         val builder = ClientConfigBuilder().addDefaults()
 
         val clientConfig = builder.build()
@@ -148,10 +143,9 @@ class ClientConfigBuilderTest {
         val expectedBuilderConfig = DefaultBundle.getConfig()
         assertEquals(expectedBuilderConfig, builderConfig)
     }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
+    
     @Test
-    fun shouldSuccessfullyAddAnEnv() = runTest {
+    fun shouldSuccessfullyAddAnEnv() {
         val envUri = "wrap://ens/some-plugin.polywrap.eth"
         val env = mapOf(
             "foo" to "bar",
@@ -165,9 +159,8 @@ class ClientConfigBuilderTest {
         assertEquals(env, config.envs!![Uri(envUri)])
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun shouldSuccessfullyAddToAnExistingEnv() = runTest {
+    fun shouldSuccessfullyAddToAnExistingEnv() {
         val envUri = "wrap://ens/some-plugin.polywrap.eth"
         val env1 = mapOf("foo" to "bar")
         val env2 = mapOf("baz" to mapOf("biz" to "buz"))
@@ -183,10 +176,9 @@ class ClientConfigBuilderTest {
         assertEquals(1, config.envs!!.size)
         assertEquals(expectedEnv, config.envs!![Uri(envUri)])
     }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
+    
     @Test
-    fun shouldSuccessfullyAddTwoSeparateEnvs() = runTest {
+    fun shouldSuccessfullyAddTwoSeparateEnvs() {
         val config = ClientConfigBuilder()
             .addEnv(testEnvs.keys.first() to testEnvs.values.first())
             .addEnv(testEnvs.keys.last() to testEnvs.values.last())
@@ -198,9 +190,8 @@ class ClientConfigBuilderTest {
         assertEquals(testEnvs.values.last(), config.envs!![Uri(testEnvs.keys.last())])
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun shouldRemoveAnEnv() = runTest {
+    fun shouldRemoveAnEnv() {
         val config = ClientConfigBuilder()
             .addEnv(testEnvs.keys.first() to testEnvs.values.first())
             .addEnv(testEnvs.keys.last() to testEnvs.values.last())
@@ -212,9 +203,8 @@ class ClientConfigBuilderTest {
         assertEquals(testEnvs.values.last(), config.envs!![Uri(testEnvs.keys.last())])
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun shouldSetAnEnv() = runTest {
+    fun shouldSetAnEnv() {
         val envUri = "wrap://ens/some.plugin.eth"
 
         val env = mapOf("foo" to "bar")
@@ -226,9 +216,8 @@ class ClientConfigBuilderTest {
         assertEquals(env, config.envs!![Uri(envUri)])
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun shouldSetAnEnvOverAnExistingEnv() = runTest {
+    fun shouldSetAnEnvOverAnExistingEnv() {
         val envUri = "wrap://ens/some.plugin.eth"
 
         val env1 = mapOf("foo" to "bar")
@@ -244,9 +233,8 @@ class ClientConfigBuilderTest {
         assertEquals(env2, config.envs!![Uri(envUri)])
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun shouldAddAnInterfaceImplementationForANonExistentInterface() = runTest {
+    fun shouldAddAnInterfaceImplementationForANonExistentInterface() {
         val interfaceUri = "wrap://ens/some.interface.eth"
         val implUri = "wrap://ens/interface.impl.eth"
 
@@ -264,9 +252,8 @@ class ClientConfigBuilderTest {
         )
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun shouldAddAnInterfaceImplementationForAnInterfaceThatAlreadyExists() = runTest {
+    fun shouldAddAnInterfaceImplementationForAnInterfaceThatAlreadyExists() {
         val interfaceUri = "wrap://ens/some.interface.eth"
         val implUri1 = "wrap://ens/interface.impl1.eth"
         val implUri2 = "wrap://ens/interface.impl2.eth"
@@ -286,9 +273,8 @@ class ClientConfigBuilderTest {
         )
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun shouldAddDifferentImplementationsForDifferentInterfaces() = runTest {
+    fun shouldAddDifferentImplementationsForDifferentInterfaces() {
         val interfaceUri1 = "wrap://ens/some.interface1.eth"
         val interfaceUri2 = "wrap://ens/some.interface2.eth"
         val implUri1 = "wrap://ens/interface.impl1.eth"
@@ -316,9 +302,8 @@ class ClientConfigBuilderTest {
         )
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun shouldAddMultipleImplementationsForANonExistentInterface() = runTest {
+    fun shouldAddMultipleImplementationsForANonExistentInterface() {
         val interfaceUri = "wrap://ens/some.interface.eth"
         val implUri1 = "wrap://ens/interface.impl1.eth"
         val implUri2 = "wrap://ens/interface.impl2.eth"
@@ -336,10 +321,9 @@ class ClientConfigBuilderTest {
             config.interfaces
         )
     }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
+    
     @Test
-    fun shouldAddMultipleImplementationsForAnExistingInterface() = runTest {
+    fun shouldAddMultipleImplementationsForAnExistingInterface() {
         val interfaceUri = "wrap://ens/some.interface.eth"
         val implUri1 = "wrap://ens/interface.impl1.eth"
         val implUri2 = "wrap://ens/interface.impl2.eth"
@@ -360,9 +344,8 @@ class ClientConfigBuilderTest {
         )
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun shouldAddMultipleDifferentImplementationsForDifferentInterfaces() = runTest {
+    fun shouldAddMultipleDifferentImplementationsForDifferentInterfaces() {
         val interfaceUri1 = "wrap://ens/some.interface1.eth"
         val interfaceUri2 = "wrap://ens/some.interface2.eth"
         val implUri1 = "wrap://ens/interface.impl1.eth"
@@ -391,10 +374,9 @@ class ClientConfigBuilderTest {
             config.interfaces
         )
     }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
+    
     @Test
-    fun shouldRemoveAnInterfaceImplementation() = runTest {
+    fun shouldRemoveAnInterfaceImplementation() {
         val interfaceUri1 = "wrap://ens/some.interface1.eth"
         val interfaceUri2 = "wrap://ens/some.interface2.eth"
         val implUri1 = "wrap://ens/interface.impl1.eth"
@@ -419,9 +401,8 @@ class ClientConfigBuilderTest {
         )
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun shouldCompletelyRemoveAnInterfaceIfThereAreNoImplementationsLeft() = runTest {
+    fun shouldCompletelyRemoveAnInterfaceIfThereAreNoImplementationsLeft() {
         val interfaceUri1 = "wrap://ens/some.interface1.eth"
         val interfaceUri2 = "wrap://ens/some.interface2.eth"
         val implUri1 = "wrap://ens/interface.impl1.eth"
@@ -443,10 +424,9 @@ class ClientConfigBuilderTest {
             config.interfaces
         )
     }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
+    
     @Test
-    fun shouldAddAnUriRedirect() = runTest {
+    fun shouldAddAnUriRedirect() {
         val from = "wrap://ens/from.this.ens"
         val to = "wrap://ens/to.that.ens"
 
@@ -462,9 +442,8 @@ class ClientConfigBuilderTest {
         )
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun shouldAddTwoUriRedirectsWithDifferentFromUris() = runTest {
+    fun shouldAddTwoUriRedirectsWithDifferentFromUris() {
         val from1 = "wrap://ens/from.this1.ens"
         val to1 = "wrap://ens/to.that1.ens"
         val from2 = "wrap://ens/from.this2.ens"
@@ -484,9 +463,8 @@ class ClientConfigBuilderTest {
         )
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun shouldOverwriteAnExistingUriRedirectIfFromMatchesOnAdd() = runTest {
+    fun shouldOverwriteAnExistingUriRedirectIfFromMatchesOnAdd() {
         val from1 = "wrap://ens/from1.this.ens"
         val from2 = "wrap://ens/from2.this.ens"
         val to1 = "wrap://ens/to.that1.ens"
@@ -506,10 +484,9 @@ class ClientConfigBuilderTest {
             builderConfig
         )
     }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
+    
     @Test
-    fun shouldRemoveAnUriRedirect() = runTest {
+    fun shouldRemoveAnUriRedirect() {
         val from1 = "wrap://ens/from.this1.ens"
         val to1 = "wrap://ens/to.that1.ens"
         val from2 = "wrap://ens/from.this2.ens"
@@ -528,10 +505,9 @@ class ClientConfigBuilderTest {
             builderConfig
         )
     }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
+    
     @Test
-    fun shouldSetUriResolver() = runTest {
+    fun shouldSetUriResolver() {
         val uriResolver = MockUriResolver(
             "wrap://ens/from.eth",
             "wrap://ens/to.eth"
@@ -546,9 +522,8 @@ class ClientConfigBuilderTest {
         assertEquals(mutableListOf<UriResolver>(uriResolver), builderConfig.resolvers)
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun shouldAddMultipleResolvers() = runTest {
+    fun shouldAddMultipleResolvers() {
         val uriResolver1 = MockUriResolver(
             "wrap://ens/from1.eth",
             "wrap://ens/to1.eth"
@@ -568,10 +543,9 @@ class ClientConfigBuilderTest {
         assertNotNull(config)
         assertEquals(mutableListOf<UriResolver>(uriResolver1, uriResolver2), builderConfig.resolvers)
     }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
+    
     @Test
-    fun shouldAddAPackage() = runTest {
+    fun shouldAddAPackage() {
         val uri = "wrap://ens/some.package.eth"
 
         val builderConfig = ClientConfigBuilder()
@@ -585,10 +559,9 @@ class ClientConfigBuilderTest {
             builderConfig.packages
         )
     }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
+    
     @Test
-    fun shouldAddMultiplePackages() = runTest {
+    fun shouldAddMultiplePackages() {
         val uri1 = "wrap://ens/some1.package.eth"
         val uri2 = "wrap://ens/some2.package.eth"
 
@@ -608,9 +581,8 @@ class ClientConfigBuilderTest {
         )
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun shouldRemoveAPackage() = runTest {
+    fun shouldRemoveAPackage() {
         val uri1 = "wrap://ens/some1.package.eth"
         val uri2 = "wrap://ens/some2.package.eth"
 
@@ -631,9 +603,8 @@ class ClientConfigBuilderTest {
         )
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun shouldAddAWrapper() = runTest {
+    fun shouldAddAWrapper() {
         val uri = "wrap://ens/some.wrapper.eth"
 
         val builderConfig = ClientConfigBuilder().addWrapper(uri to mockWrapper).config
@@ -643,10 +614,9 @@ class ClientConfigBuilderTest {
             builderConfig.wrappers
         )
     }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
+    
     @Test
-    fun shouldAddMultipleWrappers() = runTest {
+    fun shouldAddMultipleWrappers() {
         val uri1 = "wrap://ens/some1.wrapper.eth"
         val uri2 = "wrap://ens/some2.wrapper.eth"
 
@@ -666,9 +636,8 @@ class ClientConfigBuilderTest {
         )
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun shouldRemoveAWrapper() = runTest {
+    fun shouldRemoveAWrapper() {
         val uri1 = "wrap://ens/some1.wrapper.eth"
         val uri2 = "wrap://ens/some2.wrapper.eth"
 
@@ -687,9 +656,8 @@ class ClientConfigBuilderTest {
         )
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun shouldSanitizeIncomingUrisForEnvs() = runTest {
+    fun shouldSanitizeIncomingUrisForEnvs() {
         val shortUri = "ens/some1.wrapper.eth"
         val longUri = "wrap://ens/some2.wrapper.eth"
 
@@ -716,10 +684,9 @@ class ClientConfigBuilderTest {
             builderConfig2.envs
         )
     }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
+    
     @Test
-    fun shouldSanitizeIncomingUrisForInterfaceImplementations() = runTest {
+    fun shouldSanitizeIncomingUrisForInterfaceImplementations() {
         val shortUri = "ens/some1.wrapper.eth"
         val longUri = "wrap://ens/some2.wrapper.eth"
 
@@ -747,9 +714,8 @@ class ClientConfigBuilderTest {
         )
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun shouldSanitizeIncomingUrisForRedirects() = runTest {
+    fun shouldSanitizeIncomingUrisForRedirects() {
         val shortUri = "ens/some1.wrapper.eth"
         val longUri = "wrap://ens/some2.wrapper.eth"
 
@@ -777,9 +743,8 @@ class ClientConfigBuilderTest {
         )
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun shouldSanitizeIncomingUrisForPackages() = runTest {
+    fun shouldSanitizeIncomingUrisForPackages() {
         val shortUri = "ens/some1.package.eth"
         val longUri = "wrap://ens/some2.package.eth"
 
@@ -809,10 +774,9 @@ class ClientConfigBuilderTest {
             builderConfig2.packages
         )
     }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
+    
     @Test
-    fun shouldSanitizeIncomingUrisForWrappers() = runTest {
+    fun shouldSanitizeIncomingUrisForWrappers() {
         val shortUri = "ens/some1.wrapper.eth"
         val longUri = "wrap://ens/some2.wrapper.eth"
 

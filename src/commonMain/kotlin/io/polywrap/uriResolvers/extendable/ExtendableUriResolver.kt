@@ -44,7 +44,7 @@ class ExtendableUriResolver(
      * @param resolutionContext The [UriResolutionContext] for the current URI resolution process.
      * @return A [Result] containing a list of [UriResolverWrapper] instances.
      */
-    override suspend fun getUriResolvers(
+    override fun getUriResolvers(
         uri: Uri,
         client: Client,
         resolutionContext: UriResolutionContext
@@ -56,7 +56,7 @@ class ExtendableUriResolver(
                 extInterfaceUri,
                 false,
                 resolutionContext.createSubContext()
-            ).await()
+            )
 
             if (!getImplementationsResult.isSuccess) {
                 return Result.failure(getImplementationsResult.exceptionOrNull()!!)
@@ -80,7 +80,7 @@ class ExtendableUriResolver(
      * @param resolveToPackage A flag indicating whether the URI should be resolved to a package or not.
      * @return A [Result] containing a [UriPackageOrWrapper] instance.
      */
-    override suspend fun tryResolveUri(
+    override fun tryResolveUri(
         uri: Uri,
         client: Client,
         resolutionContext: UriResolutionContext,

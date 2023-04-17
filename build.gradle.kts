@@ -21,11 +21,11 @@ kotlin {
             useJUnitPlatform()
         }
     }
-    js(IR) {
-        nodejs {
-            binaries.executable()
-        }
-    }
+//    js(IR) {
+//        nodejs {
+//            binaries.executable()
+//        }
+//    }
     val hostOs = System.getProperty("os.name")
     val isMingwX64 = hostOs.startsWith("Windows")
     val nativeTarget = when {
@@ -61,14 +61,14 @@ kotlin {
             }
         }
         val jvmTest by getting
-        val jsMain by getting {
-            dependencies {
-                implementation(npm("@polywrap/asyncify-js", "~0.10.0-pre"))
-                implementation("io.ktor:ktor-client-js:2.2.4") // http plugin
-                implementation("com.squareup.okio:okio-nodefilesystem:3.3.0") // fs plugin
-            }
-        }
-        val jsTest by getting
+//        val jsMain by getting {
+//            dependencies {
+//                implementation(npm("@polywrap/asyncify-js", "~0.10.0-pre"))
+//                implementation("io.ktor:ktor-client-js:2.2.4") // http plugin
+//                implementation("com.squareup.okio:okio-nodefilesystem:3.3.0") // fs plugin
+//            }
+//        }
+//        val jsTest by getting
         val nativeMain by getting {
             dependencies {
                 implementation("io.ktor:ktor-client-cio:2.2.4") // http plugin

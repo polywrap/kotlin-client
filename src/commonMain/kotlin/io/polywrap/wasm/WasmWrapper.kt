@@ -4,8 +4,6 @@ import io.polywrap.core.types.*
 import io.polywrap.wasm.runtime.WasmInstanceFactory
 import io.polywrap.wasm.runtime.WasmModuleState
 import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 
 /**
  * Represents a WebAssembly (Wasm) wrapper for executing Wasm code.
@@ -21,21 +19,19 @@ data class WasmWrapper(val wasmModule: ByteArray) : Wrapper {
      * @param invoker The invoker instance.
      * @return A [Deferred] [Result] containing the result as a [ByteArray] on success, or an error if one occurs.
      */
-    override suspend fun invoke(options: InvokeOptions, invoker: Invoker): Deferred<Result<ByteArray>> = coroutineScope {
-        async {
-            val (_, method, args, env, _) = options
-            val (abortWithInvokeAborted, abortWithInternalError) = createAborts(options)
-            val state = WasmModuleState(
-                method = method,
-                args = args ?: byteArrayOf(0),
-                env = env ?: byteArrayOf(0),
-                abortWithInvokeAborted = abortWithInvokeAborted,
-                abortWithInternalError = abortWithInternalError,
-                invoker = invoker
-            )
-            val instance = WasmInstanceFactory.createInstance(wasmModule, state)
-            instance.invoke(method, args ?: byteArrayOf(0), env ?: byteArrayOf(0))
-        }
+    override fun invoke(options: InvokeOptions, invoker: Invoker): Result<ByteArray> {
+        val (_, method, args, env, _) = options
+        val (abortWithInvokeAborted, abortWithInternalError) = createAborts(options)
+        val state = WasmModuleState(
+            method = method,
+            args = args ?: byteArrayOf(0),
+            env = env ?: byteArrayOf(0),
+            abortWithInvokeAborted = abortWithInvokeAborted,
+            abortWithInternalError = abortWithInternalError,
+            invoker = invoker
+        )
+        val instance = WasmInstanceFactory.createInstance(wasmModule, state)
+        return instance.invoke(method, args ?: byteArrayOf(0), env ?: byteArrayOf(0))
     }
 
     /**

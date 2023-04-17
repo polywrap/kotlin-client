@@ -2,20 +2,17 @@ package io.polywrap.uriResolvers.cache
 
 import io.polywrap.core.resolution.*
 import io.polywrap.core.types.*
-import kotlinx.coroutines.sync.Mutex
 
 /**
- * A URI resolver that uses a synchronized cache to store and retrieve the results of resolved URIs.
+ * A URI resolver that uses a cache to store and retrieve the results of resolved URIs.
  *
  * @property resolver The [UriResolver] to use when resolving URIs.
  * @property cache The cache to store and retrieve resolved URIs.
  */
-class SynchronizedCacheResolver(
+class CacheResolver(
     private val resolver: UriResolver,
     private val cache: WrapperCache
 ) : UriResolver {
-
-    private val locks = mutableMapOf<Uri, Mutex>()
 
     /**
      * Tries to resolve the given URI using a cache and returns the result.
@@ -26,7 +23,7 @@ class SynchronizedCacheResolver(
      * @param resolveToPackage If `true`, the resolver will resolve the URI to a [WrapPackage] instead of a [Wrapper].
      * @return A [Result] containing the resolved [UriPackageOrWrapper] on success, or an exception on failure.
      */
-    override suspend fun tryResolveUri(
+    override fun tryResolveUri(
         uri: Uri,
         client: Client,
         resolutionContext: UriResolutionContext,
@@ -36,8 +33,6 @@ class SynchronizedCacheResolver(
             val subContext = resolutionContext.createSubHistoryContext()
             return resolver.tryResolveUri(uri, client, subContext, resolveToPackage)
         }
-
-        acquireMutex(uri)
 
         val wrapper = cache.get(uri)
 
@@ -59,9 +54,7 @@ class SynchronizedCacheResolver(
         val result = resolver.tryResolveUri(uri, client, subContext, resolveToPackage)
 
         val finalResult = if (result.isSuccess) {
-            val cachedResult = cacheResult(result.getOrThrow(), subContext)
-            cancelMutex(uri)
-            cachedResult
+            cacheResult(result.getOrThrow(), subContext)
         } else {
             result
         }
@@ -85,7 +78,7 @@ class SynchronizedCacheResolver(
      * @param subContext The context for the resolution.
      * @return A [Result] containing the cached [UriPackageOrWrapper] on success, or an exception on failure.
      */
-    private suspend fun cacheResult(
+    private fun cacheResult(
         uriPackageOrWrapper: UriPackageOrWrapper,
         subContext: UriResolutionContext
     ): Result<UriPackageOrWrapper> {
@@ -119,31 +112,6 @@ class SynchronizedCacheResolver(
 
                 Result.success(uriPackageOrWrapper)
             }
-        }
-    }
-
-    /**
-     * Acquires a mutex lock for the given URI if it's not cached.
-     *
-     * @param uri The URI for which to acquire a lock.
-     */
-    private suspend fun acquireMutex(uri: Uri) {
-        if (cache.get(uri) == null) {
-            val lock = locks.getOrPut(uri) { Mutex() }
-            lock.lock()
-        }
-    }
-
-    /**
-     * Releases the mutex lock for the given URI if it's locked.
-     *
-     * @param uri The URI for which to release the lock.
-     */
-    private fun cancelMutex(uri: Uri) {
-        val lock = locks[uri]
-        if (lock != null) {
-            lock.unlock()
-            locks.remove(uri)
         }
     }
 }

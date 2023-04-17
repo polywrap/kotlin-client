@@ -5,17 +5,14 @@ import io.polywrap.core.resolution.Uri
 import io.polywrap.core.types.InvokeOptions
 import io.polywrap.msgpack.msgPackDecode
 import io.polywrap.msgpack.msgPackEncode
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runTest
 import mockPlugin
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class PluginPackageTest {
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun createWrapper() = runTest {
+    fun createWrapper() {
         val pluginPackage = mockPlugin(null)
         val result = pluginPackage.createWrapper()
         assertTrue(result.isSuccess)
@@ -24,9 +21,8 @@ class PluginPackageTest {
 
 class PluginWrapperTest {
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun canInvokeWrapper() = runTest {
+    fun canInvokeWrapper() {
         val wrapper = mockPlugin(null).createWrapper().getOrThrow()
 
         val invocation = InvokeOptions(
@@ -35,7 +31,7 @@ class PluginWrapperTest {
             args = msgPackEncode(mapOf("num" to 1, "ber" to 2))
         )
 
-        val result = wrapper.invoke(invocation, emptyMockInvoker).await()
+        val result = wrapper.invoke(invocation, emptyMockInvoker)
         assertEquals(result.exceptionOrNull(), null)
 
         val data = msgPackDecode<Int>(result.getOrThrow()).getOrNull()

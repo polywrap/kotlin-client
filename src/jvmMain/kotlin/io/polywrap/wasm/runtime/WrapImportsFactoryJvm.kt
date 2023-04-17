@@ -1,7 +1,6 @@
 package io.polywrap.wasm.runtime
 
 import io.github.kawamuray.wasmtime.*
-import kotlinx.coroutines.runBlocking
 
 /**
  * A class for wrapping imports for a WebAssembly module with the JVM implementation.
@@ -61,11 +60,9 @@ class WrapImportsFactoryJvm {
                 WasmValType.I32,
                 WasmValType.I32,
                 WasmValType.I32,
-                WasmValType.I32
-            ) { uriPtr: Int, uriLen: Int, methodPtr: Int, methodLen: Int, argsPtr: Int, argsLen: Int ->
-                Int
-                runBlocking { wrapImports.__wrap_subinvoke(uriPtr, uriLen, methodPtr, methodLen, argsPtr, argsLen) }
-            }
+                WasmValType.I32,
+                wrapImports::__wrap_subinvoke
+            )
             return Extern.fromFunc(func)
         }
 
@@ -109,11 +106,9 @@ class WrapImportsFactoryJvm {
                 store,
                 WasmValType.I32,
                 WasmValType.I32,
-                WasmValType.I32
-            ) { uriPtr: Int, uriLen: Int ->
-                Int
-                runBlocking { wrapImports.__wrap_getImplementations(uriPtr, uriLen) }
-            }
+                WasmValType.I32,
+                wrapImports::__wrap_getImplementations
+            )
             return Extern.fromFunc(func)
         }
 

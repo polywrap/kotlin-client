@@ -5,9 +5,6 @@ import io.polywrap.core.types.InvokeOptions
 import io.polywrap.core.types.Invoker
 import io.polywrap.msgpack.msgPackDecode
 import io.polywrap.msgpack.msgPackEncode
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import kotlinx.serialization.serializer
 
 object UriResolverExtensionInvoker {
@@ -18,22 +15,21 @@ object UriResolverExtensionInvoker {
      * @param wrapper - URI for wrapper that implements the UriResolver interface
      * @param uri - the URI to resolve
      */
-    suspend fun tryResolveUri(
+    fun tryResolveUri(
         invoker: Invoker,
         wrapper: Uri,
         uri: Uri
-    ): Deferred<Result<MaybeUriOrManifest>> = coroutineScope {
-        async {
-            val result = invoker.invoke(
-                InvokeOptions(
-                    uri = wrapper,
-                    method = "tryResolveUri",
-                    args = msgPackEncode(serializer(), mapOf("authority" to uri.authority, "path" to uri.path))
-                )
-            ).await()
-            if (result.isFailure) {
-                Result.failure<MaybeUriOrManifest>(result.exceptionOrNull()!!)
-            }
+    ): Result<MaybeUriOrManifest> {
+        val result = invoker.invoke(
+            InvokeOptions(
+                uri = wrapper,
+                method = "tryResolveUri",
+                args = msgPackEncode(serializer(), mapOf("authority" to uri.authority, "path" to uri.path))
+            )
+        )
+        return if (result.isFailure) {
+            Result.failure(result.exceptionOrNull()!!)
+        } else {
             msgPackDecode(MaybeUriOrManifest.serializer(), result.getOrThrow())
         }
     }
@@ -45,22 +41,21 @@ object UriResolverExtensionInvoker {
      * @param wrapper - URI for wrapper that implements the UriResolver interface
      * @param path - a filepath, the format of which depends on the UriResolver
      */
-    suspend fun getFile(
+    fun getFile(
         invoker: Invoker,
         wrapper: Uri,
         path: String
-    ): Deferred<Result<ByteArray?>> = coroutineScope {
-        async {
-            val result = invoker.invoke(
-                InvokeOptions(
-                    uri = wrapper,
-                    method = "getFile",
-                    args = msgPackEncode(serializer(), mapOf("path" to path))
-                )
-            ).await()
-            if (result.isFailure) {
-                Result.failure<MaybeUriOrManifest>(result.exceptionOrNull()!!)
-            }
+    ): Result<ByteArray?> {
+        val result = invoker.invoke(
+            InvokeOptions(
+                uri = wrapper,
+                method = "getFile",
+                args = msgPackEncode(serializer(), mapOf("path" to path))
+            )
+        )
+        return if (result.isFailure) {
+            Result.failure(result.exceptionOrNull()!!)
+        } else {
             msgPackDecode(serializer(), result.getOrThrow())
         }
     }

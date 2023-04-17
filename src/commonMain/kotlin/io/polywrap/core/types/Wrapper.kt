@@ -1,7 +1,5 @@
 package io.polywrap.core.types
 
-import kotlinx.coroutines.Deferred
-
 /**
  * The Wrapper definition, which can be used to spawn
  * many invocations of this particular Wrapper. Internally
@@ -14,7 +12,7 @@ interface Wrapper : Invocable {
      *
      * @param options Options for this invocation.
      * @param invoker The client instance requesting this invocation. This client will be used for any sub-invocations that occur.
-     * @return A [Deferred] with [Result] containing a MsgPack encoded byte array or an error.
+     * @return A [Result] containing a MsgPack encoded byte array or an error.
      */
-    override suspend fun invoke(options: InvokeOptions, invoker: Invoker): Deferred<Result<ByteArray>>
+    override fun invoke(options: InvokeOptions, invoker: Invoker): Result<ByteArray>
 }

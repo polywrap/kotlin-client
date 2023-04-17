@@ -16,7 +16,7 @@ abstract class UriResolverAggregator : UriResolver {
      * @param resolutionContext The [UriResolutionContext] for the current URI resolution process.
      * @return A [Result] containing a list of [UriResolver] instances.
      */
-    abstract suspend fun getUriResolvers(
+    abstract fun getUriResolvers(
         uri: Uri,
         client: Client,
         resolutionContext: UriResolutionContext
@@ -30,7 +30,7 @@ abstract class UriResolverAggregator : UriResolver {
      * @param resolveToPackage A flag indicating whether the URI should be resolved to a package or not.
      * @return A [Result] containing a [UriPackageOrWrapper] instance.
      */
-    override suspend fun tryResolveUri(
+    override fun tryResolveUri(
         uri: Uri,
         client: Client,
         resolutionContext: UriResolutionContext,
@@ -64,7 +64,7 @@ abstract class UriResolverAggregator : UriResolver {
      * @param resolveToPackage A flag indicating whether the URI should be resolved to a package or not.
      * @return A [Result] containing a [UriPackageOrWrapper] instance.
      */
-    protected suspend fun tryResolveUriWithResolvers(
+    protected fun tryResolveUriWithResolvers(
         uri: Uri,
         client: Client,
         resolvers: List<UriResolver>,

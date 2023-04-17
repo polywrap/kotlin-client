@@ -4,9 +4,6 @@ import io.polywrap.core.resolution.Uri
 import io.polywrap.core.types.FileReader
 import io.polywrap.core.types.Invoker
 import io.polywrap.core.util.combinePaths
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 
 /**
  * A file reader class for reading files from a URI Resolver Extension, which inherits from [FileReader].
@@ -24,23 +21,21 @@ class UriResolverExtensionFileReader(
     /**
      * Reads the file at the given file path within the wrapper specified by [wrapperUri].
      * @param filePath The relative file path within the wrapper.
-     * @return A [Deferred] [Result] containing the file content as a [ByteArray] or an exception if the file is not found or cannot be read.
+     * @return A [Result] containing the file content as a [ByteArray] or an exception if the file is not found or cannot be read.
      */
-    override suspend fun readFile(filePath: String): Deferred<Result<ByteArray>> = coroutineScope {
-        async {
-            val path = combinePaths(wrapperUri.path, filePath)
-            val result = UriResolverExtensionInvoker.getFile(invoker, resolverExtensionUri, path).await()
+    override fun readFile(filePath: String): Result<ByteArray> {
+        val path = combinePaths(wrapperUri.path, filePath)
+        val result = UriResolverExtensionInvoker.getFile(invoker, resolverExtensionUri, path)
 
-            if (result.isFailure) {
-                Result.failure<ByteArray>(result.exceptionOrNull()!!)
-            }
+        if (result.isFailure) {
+            return Result.failure<ByteArray>(result.exceptionOrNull()!!)
+        }
 
-            val fileContent = result.getOrNull()
-            if (fileContent != null) {
-                Result.success(fileContent)
-            } else {
-                Result.failure(Exception("File not found at $path"))
-            }
+        val fileContent = result.getOrNull()
+        return if (fileContent != null) {
+            Result.success(fileContent)
+        } else {
+            Result.failure(Exception("File not found at $path"))
         }
     }
 }

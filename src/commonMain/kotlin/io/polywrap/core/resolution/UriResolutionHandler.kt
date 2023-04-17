@@ -1,7 +1,5 @@
 package io.polywrap.core.resolution
 
-import kotlinx.coroutines.Deferred
-
 /**
  * An entity capable of resolving a wrap URI, typically by using an IUriResolver implementation.
  */
@@ -13,9 +11,9 @@ interface UriResolutionHandler {
      * @param resolutionContext The current URI resolution context (optional).
      * @return A Result containing either a wrap package, a wrapper, or a URI if successful.
      */
-    suspend fun tryResolveUri(
+    fun tryResolveUri(
         uri: Uri,
         resolutionContext: UriResolutionContext? = null,
         resolveToPackage: Boolean = false
-    ): Deferred<Result<UriPackageOrWrapper>>
+    ): Result<UriPackageOrWrapper>
 }

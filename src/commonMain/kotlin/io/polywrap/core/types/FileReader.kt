@@ -1,7 +1,5 @@
 package io.polywrap.core.types
 
-import kotlinx.coroutines.Deferred
-
 /**
  * An abstract class for reading files.
  */
@@ -12,7 +10,7 @@ abstract class FileReader {
      * @param filePath The path to the file to be read.
      * @return A [Result] object that contains the content of the file as a [ByteArray] if the file is read successfully.
      */
-    abstract suspend fun readFile(filePath: String): Deferred<Result<ByteArray>>
+    abstract fun readFile(filePath: String): Result<ByteArray>
 
     companion object {
         const val WRAP_MANIFEST_PATH = "wrap.info"

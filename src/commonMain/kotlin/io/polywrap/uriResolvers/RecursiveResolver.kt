@@ -23,7 +23,7 @@ class RecursiveResolver(private val resolver: UriResolver) : UriResolver {
      * @param resolveToPackage If true, the resolver will attempt to resolve the URI to a wrap package. If false, the resolver will attempt to resolve the URI to a wrapper.
      * @return A [Result] containing a [UriPackageOrWrapper] if the resolution is successful, or an exception if not.
      */
-    override suspend fun tryResolveUri(
+    override fun tryResolveUri(
         uri: Uri,
         client: Client,
         resolutionContext: UriResolutionContext,
@@ -49,7 +49,7 @@ class RecursiveResolver(private val resolver: UriResolver) : UriResolver {
      * @param resolveToPackage If true, the resolver will attempt to resolve the URI to a wrap package. If false, the resolver will attempt to resolve the URI to a wrapper.
      * @return A [Result] containing a [UriPackageOrWrapper] if the resolution is successful, or an exception if not.
      */
-    private suspend fun tryResolveUriAgainIfRedirect(
+    private fun tryResolveUriAgainIfRedirect(
         result: Result<UriPackageOrWrapper>,
         uri: Uri,
         client: Client,

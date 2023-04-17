@@ -24,7 +24,7 @@ class UriResolverWrapper(private val implementationUri: Uri) : ResolverWithHisto
      * @param result The result of the URI resolution as a [Result] of [UriPackageOrWrapper].
      * @return A string representing the step description.
      */
-    override suspend fun getStepDescription(uri: Uri, result: Result<UriPackageOrWrapper>): String =
+    override fun getStepDescription(uri: Uri, result: Result<UriPackageOrWrapper>): String =
         "ResolverExtension (${implementationUri.uri})"
 
     /**
@@ -35,7 +35,7 @@ class UriResolverWrapper(private val implementationUri: Uri) : ResolverWithHisto
      * @param resolveToPackage A flag indicating whether the URI should be resolved to a package or not.
      * @return A [Result] containing a [UriPackageOrWrapper] instance.
      */
-    override suspend fun _tryResolveUri(
+    override fun _tryResolveUri(
         uri: Uri,
         client: Client,
         resolutionContext: UriResolutionContext,
@@ -64,7 +64,7 @@ class UriResolverWrapper(private val implementationUri: Uri) : ResolverWithHisto
         return Result.success(UriPackageOrWrapper.UriValue(uri))
     }
 
-    private suspend fun tryResolveUriWithImplementation(
+    private fun tryResolveUriWithImplementation(
         uri: Uri,
         implementationUri: Uri,
         client: Client,
@@ -95,20 +95,20 @@ class UriResolverWrapper(private val implementationUri: Uri) : ResolverWithHisto
                 ),
                 env = env
             )
-        ).await()
+        )
         if (result.isFailure) {
             return Result.failure(result.exceptionOrNull()!!)
         }
         return msgPackDecode(serializer(), result.getOrThrow())
     }
 
-    private suspend fun loadResolverExtension(
+    private fun loadResolverExtension(
         currentUri: Uri,
         resolverExtensionUri: Uri,
         client: Client,
         resolutionContext: UriResolutionContext
     ): Result<Wrapper> {
-        val result = client.tryResolveUri(resolverExtensionUri, resolutionContext).await()
+        val result = client.tryResolveUri(resolverExtensionUri, resolutionContext)
 
         return when (val uriPackageOrWrapper = result.getOrNull()) {
             is UriPackageOrWrapper.UriValue -> {

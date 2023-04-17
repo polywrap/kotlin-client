@@ -3,7 +3,6 @@ package io.polywrap.plugin
 import io.polywrap.core.types.WrapPackage
 import io.polywrap.core.types.Wrapper
 import io.polywrap.core.wrap.WrapManifest
-import kotlinx.coroutines.Deferred
 
 /**
  * Implementation of the [WrapPackage] interface for Plugin Wrap packages.
@@ -22,23 +21,19 @@ data class PluginPackage<TConfig>(
      *
      * @return A [WrapManifest] instance
      */
-    override suspend fun getManifest(): Result<WrapManifest> {
-        return Result.success(manifest)
-    }
+    override fun getManifest(): Result<WrapManifest> = Result.success(manifest)
 
     /**
      * Produce an instance of the package's Plugin Wrapper
      *
      * @return A [PluginWrapper] instance
      */
-    override suspend fun createWrapper(): Result<Wrapper> {
-        return Result.success(PluginWrapper(pluginModule))
-    }
+    override fun createWrapper(): Result<Wrapper> = Result.success(PluginWrapper(pluginModule))
 
     /**
      * Not Implemented. Throws a NotImplementedError.
      */
-    override suspend fun getFile(path: String): Deferred<Result<ByteArray>> {
+    override fun getFile(path: String): Result<ByteArray> {
         throw NotImplementedError()
     }
 }

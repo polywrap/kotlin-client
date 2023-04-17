@@ -2,7 +2,6 @@ package io.polywrap.core.types
 
 import io.polywrap.core.resolution.Uri
 import io.polywrap.core.resolution.UriResolutionContext
-import kotlinx.coroutines.Deferred
 
 /**
  * Options required for a wrapper invocation.
@@ -67,9 +66,9 @@ interface Invoker {
      *
      * @param wrapper An instance of a Wrapper to invoke.
      * @param options Invoker options to set and a Wrapper instance to invoke.
-     * @return A [Deferred] with [Result] containing a MsgPack encoded byte array or an error.
+     * @return A [Result] containing a MsgPack encoded byte array or an error.
      */
-    suspend fun invokeWrapper(wrapper: Wrapper, options: InvokeOptions): Deferred<Result<ByteArray>>
+    fun invokeWrapper(wrapper: Wrapper, options: InvokeOptions): Result<ByteArray>
 
     /**
      * Invoke a wrapper.
@@ -77,9 +76,9 @@ interface Invoker {
      * Unlike [invokeWrapper], this method automatically retrieves and caches the wrapper.
      *
      * @param options Invoker options to set.
-     * @return A [Deferred] with [Result] containing a MsgPack encoded byte array or an error.
+     * @return A [Result] containing a MsgPack encoded byte array or an error.
      */
-    suspend fun invoke(options: InvokeOptions): Deferred<Result<ByteArray>>
+    fun invoke(options: InvokeOptions): Result<ByteArray>
 
     /**
      * Returns the interface implementations associated with an interface URI from the
@@ -90,11 +89,11 @@ interface Invoker {
      * @param resolutionContext - Use and update an existing resolution context
      * @return a Result containing an array of URIs if the request was successful
      */
-    suspend fun getImplementations(
+    fun getImplementations(
         uri: Uri,
         applyResolution: Boolean = false,
         resolutionContext: UriResolutionContext? = null
-    ): Deferred<Result<List<Uri>>>
+    ): Result<List<Uri>>
 }
 
 /** An invocable entity, such as a wrapper. */
@@ -104,7 +103,7 @@ interface Invocable {
      *
      * @param options Invoke options to set.
      * @param invoker An [Invoker], capable of invoking this object.
-     * @return A [Deferred] with [Result] containing a MsgPack encoded byte array or an error.
+     * @return A [Result] containing a MsgPack encoded byte array or an error.
      */
-    suspend fun invoke(options: InvokeOptions, invoker: Invoker): Deferred<Result<ByteArray>>
+    fun invoke(options: InvokeOptions, invoker: Invoker): Result<ByteArray>
 }

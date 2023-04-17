@@ -3,38 +3,30 @@ package core
 import io.polywrap.core.resolution.*
 import io.polywrap.core.resolution.algorithms.getImplementations
 import io.polywrap.uriResolvers.embedded.UriRedirect
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.test.*
 import kotlin.test.*
 
 class GetImplementationsTest {
     private fun getUriResolutionHandler(redirects: List<UriRedirect>): UriResolutionHandler {
         return object : UriResolutionHandler {
-            override suspend fun tryResolveUri(uri: Uri, resolutionContext: UriResolutionContext?, resolveToPackage: Boolean): Deferred<Result<UriPackageOrWrapper>> = coroutineScope {
-                async {
-                    var currentUri = uri
-                    val result: UriPackageOrWrapper
-                    while (true) {
-                        val redirect = redirects.find { it.first.uri == currentUri.uri }
-                        if (redirect != null) {
-                            currentUri = redirect.second
-                        } else {
-                            result = UriPackageOrWrapper.UriValue(currentUri)
-                            break
-                        }
+            override fun tryResolveUri(uri: Uri, resolutionContext: UriResolutionContext?, resolveToPackage: Boolean): Result<UriPackageOrWrapper> {
+                var currentUri = uri
+                val result: UriPackageOrWrapper
+                while (true) {
+                    val redirect = redirects.find { it.first.uri == currentUri.uri }
+                    if (redirect != null) {
+                        currentUri = redirect.second
+                    } else {
+                        result = UriPackageOrWrapper.UriValue(currentUri)
+                        break
                     }
-                    Result.success(result)
                 }
+                return Result.success(result)
             }
         }
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun worksWithComplexRedirects() = runTest {
+    fun worksWithComplexRedirects() {
         val interface1Uri = "wrap://ens/some-interface1.eth"
         val interface2Uri = "wrap://ens/some-interface2.eth"
         val interface3Uri = "wrap://ens/some-interface3.eth"
@@ -99,9 +91,8 @@ class GetImplementationsTest {
         )
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun interfaceImplementationsAreNotRedirected() = runTest {
+    fun interfaceImplementationsAreNotRedirected() {
         val interface1Uri = "wrap://ens/some-interface1.eth"
 
         val implementation1Uri = "wrap://ens/some-implementation.eth"

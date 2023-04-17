@@ -15,7 +15,7 @@ import io.polywrap.core.types.WrapErrorCode
  * @param resolutionContext (Optional) The context used for URI resolution.
  * @return A [Result] that contains the list of implementation URIs if successful, or a [WrapError] if there was an error.
  */
-suspend fun getImplementations(
+fun getImplementations(
     wrapperInterfaceUri: Uri,
     interfaces: Map<Uri, List<Uri>>,
     client: UriResolutionHandler? = null,
@@ -55,7 +55,7 @@ suspend fun getImplementations(
  * @param resolutionContext (Optional) The context used for URI resolution.
  * @return A [Result] that contains `null` if successful, or a [WrapError] if there was an error.
  */
-private suspend fun addAllImplementationsFromImplementationsArray(
+private fun addAllImplementationsFromImplementationsArray(
     result: MutableList<Uri>,
     implementationsMap: Map<Uri, List<Uri>>,
     wrapperInterfaceUri: Uri,

@@ -27,7 +27,7 @@ class SequentialResolver(private val resolvers: List<UriResolver>) : UriResolver
      * @param resolutionContext The [UriResolutionContext] for the current URI resolution process.
      * @return A [Result] containing a list of [UriResolver] instances.
      */
-    override suspend fun getUriResolvers(
+    override fun getUriResolvers(
         uri: Uri,
         client: Client,
         resolutionContext: UriResolutionContext

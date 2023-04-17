@@ -34,7 +34,7 @@ class WasmInstanceJvm(module: ByteArray, state: WasmModuleState) : WasmInstance(
      * @param env A [ByteArray] containing the environment data, or `null` if not provided.
      * @return A [Result] containing a [ByteArray] with the method invocation result or an exception if the invocation fails.
      */
-    override suspend fun invoke(method: String, args: ByteArray, env: ByteArray?): Result<ByteArray> {
+    override fun invoke(method: String, args: ByteArray, env: ByteArray?): Result<ByteArray> {
         val config = Config().maxWasmStack(1024 * 1024 * 2)
         val engine = Engine(config)
         val store: Store<WasmModuleState> = Store(state, engine)

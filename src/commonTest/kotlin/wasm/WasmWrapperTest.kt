@@ -6,8 +6,6 @@ import io.polywrap.core.types.InvokeOptions
 import io.polywrap.msgpack.msgPackDecode
 import io.polywrap.msgpack.msgPackEncode
 import io.polywrap.wasm.WasmWrapper
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runTest
 import readTestResource
 import kotlin.test.*
 
@@ -16,9 +14,8 @@ class WasmWrapperTest {
     private val wrapperPath = "wrappers/numbers-type/implementations/as"
     private val modulePath = "$wrapperPath/wrap.wasm"
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun canInvokeWrapper() = runTest {
+    fun canInvokeWrapper() {
         val wasmModule: ByteArray = readTestResource(modulePath).getOrThrow()
         val wrapper = WasmWrapper(wasmModule)
 
@@ -28,7 +25,7 @@ class WasmWrapperTest {
             args = msgPackEncode(mapOf("first" to 1, "second" to 2))
         )
 
-        val result = wrapper.invoke(invocation, emptyMockInvoker).await()
+        val result = wrapper.invoke(invocation, emptyMockInvoker)
         assertEquals(result.exceptionOrNull(), null)
 
         val data = msgPackDecode<Int>(result.getOrThrow()).getOrNull()

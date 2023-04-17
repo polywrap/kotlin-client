@@ -39,6 +39,7 @@ data class ArgsConcat(
     val ing: String
 )
 
+@Suppress("UNUSED_PARAMETER", "FunctionName")
 abstract class Module<TConfig>(config: TConfig) : PluginModule<TConfig>(config) {
 
     final override val methods: Map<String, PluginMethod> = mapOf(

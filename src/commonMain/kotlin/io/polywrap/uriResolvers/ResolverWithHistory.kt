@@ -19,7 +19,7 @@ abstract class ResolverWithHistory : UriResolver {
      * @param resolveToPackage If true, the resolver will attempt to resolve the URI to a wrap package. If false, the resolver will attempt to resolve the URI to a wrapper.
      * @return A [Result] containing a wrap package, a wrapper, or a URI if successful.
      */
-    override suspend fun tryResolveUri(
+    override fun tryResolveUri(
         uri: Uri,
         client: Client,
         resolutionContext: UriResolutionContext,
@@ -45,7 +45,7 @@ abstract class ResolverWithHistory : UriResolver {
      * @param result The [Result] containing a wrap package, a wrapper, or a URI if successful.
      * @return A [String] description of the resolution step.
      */
-    protected abstract suspend fun getStepDescription(uri: Uri, result: Result<UriPackageOrWrapper>): String
+    protected abstract fun getStepDescription(uri: Uri, result: Result<UriPackageOrWrapper>): String
 
     /**
      * The actual URI resolution implementation. Must be implemented by subclasses.
@@ -55,7 +55,7 @@ abstract class ResolverWithHistory : UriResolver {
      * @param resolveToPackage If true, the resolver will attempt to resolve the URI to a wrap package. If false, the resolver will attempt to resolve the URI to a wrapper.
      * @return A [Result] containing a wrap package, a wrapper, or a URI if successful.
      */
-    protected abstract suspend fun _tryResolveUri(
+    protected abstract fun _tryResolveUri(
         uri: Uri,
         client: Client,
         resolutionContext: UriResolutionContext,

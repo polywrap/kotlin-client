@@ -3,8 +3,6 @@ package core
 import io.polywrap.core.wrap.WrapManifest
 import io.polywrap.core.wrap.formats.wrap01.WrapManifest01
 import io.polywrap.core.wrap.formats.wrap01.abi.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runTest
 import readTestResource
 import kotlin.test.*
 
@@ -147,37 +145,32 @@ class WrapManifestTest {
         }
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun shouldSerializeAndDeserializeManifest_Asyncify() = runTest {
+    fun shouldSerializeAndDeserializeManifest_Asyncify() {
         val testCase = "wrappers/asyncify/implementations/as/wrap.info"
         testSerializeAndDeserializeManifest(testCase)
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun shouldSerializeAndDeserializeManifest_BigNumberType() = runTest {
+    fun shouldSerializeAndDeserializeManifest_BigNumberType() {
         val testCase = "wrappers/bignumber-type/implementations/as/wrap.info"
         testSerializeAndDeserializeManifest(testCase)
     }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
+    
     @Test
-    fun shouldSerializeAndDeserializeManifest_BytesType() = runTest {
+    fun shouldSerializeAndDeserializeManifest_BytesType() {
         val testCase = "wrappers/bytes-type/implementations/as/wrap.info"
         testSerializeAndDeserializeManifest(testCase)
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun shouldSerializeAndDeserializeManifest_EnumType() = runTest {
+    fun shouldSerializeAndDeserializeManifest_EnumType() {
         val testCase = "wrappers/enum-type/implementations/as/wrap.info"
         testSerializeAndDeserializeManifest(testCase)
     }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
+    
     @Test
-    fun shouldSerializeAndDeserializeManifest_EnvType() = runTest {
+    fun shouldSerializeAndDeserializeManifest_EnvType() {
         val testCaseExternal = "wrappers/env-type/00-external/implementations/as/wrap.info"
         testSerializeAndDeserializeManifest(testCaseExternal)
 
@@ -185,9 +178,8 @@ class WrapManifestTest {
         testSerializeAndDeserializeManifest(testCaseMain)
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun shouldSerializeAndDeserializeManifest_InterfaceInvoke() = runTest {
+    fun shouldSerializeAndDeserializeManifest_InterfaceInvoke() {
         val testCaseInterface = "wrappers/interface-invoke/00-interface/wrap.info"
         testSerializeAndDeserializeManifest(testCaseInterface)
 
@@ -197,31 +189,27 @@ class WrapManifestTest {
         val testCaseWrapper = "wrappers/interface-invoke/02-wrapper/implementations/as/wrap.info"
         testSerializeAndDeserializeManifest(testCaseWrapper)
     }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
+    
     @Test
-    fun shouldSerializeAndDeserializeManifest_JsonType() = runTest {
+    fun shouldSerializeAndDeserializeManifest_JsonType() {
         val testCase = "wrappers/json-type/implementations/as/wrap.info"
         testSerializeAndDeserializeManifest(testCase)
     }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
+    
     @Test
-    fun shouldSerializeAndDeserializeManifest_MapType() = runTest {
+    fun shouldSerializeAndDeserializeManifest_MapType() {
         val testCase = "wrappers/map-type/implementations/as/wrap.info"
         testSerializeAndDeserializeManifest(testCase)
     }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
+    
     @Test
-    fun shouldSerializeAndDeserializeManifest_NumbersType() = runTest {
+    fun shouldSerializeAndDeserializeManifest_NumbersType() {
         val testCase = "wrappers/numbers-type/implementations/as/wrap.info"
         testSerializeAndDeserializeManifest(testCase)
     }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
+    
     @Test
-    fun shouldSerializeAndDeserializeManifest_ObjectType() = runTest {
+    fun shouldSerializeAndDeserializeManifest_ObjectType() {
         val testCase = "wrappers/object-type/implementations/as/wrap.info"
         testSerializeAndDeserializeManifest(testCase)
     }
@@ -230,6 +218,5 @@ class WrapManifestTest {
         val bytes = readTestResource(testCase).getOrThrow()
         val manifest = WrapManifest.deserialize(bytes).getOrThrow()
         WrapManifest.serialize(manifest)
-//        assertEquals(encoded, bytes)
     }
 }

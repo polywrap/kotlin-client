@@ -20,7 +20,7 @@ class PackageRedirectResolver(val from: Uri, val pkg: WrapPackage) : ResolverWit
      * @param result The [Result] containing a wrap package, a wrapper, or a URI if successful.
      * @return A [String] description of the resolution step.
      */
-    override suspend fun getStepDescription(uri: Uri, result: Result<UriPackageOrWrapper>): String = "Package (${this.from.uri})"
+    override fun getStepDescription(uri: Uri, result: Result<UriPackageOrWrapper>): String = "Package (${this.from.uri})"
 
     /**
      * Tries to resolve the given [uri] by redirecting it to a wrap package.
@@ -31,7 +31,7 @@ class PackageRedirectResolver(val from: Uri, val pkg: WrapPackage) : ResolverWit
      * @param resolveToPackage Whether to resolve the URI to a wrap package (ignored by this resolver).
      * @return A [Result] containing a wrap package, a wrapper, or a URI if successful.
      */
-    override suspend fun _tryResolveUri(
+    override fun _tryResolveUri(
         uri: Uri,
         client: Client,
         resolutionContext: UriResolutionContext,

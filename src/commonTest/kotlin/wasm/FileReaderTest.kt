@@ -2,11 +2,6 @@ package wasm
 
 import io.polywrap.core.types.FileReader
 import io.polywrap.wasm.FileReaderFactory
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.test.runTest
 import readTestResource
 import kotlin.test.*
 
@@ -17,16 +12,13 @@ class FileReaderTest {
     private val modulePath = "$wrapperPath/wrap.wasm"
 
     private val baseFileReader = object : FileReader() {
-        override suspend fun readFile(filePath: String): Deferred<Result<ByteArray>> = coroutineScope {
-            async {
-                readTestResource("$wrapperPath/$filePath")
-            }
+        override fun readFile(filePath: String): Result<ByteArray> {
+            return readTestResource("$wrapperPath/$filePath")
         }
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun fromMemoryWithBaseFileReader() = runTest {
+    fun fromMemoryWithBaseFileReader() {
         val manifest: ByteArray = readTestResource(manifestPath).getOrThrow()
         val wasmModule: ByteArray = readTestResource(modulePath).getOrThrow()
         val fileReader = FileReaderFactory.fromMemory(
@@ -37,9 +29,8 @@ class FileReaderTest {
         compareResult(fileReader, manifest, wasmModule)
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun fromMemoryWithoutBaseFileReader() = runTest {
+    fun fromMemoryWithoutBaseFileReader() {
         val manifest: ByteArray = readTestResource(manifestPath).getOrThrow()
         val wasmModule: ByteArray = readTestResource(modulePath).getOrThrow()
 
@@ -48,22 +39,21 @@ class FileReaderTest {
             wasmModule = wasmModule
         )
 
-        val manifestResult = fileReader.readFile(FileReader.WRAP_MANIFEST_PATH).await()
+        val manifestResult = fileReader.readFile(FileReader.WRAP_MANIFEST_PATH)
         assertTrue(manifestResult.isSuccess)
         assertContentEquals(manifest, manifestResult.getOrNull())
 
-        val wasmModuleResult = fileReader.readFile(FileReader.WRAP_MODULE_PATH).await()
+        val wasmModuleResult = fileReader.readFile(FileReader.WRAP_MODULE_PATH)
         assertTrue(wasmModuleResult.isSuccess)
         assertContentEquals(wasmModule, wasmModuleResult.getOrNull())
 
-        val fileResult = fileReader.readFile("file.txt").await()
+        val fileResult = fileReader.readFile("file.txt")
         assertTrue(fileResult.isFailure)
         assertEquals("File not found at file.txt.", fileResult.exceptionOrNull()?.message)
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun fromManifest() = runTest {
+    fun fromManifest() {
         val manifest: ByteArray = readTestResource(manifestPath).getOrThrow()
         val wasmModule: ByteArray = readTestResource(modulePath).getOrThrow()
         val fileReader = FileReaderFactory.fromManifest(
@@ -73,9 +63,8 @@ class FileReaderTest {
         compareResult(fileReader, manifest, wasmModule)
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun fromWasmModule() = runTest {
+    fun fromWasmModule() {
         val manifest: ByteArray = readTestResource(manifestPath).getOrThrow()
         val wasmModule: ByteArray = readTestResource(modulePath).getOrThrow()
         val fileReader = FileReaderFactory.fromWasmModule(
@@ -85,16 +74,16 @@ class FileReaderTest {
         compareResult(fileReader, manifest, wasmModule)
     }
 
-    private suspend fun compareResult(fileReader: FileReader, manifest: ByteArray, wasmModule: ByteArray) {
-        val manifestResult = fileReader.readFile(FileReader.WRAP_MANIFEST_PATH).await()
+    private fun compareResult(fileReader: FileReader, manifest: ByteArray, wasmModule: ByteArray) {
+        val manifestResult = fileReader.readFile(FileReader.WRAP_MANIFEST_PATH)
         assertTrue(manifestResult.isSuccess)
         assertContentEquals(manifest, manifestResult.getOrNull())
 
-        val wasmModuleResult = fileReader.readFile(FileReader.WRAP_MODULE_PATH).await()
+        val wasmModuleResult = fileReader.readFile(FileReader.WRAP_MODULE_PATH)
         assertTrue(wasmModuleResult.isSuccess)
         assertContentEquals(wasmModule, wasmModuleResult.getOrNull())
 
-        val fileResult = fileReader.readFile("file.txt").await()
+        val fileResult = fileReader.readFile("file.txt")
         assertTrue(fileResult.isSuccess)
         assertEquals("file.txt content", fileResult.getOrNull()?.decodeToString())
     }

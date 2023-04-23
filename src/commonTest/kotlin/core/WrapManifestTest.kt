@@ -156,7 +156,7 @@ class WrapManifestTest {
         val testCase = "wrappers/bignumber-type/implementations/as/wrap.info"
         testSerializeAndDeserializeManifest(testCase)
     }
-    
+
     @Test
     fun shouldSerializeAndDeserializeManifest_BytesType() {
         val testCase = "wrappers/bytes-type/implementations/as/wrap.info"
@@ -168,7 +168,7 @@ class WrapManifestTest {
         val testCase = "wrappers/enum-type/implementations/as/wrap.info"
         testSerializeAndDeserializeManifest(testCase)
     }
-    
+
     @Test
     fun shouldSerializeAndDeserializeManifest_EnvType() {
         val testCaseExternal = "wrappers/env-type/00-external/implementations/as/wrap.info"
@@ -189,25 +189,25 @@ class WrapManifestTest {
         val testCaseWrapper = "wrappers/interface-invoke/02-wrapper/implementations/as/wrap.info"
         testSerializeAndDeserializeManifest(testCaseWrapper)
     }
-    
+
     @Test
     fun shouldSerializeAndDeserializeManifest_JsonType() {
         val testCase = "wrappers/json-type/implementations/as/wrap.info"
         testSerializeAndDeserializeManifest(testCase)
     }
-    
+
     @Test
     fun shouldSerializeAndDeserializeManifest_MapType() {
         val testCase = "wrappers/map-type/implementations/as/wrap.info"
         testSerializeAndDeserializeManifest(testCase)
     }
-    
+
     @Test
     fun shouldSerializeAndDeserializeManifest_NumbersType() {
         val testCase = "wrappers/numbers-type/implementations/as/wrap.info"
         testSerializeAndDeserializeManifest(testCase)
     }
-    
+
     @Test
     fun shouldSerializeAndDeserializeManifest_ObjectType() {
         val testCase = "wrappers/object-type/implementations/as/wrap.info"

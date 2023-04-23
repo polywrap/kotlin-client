@@ -16,18 +16,16 @@ class WrapImportsFactoryJvm {
          * @property requiredImports The list of imports required by the WebAssembly module.
          * @return A collection of WasmTime [Extern] objects.
          */
-        fun get(store: Store<WasmModuleState>, memory: Memory, requiredImports: List<String>, linker: Linker): Collection<Extern> {
+        fun get(store: Store<WasmModuleState>, memory: Memory, requiredImports: List<String>): Collection<Extern> {
             val wrapImports = WrapImportsJvm(store, memory)
             val result = mutableListOf<Extern>()
             for (import in requiredImports) {
                 val extern = allImports[import]?.invoke(store, wrapImports)
                 if (extern != null) {
-                    linker.define("wrap", import, extern)
                     result.add(extern)
                 }
                 if (import == "memory") {
                     val memExtern = Extern.fromMemory(memory)
-                    linker.define("env", "memory", memExtern)
                     result.add(memExtern)
                 }
             }

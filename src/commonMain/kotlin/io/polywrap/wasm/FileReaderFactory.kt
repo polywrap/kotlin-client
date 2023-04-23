@@ -19,7 +19,7 @@ object FileReaderFactory {
      */
     fun fromMemory(manifest: ByteArray, wasmModule: ByteArray, baseFileReader: FileReader? = null): FileReader {
         return object : FileReader() {
-            override fun readFile(filePath: String): Result<ByteArray>{
+            override fun readFile(filePath: String): Result<ByteArray> {
                 return when {
                     filePath == WRAP_MANIFEST_PATH -> Result.success(manifest)
                     filePath == WRAP_MODULE_PATH -> Result.success(wasmModule)
@@ -44,7 +44,7 @@ object FileReaderFactory {
     fun fromManifest(manifest: ByteArray, baseFileReader: FileReader): FileReader {
         return object : FileReader() {
             override fun readFile(filePath: String): Result<ByteArray> {
-               return if (filePath == WRAP_MANIFEST_PATH) {
+                return if (filePath == WRAP_MANIFEST_PATH) {
                     Result.success(manifest)
                 } else {
                     baseFileReader.readFile(filePath)

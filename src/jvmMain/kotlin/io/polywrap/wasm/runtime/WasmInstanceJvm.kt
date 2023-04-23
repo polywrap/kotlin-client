@@ -41,22 +41,16 @@ class WasmInstanceJvm(module: ByteArray, state: WasmModuleState) : WasmInstance(
         val memory: Memory = createMemory(store, module).getOrThrow()
         val wasmTimeModule: Module = Module.fromBinary(engine, module)
 
-        val linker = Linker(engine)
         val importNames = wasmTimeModule.imports().map { it.name() }
-        val imports = WrapImportsFactoryJvm.get(store, memory, importNames, linker)
-        linker.module(store, "wrap", wasmTimeModule)
+        val imports = WrapImportsFactoryJvm.get(store, memory, importNames)
 
         val instance = Instance(store, wasmTimeModule, imports)
         val result: Result<ByteArray>
         try {
-            val export = linker.get(store, "wrap", "_wrap_invoke").get().func()
+            val export = instance.getFunc(store, "_wrap_invoke").get()
             export.use {
-                val isSuccess = export.call(
-                    store,
-                    Val.fromI32(method.length),
-                    Val.fromI32(args.size),
-                    Val.fromI32(env?.size ?: 0)
-                )[0].i32()
+                val fn = WasmFunctions.func(store, export, WasmValType.I32, WasmValType.I32, WasmValType.I32, WasmValType.I32)
+                val isSuccess = fn.call(method.length, args.size, env?.size ?: 0)
                 result = processResult(isSuccess == 1)
             }
         } finally {
@@ -71,7 +65,6 @@ class WasmInstanceJvm(module: ByteArray, state: WasmModuleState) : WasmInstance(
                 }
             }
             store.close()
-            linker.close()
             engine.close()
         }
         return result
@@ -91,10 +84,8 @@ class WasmInstanceJvm(module: ByteArray, state: WasmModuleState) : WasmInstance(
         }
 
         val memoryInitialLimits = module[idx + ENV_MEMORY_IMPORTS_SIGNATURE.size + 1].toLong()
-        val memory = Memory(
-            store,
-            MemoryType(memoryInitialLimits, false)
-        )
+        val memory = Memory(store, MemoryType(0, false))
+        memory.grow(store, memoryInitialLimits)
 
         return Result.success(memory)
     }

@@ -94,7 +94,7 @@ class ClientConfigBuilderTest {
         assertEquals(config.interfaces, mapOf())
         assertEquals(config.envs, mapOf())
     }
-    
+
     @Test
     fun shouldSuccessfullyAddConfigObjectAndBuild() {
         val configObject = BuilderConfig(
@@ -130,7 +130,6 @@ class ClientConfigBuilderTest {
         assertEquals(configObject, builderConfig)
     }
 
-    
     @Test
     fun shouldSuccessfullyAddTheDefaultConfig() {
         val builder = ClientConfigBuilder().addDefaults()
@@ -143,7 +142,7 @@ class ClientConfigBuilderTest {
         val expectedBuilderConfig = DefaultBundle.getConfig()
         assertEquals(expectedBuilderConfig, builderConfig)
     }
-    
+
     @Test
     fun shouldSuccessfullyAddAnEnv() {
         val envUri = "wrap://ens/some-plugin.polywrap.eth"
@@ -176,7 +175,7 @@ class ClientConfigBuilderTest {
         assertEquals(1, config.envs!!.size)
         assertEquals(expectedEnv, config.envs!![Uri(envUri)])
     }
-    
+
     @Test
     fun shouldSuccessfullyAddTwoSeparateEnvs() {
         val config = ClientConfigBuilder()
@@ -321,7 +320,7 @@ class ClientConfigBuilderTest {
             config.interfaces
         )
     }
-    
+
     @Test
     fun shouldAddMultipleImplementationsForAnExistingInterface() {
         val interfaceUri = "wrap://ens/some.interface.eth"
@@ -374,7 +373,7 @@ class ClientConfigBuilderTest {
             config.interfaces
         )
     }
-    
+
     @Test
     fun shouldRemoveAnInterfaceImplementation() {
         val interfaceUri1 = "wrap://ens/some.interface1.eth"
@@ -424,7 +423,7 @@ class ClientConfigBuilderTest {
             config.interfaces
         )
     }
-    
+
     @Test
     fun shouldAddAnUriRedirect() {
         val from = "wrap://ens/from.this.ens"
@@ -484,7 +483,7 @@ class ClientConfigBuilderTest {
             builderConfig
         )
     }
-    
+
     @Test
     fun shouldRemoveAnUriRedirect() {
         val from1 = "wrap://ens/from.this1.ens"
@@ -505,7 +504,7 @@ class ClientConfigBuilderTest {
             builderConfig
         )
     }
-    
+
     @Test
     fun shouldSetUriResolver() {
         val uriResolver = MockUriResolver(
@@ -543,7 +542,7 @@ class ClientConfigBuilderTest {
         assertNotNull(config)
         assertEquals(mutableListOf<UriResolver>(uriResolver1, uriResolver2), builderConfig.resolvers)
     }
-    
+
     @Test
     fun shouldAddAPackage() {
         val uri = "wrap://ens/some.package.eth"
@@ -559,7 +558,7 @@ class ClientConfigBuilderTest {
             builderConfig.packages
         )
     }
-    
+
     @Test
     fun shouldAddMultiplePackages() {
         val uri1 = "wrap://ens/some1.package.eth"
@@ -614,7 +613,7 @@ class ClientConfigBuilderTest {
             builderConfig.wrappers
         )
     }
-    
+
     @Test
     fun shouldAddMultipleWrappers() {
         val uri1 = "wrap://ens/some1.wrapper.eth"
@@ -684,7 +683,7 @@ class ClientConfigBuilderTest {
             builderConfig2.envs
         )
     }
-    
+
     @Test
     fun shouldSanitizeIncomingUrisForInterfaceImplementations() {
         val shortUri = "ens/some1.wrapper.eth"
@@ -774,7 +773,7 @@ class ClientConfigBuilderTest {
             builderConfig2.packages
         )
     }
-    
+
     @Test
     fun shouldSanitizeIncomingUrisForWrappers() {
         val shortUri = "ens/some1.wrapper.eth"

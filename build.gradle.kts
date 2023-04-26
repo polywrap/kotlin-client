@@ -1,6 +1,6 @@
 plugins {
-    kotlin("multiplatform") version "1.8.0"
-    kotlin("plugin.serialization") version "1.8.0"
+    kotlin("multiplatform") version "1.8.20"
+    kotlin("plugin.serialization") version "1.8.20"
     id("com.goncalossilva.resources") version "0.2.5"
     id("org.jlleitschuh.gradle.ktlint") version "11.3.1"
 }
@@ -71,6 +71,7 @@ kotlin {
 //        val jsTest by getting
         val nativeMain by getting {
             dependencies {
+                implementation("io.github.krisbitney:wasmtime-kt:1.0.0")
                 implementation("io.ktor:ktor-client-cio:2.2.4") // http plugin
             }
         }

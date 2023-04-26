@@ -1,7 +1,7 @@
 package io.polywrap.wasm.runtime
 
 import io.github.kawamuray.wasmtime.*
-import java.util.*
+import io.polywrap.util.indexOfSubList
 
 /**
  * A platform-specific object for creating [WasmInstance] objects.
@@ -21,10 +21,10 @@ actual object WasmInstanceFactory {
 /**
  * A platform-specific [WasmInstance] implementation for the JVM.
  *
- * @property module A [ByteArray] representing the WebAssembly module.
+ * @property wasmModule A [ByteArray] representing the WebAssembly module.
  * @property state A [WasmModuleState] object representing the module's state.
  */
-class WasmInstanceJvm(module: ByteArray, state: WasmModuleState) : WasmInstance(module, state) {
+class WasmInstanceJvm(wasmModule: ByteArray, state: WasmModuleState) : WasmInstance(wasmModule, state) {
 
     /**
      * Invokes a specified method in the WebAssembly instance.
@@ -38,8 +38,8 @@ class WasmInstanceJvm(module: ByteArray, state: WasmModuleState) : WasmInstance(
         val config = Config().maxWasmStack(1024 * 1024 * 2)
         val engine = Engine(config)
         val store: Store<WasmModuleState> = Store(state, engine)
-        val memory: Memory = createMemory(store, module).getOrThrow()
-        val wasmTimeModule: Module = Module.fromBinary(engine, module)
+        val memory: Memory = createMemory(store, wasmModule).getOrThrow()
+        val wasmTimeModule: Module = Module.fromBinary(engine, wasmModule)
 
         val importNames = wasmTimeModule.imports().map { it.name() }
         val imports = WrapImportsFactoryJvm.get(store, memory, importNames)
@@ -71,7 +71,7 @@ class WasmInstanceJvm(module: ByteArray, state: WasmModuleState) : WasmInstance(
     }
 
     private fun createMemory(store: Store<WasmModuleState>, module: ByteArray): Result<Memory> {
-        val idx = Collections.indexOfSubList(module.toList(), ENV_MEMORY_IMPORTS_SIGNATURE.toList())
+        val idx = module.toList().indexOfSubList(ENV_MEMORY_IMPORTS_SIGNATURE.toList())
 
         if (idx == -1) {
             val error = Error(

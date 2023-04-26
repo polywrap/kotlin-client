@@ -18,7 +18,7 @@ expect object WasmInstanceFactory {
  * An interface representing a WebAssembly instance that can be invoked using a specific method,
  * arguments, and environment.
  */
-abstract class WasmInstance(protected val module: ByteArray, protected val state: WasmModuleState) {
+abstract class WasmInstance(protected val wasmModule: ByteArray, protected val state: WasmModuleState) {
 
     /**
      * Invokes a specific method of the WebAssembly instance with the provided arguments and environment.

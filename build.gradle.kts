@@ -27,10 +27,14 @@ kotlin {
 //        }
 //    }
     val hostOs = System.getProperty("os.name")
+    val arch = System.getProperty("os.arch")
     val isMingwX64 = hostOs.startsWith("Windows")
     val nativeTarget = when {
-//        hostOs == "Mac OS X" -> macosX64("native")
-        hostOs == "Mac OS X" -> macosArm64("native")
+        hostOs == "Mac OS X" -> if (arch == "aarch64") {
+            macosArm64("native")
+        } else {
+            macosX64("native")
+        }
         hostOs == "Linux" -> linuxX64("native")
         isMingwX64 -> mingwX64("native")
         else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
@@ -56,7 +60,7 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 implementation("io.github.kawamuray.wasmtime:wasmtime-java:0.14.0")
-                implementation("io.ktor:ktor-client-cio:2.2.4") // http plugin
+                implementation("io.ktor:ktor-client-android:2.2.4") // http plugin
             }
         }
         val jvmTest by getting
@@ -71,7 +75,11 @@ kotlin {
         val nativeMain by getting {
             dependencies {
                 implementation("io.github.krisbitney:wasmtime-kt:1.0.0")
-                implementation("io.ktor:ktor-client-cio:2.2.4") // http plugin
+                when {
+                    hostOs == "Mac OS X" -> implementation("io.ktor:ktor-client-darwin:2.2.4")
+                    hostOs == "Linux" -> implementation("io.ktor:ktor-client-curl:2.2.4")
+                    isMingwX64 -> implementation("io.ktor:ktor-client-winhttp:2.2.4")
+                }
             }
         }
         val nativeTest by getting

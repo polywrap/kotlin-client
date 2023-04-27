@@ -68,9 +68,9 @@ class WasmInstanceNative(wasmModule: ByteArray, state: WasmModuleState) : WasmIn
         if (idx == -1) {
             val error = Error(
                 "Unable to find Wasm memory import section. " +
-                        "Modules must import memory from the \"env\" module's " +
-                        "\"memory\" field like so: " +
-                        "(import \"env\" \"memory\" (memory (;0;) #))"
+                    "Modules must import memory from the \"env\" module's " +
+                    "\"memory\" field like so: " +
+                    "(import \"env\" \"memory\" (memory (;0;) #))"
             )
             return Result.failure(error)
         }

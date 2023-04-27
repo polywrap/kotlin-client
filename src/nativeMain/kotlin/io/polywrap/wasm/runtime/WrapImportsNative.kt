@@ -23,8 +23,7 @@ class WrapImportsNative(private val store: Store<WasmModuleState>, memory: Memor
      */
     override fun readBytes(source: Memory, srcOffset: Int, length: Int): ByteArray {
         val destination = ByteArray(length)
-        source.buffer.copyInto(destination, 0, srcOffset, srcOffset + length)
-        return destination
+        return source.buffer.copyInto(destination, 0, srcOffset, srcOffset + length)
     }
 
     /**

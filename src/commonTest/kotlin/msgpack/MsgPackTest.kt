@@ -4,6 +4,7 @@ import io.polywrap.msgpack.EnvSerializer
 import io.polywrap.msgpack.MsgPackMap
 import io.polywrap.msgpack.msgPackDecode
 import io.polywrap.msgpack.msgPackEncode
+import io.polywrap.msgpack.toMsgPackMap
 import kotlinx.serialization.Serializable
 import kotlin.test.*
 
@@ -128,5 +129,29 @@ class MsgPackTest {
 
         val decoded: Result<Map<String, Any>> = msgPackDecode(EnvSerializer, encoded)
         assertEquals(env, decoded.getOrThrow())
+    }
+
+    @Test
+    fun shouldEncodeAndDecodeObjectWithMapProperty() {
+        @Serializable
+        data class CustomObject(
+            val firstKey: String,
+            val secondKey: MsgPackMap<String, String>?
+        )
+
+        val map = mapOf(
+            "firstKey" to "firstKey=24",
+            "secondKey" to "secondValue"
+        ).toMsgPackMap()
+
+        val customObject = CustomObject("firstValue", map)
+        val encoded = msgPackEncode(customObject)
+        val decoded = msgPackDecode<CustomObject>(encoded).getOrThrow()
+        assertEquals(customObject, decoded)
+
+        val customObjectWithNull = CustomObject("firstValue", null)
+        val encodedWithNull = msgPackEncode(customObjectWithNull)
+        val decodedWithNull = msgPackDecode<CustomObject>(encodedWithNull).getOrThrow()
+        assertEquals(customObjectWithNull, decodedWithNull)
     }
 }

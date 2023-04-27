@@ -34,5 +34,5 @@ data class MapDefinition(
     override val enum: GenericDefinition? = null,
     override val unresolvedObjectOrEnum: GenericDefinition? = null,
     val key: MapKeyDefinition? = null,
-    val value: GenericDefinition? = null
+    val value: GenericDefinition? = null // in practice, we sometimes see extra properties attached to value!
 ) : WithComment, AnyDefinition

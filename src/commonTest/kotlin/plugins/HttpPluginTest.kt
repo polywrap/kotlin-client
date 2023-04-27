@@ -5,6 +5,7 @@ import io.ktor.client.*
 import io.ktor.client.engine.mock.*
 import io.ktor.client.plugins.*
 import io.ktor.http.*
+import io.polywrap.msgpack.toMsgPackMap
 import io.polywrap.plugins.http.HttpPlugin
 import io.polywrap.plugins.http.wrapHardCoded.ArgsGet
 import io.polywrap.plugins.http.wrapHardCoded.ArgsPost
@@ -98,8 +99,8 @@ class HttpPluginTest {
         val args = ArgsGet(
             url = "https://example.com/success-text",
             request = HttpRequest(
-                headers = mapOf("X-Test-Header" to "test-value"),
-                urlParams = mapOf("param1" to "value1", "param2" to "value2"),
+                headers = mapOf("X-Test-Header" to "test-value").toMsgPackMap(),
+                urlParams = mapOf("param1" to "value1", "param2" to "value2").toMsgPackMap(),
                 responseType = HttpResponseType.TEXT
             )
         )
@@ -128,7 +129,7 @@ class HttpPluginTest {
         val args = ArgsPost(
             url = "https://example.com/success-text",
             request = HttpRequest(
-                headers = mapOf("Content-Type" to "application/json"),
+                headers = mapOf("Content-Type" to "application/json").toMsgPackMap(),
                 responseType = HttpResponseType.TEXT,
                 body = """{"key": "value"}"""
             )
@@ -180,8 +181,8 @@ class HttpPluginTest {
         val args = ArgsPost(
             url = "https://example.com/success-text",
             request = HttpRequest(
-                headers = mapOf("X-Test-Header" to "test-value"),
-                urlParams = mapOf("param1" to "value1", "param2" to "value2"),
+                headers = mapOf("X-Test-Header" to "test-value").toMsgPackMap(),
+                urlParams = mapOf("param1" to "value1", "param2" to "value2").toMsgPackMap(),
                 responseType = HttpResponseType.TEXT,
                 body = "Hello World"
             )

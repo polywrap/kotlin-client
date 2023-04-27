@@ -7,6 +7,7 @@ import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.util.*
 import io.polywrap.core.types.Invoker
+import io.polywrap.msgpack.toMsgPackMap
 import io.polywrap.plugin.PluginFactory
 import io.polywrap.plugin.PluginPackage
 import io.polywrap.plugins.http.wrapHardCoded.*
@@ -15,6 +16,8 @@ import io.ktor.client.statement.HttpResponse as KtorHttpResponse
 
 // TODO: I would like to re-use the same HttpClient instance for all requests,
 //  but I need to somehow close it when the plugin is unloaded.
+
+// TODO: CIO engine used does not support https, so need to change
 
 /**
  * A plugin for making HTTP requests.
@@ -59,7 +62,7 @@ class HttpPlugin(config: Config? = null) : Module<HttpPlugin.Config?>(config) {
                     setBody(request?.body)
                 }
                 url {
-                    request?.urlParams?.forEach { (key, value) ->
+                    request?.urlParams?.map?.forEach { (key, value) ->
                         parameters.append(key, value)
                     }
                 }
@@ -67,7 +70,7 @@ class HttpPlugin(config: Config? = null) : Module<HttpPlugin.Config?>(config) {
                     if (request?.responseType == HttpResponseType.TEXT) {
                         append(HttpHeaders.Accept, "text/*")
                     }
-                    request?.headers?.forEach { (key, value) ->
+                    request?.headers?.map?.forEach { (key, value) ->
                         append(key, value)
                     }
                 }
@@ -87,10 +90,14 @@ class HttpPlugin(config: Config? = null) : Module<HttpPlugin.Config?>(config) {
             response.bodyAsText()
         }
 
+        val responseHeaders = response.headers.toMap().mapValues {
+            if (it.value.size == 1) it.value.first() else it.value.toString()
+        }
+
         return HttpResponse(
             status = response.status.value,
             statusText = response.status.description,
-            headers = response.headers.toMap().mapValues { it.toString() },
+            headers = responseHeaders.toMsgPackMap(),
             body = responseBody
         )
     }

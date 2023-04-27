@@ -18,7 +18,7 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class MapKeyDefinition(
-    override val type: String, // This is nullable in the spec
+    override val type: String, // This is nullable in the TS interface
     override val kind: Int,
     override val name: String? = null,
     override val required: Boolean? = false,

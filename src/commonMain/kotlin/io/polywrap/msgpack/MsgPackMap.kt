@@ -21,6 +21,11 @@ import kotlinx.serialization.encoding.Encoder
 data class MsgPackMap<K, V>(val map: Map<K, V>)
 
 /**
+ * Convenience method to wrap a [Map] in a [MsgPackMap] instance.
+ */
+fun <K, V> Map<K, V>.toMsgPackMap(): MsgPackMap<K, V> = MsgPackMap(this)
+
+/**
  * A custom serializer for serializing [MsgPackMap] instances using the MsgPack format.
  * @param K The key type of the map.
  * @param V The value type of the map.

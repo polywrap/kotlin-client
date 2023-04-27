@@ -1,5 +1,6 @@
 package io.polywrap.plugins.http.wrapHardCoded
 
+import io.polywrap.msgpack.MsgPackMap
 import kotlinx.serialization.Serializable
 
 typealias Bytes = ByteArray
@@ -9,12 +10,12 @@ typealias Json = String
 
 @Serializable
 data class HttpRequest(
-    val headers: Map<String, String>? = null,
-    val urlParams: Map<String, String>? = null,
+    val headers: MsgPackMap<String, String>? = null,
+    val urlParams: MsgPackMap<String, String>? = null,
     val responseType: HttpResponseType,
     val body: String? = null,
     val formData: List<HttpFormDataEntry>? = null,
-    val timeout: UInt? = null
+    val timeout: Int? = null
 )
 
 @Serializable
@@ -29,7 +30,7 @@ data class HttpFormDataEntry(
 data class HttpResponse(
     val status: Int,
     val statusText: String,
-    val headers: Map<String, String>? = null,
+    val headers: MsgPackMap<String, String>? = null,
     val body: String? = null
 )
 

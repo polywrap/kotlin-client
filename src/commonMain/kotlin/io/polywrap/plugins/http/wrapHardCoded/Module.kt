@@ -43,8 +43,10 @@ abstract class Module<TConfig>(config: TConfig) : PluginModule<TConfig>(config) 
         invoker: Invoker,
         encodedEnv: ByteArray?
     ): ByteArray {
-        val args: ArgsGet = encodedArgs?.let { msgPackDecode(ArgsGet.serializer(), it).getOrNull() }
-            ?: throw Error("Missing args in invocation to plugin method 'get'")
+        val args: ArgsGet = encodedArgs?.let { 
+            msgPackDecode(ArgsGet.serializer(), it).getOrNull()
+                ?: throw Exception("Failed to decode args in invocation to plugin method 'get'")
+        } ?: throw Exception("Missing args in invocation to plugin method 'get'")
         val response = get(args, invoker)
         return msgPackEncode(serializer(), response)
     }
@@ -54,8 +56,10 @@ abstract class Module<TConfig>(config: TConfig) : PluginModule<TConfig>(config) 
         invoker: Invoker,
         encodedEnv: ByteArray?
     ): ByteArray {
-        val args: ArgsPost = encodedArgs?.let { msgPackDecode(ArgsPost.serializer(), it).getOrNull() }
-            ?: throw Error("Missing args in invocation to plugin method 'post'")
+        val args: ArgsPost = encodedArgs?.let {
+            msgPackDecode(ArgsPost.serializer(), it).getOrNull()
+                ?: throw Exception("Failed to decode args in invocation to plugin method 'post'")
+        } ?: throw Exception("Missing args in invocation to plugin method 'post'")
         val response = post(args, invoker)
         return msgPackEncode(serializer(), response)
     }

@@ -1,0 +1,150 @@
+{
+  "version": "0.1",
+  "name": "simple-map-type",
+  "type": "wasm",
+  "abi": {
+    "version": "0.1",
+    "objectTypes": [
+      {
+        "type": "CustomMap",
+        "kind": 1,
+        "properties": [
+          {
+            "type": "Map<String, Int>",
+            "name": "map",
+            "map": {
+              "type": "Map<String, Int>",
+              "scalar": {
+                "name": "map",
+                "type": "Int",
+                "required": true,
+                "kind": 4
+              },
+              "kind": 262146,
+              "name": "map",
+              "key": {
+                "name": "map",
+                "type": "String",
+                "required": true,
+                "kind": 4
+              },
+              "value": {
+                "name": "map",
+                "type": "Int",
+                "required": true,
+                "kind": 4
+              },
+              "required": true
+            },
+            "required": true,
+            "kind": 34
+          },
+          {
+            "type": "Map<String, Map<String, Int>>",
+            "name": "nestedMap",
+            "map": {
+              "type": "Map<String, Map<String, Int>>",
+              "map": {
+                "type": "Map<String, Int>",
+                "name": "nestedMap",
+                "key": {
+                  "name": "nestedMap",
+                  "type": "String",
+                  "required": true,
+                  "kind": 4
+                },
+                "value": {
+                  "name": "nestedMap",
+                  "type": "Int",
+                  "required": true,
+                  "kind": 4
+                },
+                "required": true,
+                "scalar": {
+                  "name": "nestedMap",
+                  "type": "Int",
+                  "required": true,
+                  "kind": 4
+                },
+                "kind": 262146
+              },
+              "kind": 262146,
+              "name": "nestedMap",
+              "key": {
+                "name": "nestedMap",
+                "type": "String",
+                "required": true,
+                "kind": 4
+              },
+              "value": {
+                "type": "Map<String, Int>",
+                "name": "nestedMap",
+                "key": {
+                  "name": "nestedMap",
+                  "type": "String",
+                  "required": true,
+                  "kind": 4
+                },
+                "value": {
+                  "name": "nestedMap",
+                  "type": "Int",
+                  "required": true,
+                  "kind": 4
+                },
+                "required": true,
+                "scalar": {
+                  "name": "nestedMap",
+                  "type": "Int",
+                  "required": true,
+                  "kind": 4
+                },
+                "kind": 262146
+              },
+              "required": true
+            },
+            "required": true,
+            "kind": 34
+          }
+        ]
+      }
+    ],
+    "moduleType": {
+      "type": "Module",
+      "kind": 128,
+      "methods": [
+        {
+          "name": "returnCustomMap",
+          "return": {
+            "type": "CustomMap",
+            "name": "returnCustomMap",
+            "required": true,
+            "kind": 34,
+            "object": {
+              "name": "returnCustomMap",
+              "required": true,
+              "type": "CustomMap",
+              "kind": 8192
+            }
+          },
+          "type": "Method",
+          "kind": 64,
+          "required": true,
+          "arguments": [
+            {
+              "type": "CustomMap",
+              "name": "foo",
+              "required": true,
+              "kind": 34,
+              "object": {
+                "name": "foo",
+                "required": true,
+                "type": "CustomMap",
+                "kind": 8192
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

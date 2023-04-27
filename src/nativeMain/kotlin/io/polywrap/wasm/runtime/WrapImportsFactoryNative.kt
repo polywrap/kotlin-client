@@ -11,24 +11,6 @@ class WrapImportsFactoryNative {
 
     companion object {
         /**
-         * Factory method for creating a collection of WasmTime [Extern] objects for the given imports.
-         *
-         * @param store The WebAssembly module state.
-         * @param memory The memory to be used by the WebAssembly module.
-         * @return A collection of WasmTime [Extern] objects.
-         */
-        fun get(store: Store<WasmModuleState>, memory: Memory): Collection<Extern> {
-            val wrapImports = WrapImportsNative(store, memory)
-            val result = mutableListOf<Extern>()
-            allImports.forEach { (_, import) ->
-                val extern = import.invoke(store, wrapImports)
-                result.add(extern)
-            }
-            result.add(memory)
-            return result
-        }
-
-        /**
          * Factory method for setting imports in the linker.
          *
          * @param store The WebAssembly module state.

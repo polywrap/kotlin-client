@@ -17,7 +17,8 @@ val msgPack: MsgPack by lazy {
             strictTypes = false,
             strictTypeWriting = false,
             preventOverflows = true,
-            ignoreUnknownKeys = false
+            ignoreUnknownKeys = true,
+            ordinalEnums = true
         )
     )
 }
@@ -31,7 +32,7 @@ val EnvSerializer = MapSerializer(String.serializer(), MsgPackDynamicSerializer)
  * @param value the object to encode
  * @return the msgpack byte array
  */
-inline fun <reified T : Any> msgPackEncode(value: T): ByteArray {
+inline fun <reified T : Any?> msgPackEncode(value: T): ByteArray {
     return msgPack.encodeToByteArray(serializer(), value)
 }
 
@@ -42,7 +43,7 @@ inline fun <reified T : Any> msgPackEncode(value: T): ByteArray {
  * @param value the object to encode
  * @return the msgpack byte array
  */
-fun <T> msgPackEncode(serializer: SerializationStrategy<T>, value: T): ByteArray {
+fun <T : Any?> msgPackEncode(serializer: SerializationStrategy<T>, value: T): ByteArray {
     return msgPack.encodeToByteArray(serializer, value)
 }
 
@@ -53,7 +54,7 @@ fun <T> msgPackEncode(serializer: SerializationStrategy<T>, value: T): ByteArray
  * @param bytes the msgpack byte array to decode
  * @return a Result containing the decoded object, or an exception if the decoding fails
  */
-inline fun <reified T : Any> msgPackDecode(bytes: ByteArray): Result<T> {
+inline fun <reified T : Any?> msgPackDecode(bytes: ByteArray): Result<T> {
     return runCatching { msgPack.decodeFromByteArray(serializer(), bytes) }
 }
 
@@ -64,6 +65,6 @@ inline fun <reified T : Any> msgPackDecode(bytes: ByteArray): Result<T> {
  * @param bytes the msgpack byte array to decode
  * @return a Result containing the decoded object, or an exception if the decoding fails
  */
-fun <T> msgPackDecode(serializer: DeserializationStrategy<T>, bytes: ByteArray): Result<T> {
+fun <T : Any?> msgPackDecode(serializer: DeserializationStrategy<T>, bytes: ByteArray): Result<T> {
     return runCatching { msgPack.decodeFromByteArray(serializer, bytes) }
 }

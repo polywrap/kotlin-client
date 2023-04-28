@@ -17,7 +17,7 @@ import io.ktor.client.statement.HttpResponse as KtorHttpResponse
 // TODO: I would like to re-use the same HttpClient instance for all requests,
 //  but I need to somehow close it when the plugin is unloaded.
 
-// TODO: CIO engine used does not support https, so need to change
+// TODO: Add form-data support
 
 /**
  * A plugin for making HTTP requests.
@@ -35,12 +35,12 @@ class HttpPlugin(config: Config? = null) : Module<HttpPlugin.Config?>(config) {
      */
     class Config(val httpClient: HttpClient? = null)
 
-    override suspend fun get(args: ArgsGet, invoker: Invoker): HttpResponse? {
-        return request(HttpMethod.Get, args.url, args.request)
+    override suspend fun get(args: ArgsGet, invoker: Invoker): Result<HttpResponse?> {
+        return runCatching { request(HttpMethod.Get, args.url, args.request) }
     }
 
-    override suspend fun post(args: ArgsPost, invoker: Invoker): HttpResponse? {
-        return request(HttpMethod.Post, args.url, args.request)
+    override suspend fun post(args: ArgsPost, invoker: Invoker): Result<HttpResponse?> {
+        return runCatching { request(HttpMethod.Post, args.url, args.request) }
     }
 
     private suspend fun request(httpMethod: HttpMethod, url: String, request: HttpRequest?): HttpResponse {
@@ -106,6 +106,6 @@ class HttpPlugin(config: Config? = null) : Module<HttpPlugin.Config?>(config) {
 val httpPlugin: PluginFactory<HttpPlugin.Config?> = { config: HttpPlugin.Config? ->
     PluginPackage(
         pluginModule = HttpPlugin(config),
-        manifest = manifest
+        manifest = io.polywrap.plugins.filesystem.wrapHardCoded.manifest
     )
 }

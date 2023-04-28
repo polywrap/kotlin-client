@@ -1,11 +1,11 @@
-package io.polywrap.util
+package io.polywrap.plugins.filesystem
 
 import okio.FileSystem
 
 /**
  * Get a reference to a native FileSystem implementation.
  */
-actual object FileSystemFactory {
+internal actual object FileSystemFactory {
     /**
      * Get a reference to a native FileSystem implementation.
      *

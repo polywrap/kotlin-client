@@ -7,10 +7,7 @@ import io.polywrap.msgpack.MsgPackMap
 import io.polywrap.msgpack.msgPackDecode
 import io.polywrap.msgpack.msgPackEncode
 import io.polywrap.msgpack.toMsgPackMap
-import io.polywrap.plugins.http.wrapHardCoded.ArgsGet
-import io.polywrap.plugins.http.wrapHardCoded.HttpRequest
-import io.polywrap.plugins.http.wrapHardCoded.HttpResponse
-import io.polywrap.plugins.http.wrapHardCoded.HttpResponseType
+import io.polywrap.plugins.http.wrapHardCoded.*
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals

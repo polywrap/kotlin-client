@@ -1,4 +1,1 @@
-#import { Module } into Http from "ens/wraps.eth:http@1.1.0"
-
-type Module implements Http_Module {
-}
+#import * from "ens/wraps.eth:http@1.1.0"

@@ -7,10 +7,7 @@ import io.ktor.client.plugins.*
 import io.ktor.http.*
 import io.polywrap.msgpack.toMsgPackMap
 import io.polywrap.plugins.http.HttpPlugin
-import io.polywrap.plugins.http.wrapHardCoded.ArgsGet
-import io.polywrap.plugins.http.wrapHardCoded.ArgsPost
-import io.polywrap.plugins.http.wrapHardCoded.HttpRequest
-import io.polywrap.plugins.http.wrapHardCoded.HttpResponseType
+import io.polywrap.plugins.http.wrapHardCoded.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
@@ -72,7 +69,7 @@ class HttpPluginTest {
             url = "https://example.com/success-text",
             request = HttpRequest(responseType = HttpResponseType.TEXT)
         )
-        val response = httpPlugin.get(args, emptyMockInvoker)
+        val response = httpPlugin.get(args, emptyMockInvoker).getOrThrow()
 
         assertNotNull(response)
         assertEquals(HttpStatusCode.OK.value, response.status)
@@ -86,7 +83,7 @@ class HttpPluginTest {
             url = "https://example.com/success-binary",
             request = HttpRequest(responseType = HttpResponseType.BINARY)
         )
-        val response = httpPlugin.get(args, emptyMockInvoker)
+        val response = httpPlugin.get(args, emptyMockInvoker).getOrThrow()
 
         assertNotNull(response)
         assertEquals(HttpStatusCode.OK.value, response.status)
@@ -104,7 +101,7 @@ class HttpPluginTest {
                 responseType = HttpResponseType.TEXT
             )
         )
-        val response = httpPlugin.get(args, emptyMockInvoker)
+        val response = httpPlugin.get(args, emptyMockInvoker).getOrThrow()
 
         assertNotNull(response)
         assertEquals(HttpStatusCode.OK.value, response.status)
@@ -118,7 +115,8 @@ class HttpPluginTest {
             url = "https://example.com/failure",
             request = HttpRequest(responseType = HttpResponseType.TEXT)
         )
-        val response = httpPlugin.get(args, emptyMockInvoker)
+        val response = httpPlugin.get(args, emptyMockInvoker).getOrThrow()
+
         assertNotNull(response)
         assertEquals(HttpStatusCode.InternalServerError.value, response.status)
     }
@@ -134,7 +132,7 @@ class HttpPluginTest {
                 body = """{"key": "value"}"""
             )
         )
-        val response = httpPlugin.post(args, emptyMockInvoker)
+        val response = httpPlugin.post(args, emptyMockInvoker).getOrThrow()
 
         assertNotNull(response)
         assertEquals(HttpStatusCode.OK.value, response.status)
@@ -151,7 +149,7 @@ class HttpPluginTest {
                 body = "Hello World"
             )
         )
-        val response = httpPlugin.post(args, emptyMockInvoker)
+        val response = httpPlugin.post(args, emptyMockInvoker).getOrThrow()
 
         assertNotNull(response)
         assertEquals(HttpStatusCode.OK.value, response.status)
@@ -168,7 +166,7 @@ class HttpPluginTest {
                 body = "Hello World"
             )
         )
-        val response = httpPlugin.post(args, emptyMockInvoker)
+        val response = httpPlugin.post(args, emptyMockInvoker).getOrThrow()
 
         assertNotNull(response)
         assertEquals(HttpStatusCode.OK.value, response.status)
@@ -187,7 +185,7 @@ class HttpPluginTest {
                 body = "Hello World"
             )
         )
-        val response = httpPlugin.post(args, emptyMockInvoker)
+        val response = httpPlugin.post(args, emptyMockInvoker).getOrThrow()
 
         assertNotNull(response)
         assertEquals(HttpStatusCode.OK.value, response.status)
@@ -204,7 +202,7 @@ class HttpPluginTest {
                 body = "Hello World"
             )
         )
-        val response = httpPlugin.post(args, emptyMockInvoker)
+        val response = httpPlugin.post(args, emptyMockInvoker).getOrThrow()
 
         assertNotNull(response)
         assertEquals(HttpStatusCode.InternalServerError.value, response.status)

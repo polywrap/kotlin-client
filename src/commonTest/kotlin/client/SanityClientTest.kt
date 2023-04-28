@@ -20,7 +20,6 @@ class SanityClientTest {
         val result = client.tryResolveUri(uri = sha3Uri)
 
         assertNull(result.exceptionOrNull())
-        println(result.getOrThrow())
     }
 
     @Test
@@ -35,7 +34,6 @@ class SanityClientTest {
             )
         )
         assertNull(result.exceptionOrNull())
-        println(result.getOrThrow())
     }
 
     @Test
@@ -48,24 +46,20 @@ class SanityClientTest {
             args = mapOf("message" to "Hello World!")
         )
         assertNull(result.exceptionOrNull())
-        println(result.getOrThrow())
     }
 
     @Test
     fun invokeWithReifiedTypes() {
         @Serializable
-        data class MethodArgs(
-            val firstKey: String,
-            val secondKey: String
-        )
+        data class Keccak256Args(val message: String)
+
         val config = ClientConfigBuilder().addDefaults().build()
         val client = PolywrapClient(config)
-        val result = client.invoke<MethodArgs, String>(
+        val result = client.invoke<Keccak256Args, String>(
             uri = sha3Uri,
             method = "keccak_256",
-            args = MethodArgs("firstValue", "secondValue")
+            args = Keccak256Args("Hello World!")
         )
         assertNull(result.exceptionOrNull())
-        println(result.getOrThrow())
     }
 }

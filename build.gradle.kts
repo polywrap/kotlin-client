@@ -76,7 +76,7 @@ kotlin {
             dependencies {
                 implementation("io.github.krisbitney:wasmtime-kt:1.0.0")
                 when {
-                    hostOs == "Mac OS X" -> implementation("io.ktor:ktor-client-darwin:2.2.4")
+                    hostOs == "Mac OS X" -> implementation("io.ktor:ktor-client-curl:2.2.4")
                     hostOs == "Linux" -> implementation("io.ktor:ktor-client-curl:2.2.4")
                     isMingwX64 -> implementation("io.ktor:ktor-client-winhttp:2.2.4")
                 }

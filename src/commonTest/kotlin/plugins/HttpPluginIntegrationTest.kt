@@ -81,7 +81,7 @@ class HttpPluginIntegrationTest {
         val result = client.invoke<HttpResponse?>(
             uri = DefaultBundle.plugins["http"]!!.uri,
             method = "get",
-            args = mapOf("url" to "http://httpbin.org/get")
+            args = mapOf("url" to "https://httpbin.org/get")
         )
         if (result.isFailure) throw result.exceptionOrNull()!!
         assertNull(result.exceptionOrNull())

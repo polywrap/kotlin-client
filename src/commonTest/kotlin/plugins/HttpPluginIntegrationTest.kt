@@ -11,7 +11,6 @@ import io.polywrap.plugins.http.wrapHardCoded.*
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
-import kotlin.test.assertNull
 
 class HttpPluginIntegrationTest {
     @Test
@@ -81,7 +80,6 @@ class HttpPluginIntegrationTest {
             args = mapOf("url" to "https://httpbin.org/get")
         )
         if (result.isFailure) throw result.exceptionOrNull()!!
-        assertNull(result.exceptionOrNull())
 
         val response = result.getOrThrow()
         assertEquals(200, response?.status)

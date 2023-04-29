@@ -4,6 +4,7 @@ import io.polywrap.configBuilder.embeds.getIpfsHttpClientWrap
 import io.polywrap.configBuilder.embeds.getIpfsResolverWrap
 import io.polywrap.core.resolution.Uri
 import io.polywrap.core.types.WrapPackage
+import io.polywrap.plugins.filesystem.fileSystemPlugin
 import io.polywrap.plugins.http.httpPlugin
 import io.polywrap.uriResolvers.embedded.UriRedirect
 import io.polywrap.uriResolvers.extendable.ExtendableUriResolver
@@ -48,10 +49,10 @@ class DefaultBundle {
             embeds["ipfsResolver"]!!.source,
             textRecordResolverRedirect.first,
             Uri("ens/wraps.eth:http-uri-resolver-ext@1.0.0"),
-            // Uri("ens/wraps.eth:file-system-uri-resolver-ext@1.0.0"),
-            Uri("ens/wraps.eth:ens-uri-resolver-ext@1.0.0"),
-            Uri("ens/wraps.eth:ens-ipfs-contenthash-uri-resolver-ext@1.0.0"),
-            Uri("ens/wraps.eth:ens-ocr-contenthash-uri-resolver-ext@1.0.0")
+             Uri("ens/wraps.eth:file-system-uri-resolver-ext@1.0.0"),
+//            Uri("ens/wraps.eth:ens-uri-resolver-ext@1.0.0"),
+//            Uri("ens/wraps.eth:ens-ipfs-contenthash-uri-resolver-ext@1.0.0"),
+//            Uri("ens/wraps.eth:ens-ocr-contenthash-uri-resolver-ext@1.0.0")
         )
 
         val plugins: Map<String, IDefaultPlugin> = mapOf(
@@ -61,6 +62,13 @@ class DefaultBundle {
                 override val implements = listOf(
                     Uri("ens/wraps.eth:http@1.1.0"),
                     Uri("ens/wraps.eth:http@1.0.0")
+                )
+            },
+            "fileSystem" to object : IDefaultPlugin {
+                override val uri = Uri("plugin/file-system@1.0.0")
+                override val plugin = fileSystemPlugin(null)
+                override val implements = listOf(
+                    Uri("ens/wraps.eth:file-system@1.0.0")
                 )
             }
         )

@@ -35,12 +35,12 @@ class HttpPlugin(config: Config? = null) : Module<HttpPlugin.Config?>(config) {
      */
     class Config(val httpClient: HttpClient? = null)
 
-    override suspend fun get(args: ArgsGet, invoker: Invoker): Result<HttpResponse?> {
-        return runCatching { request(HttpMethod.Get, args.url, args.request) }
+    override suspend fun get(args: ArgsGet, invoker: Invoker): HttpResponse? {
+        return request(HttpMethod.Get, args.url, args.request)
     }
 
-    override suspend fun post(args: ArgsPost, invoker: Invoker): Result<HttpResponse?> {
-        return runCatching { request(HttpMethod.Post, args.url, args.request) }
+    override suspend fun post(args: ArgsPost, invoker: Invoker): HttpResponse? {
+        return request(HttpMethod.Post, args.url, args.request)
     }
 
     private suspend fun request(httpMethod: HttpMethod, url: String, request: HttpRequest?): HttpResponse {

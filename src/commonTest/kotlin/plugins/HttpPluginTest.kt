@@ -69,7 +69,7 @@ class HttpPluginTest {
             url = "https://example.com/success-text",
             request = HttpRequest(responseType = HttpResponseType.TEXT)
         )
-        val response = httpPlugin.get(args, emptyMockInvoker).getOrThrow()
+        val response = httpPlugin.get(args, emptyMockInvoker)
 
         assertNotNull(response)
         assertEquals(HttpStatusCode.OK.value, response.status)
@@ -83,7 +83,7 @@ class HttpPluginTest {
             url = "https://example.com/success-binary",
             request = HttpRequest(responseType = HttpResponseType.BINARY)
         )
-        val response = httpPlugin.get(args, emptyMockInvoker).getOrThrow()
+        val response = httpPlugin.get(args, emptyMockInvoker)
 
         assertNotNull(response)
         assertEquals(HttpStatusCode.OK.value, response.status)
@@ -101,7 +101,7 @@ class HttpPluginTest {
                 responseType = HttpResponseType.TEXT
             )
         )
-        val response = httpPlugin.get(args, emptyMockInvoker).getOrThrow()
+        val response = httpPlugin.get(args, emptyMockInvoker)
 
         assertNotNull(response)
         assertEquals(HttpStatusCode.OK.value, response.status)
@@ -115,7 +115,7 @@ class HttpPluginTest {
             url = "https://example.com/failure",
             request = HttpRequest(responseType = HttpResponseType.TEXT)
         )
-        val response = httpPlugin.get(args, emptyMockInvoker).getOrThrow()
+        val response = httpPlugin.get(args, emptyMockInvoker)
 
         assertNotNull(response)
         assertEquals(HttpStatusCode.InternalServerError.value, response.status)
@@ -132,7 +132,7 @@ class HttpPluginTest {
                 body = """{"key": "value"}"""
             )
         )
-        val response = httpPlugin.post(args, emptyMockInvoker).getOrThrow()
+        val response = httpPlugin.post(args, emptyMockInvoker)
 
         assertNotNull(response)
         assertEquals(HttpStatusCode.OK.value, response.status)
@@ -149,7 +149,7 @@ class HttpPluginTest {
                 body = "Hello World"
             )
         )
-        val response = httpPlugin.post(args, emptyMockInvoker).getOrThrow()
+        val response = httpPlugin.post(args, emptyMockInvoker)
 
         assertNotNull(response)
         assertEquals(HttpStatusCode.OK.value, response.status)
@@ -166,7 +166,7 @@ class HttpPluginTest {
                 body = "Hello World"
             )
         )
-        val response = httpPlugin.post(args, emptyMockInvoker).getOrThrow()
+        val response = httpPlugin.post(args, emptyMockInvoker)
 
         assertNotNull(response)
         assertEquals(HttpStatusCode.OK.value, response.status)
@@ -185,7 +185,7 @@ class HttpPluginTest {
                 body = "Hello World"
             )
         )
-        val response = httpPlugin.post(args, emptyMockInvoker).getOrThrow()
+        val response = httpPlugin.post(args, emptyMockInvoker)
 
         assertNotNull(response)
         assertEquals(HttpStatusCode.OK.value, response.status)
@@ -202,7 +202,7 @@ class HttpPluginTest {
                 body = "Hello World"
             )
         )
-        val response = httpPlugin.post(args, emptyMockInvoker).getOrThrow()
+        val response = httpPlugin.post(args, emptyMockInvoker)
 
         assertNotNull(response)
         assertEquals(HttpStatusCode.InternalServerError.value, response.status)

@@ -46,7 +46,7 @@ kotlin {
                 implementation("com.ensarsarajcic.kotlinx:serialization-msgpack:0.5.4")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
                 implementation("com.squareup.okio:okio:3.3.0") // fs plugin
-                implementation("io.ktor:ktor-client-core:2.2.4") // http plugin
+                implementation("io.ktor:ktor-client-core:2.3.0") // http plugin
             }
         }
         val commonTest by getting {
@@ -54,20 +54,20 @@ kotlin {
                 implementation(kotlin("test"))
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
                 implementation("com.goncalossilva:resources:0.3.1") // access resources in tests
-                implementation("io.ktor:ktor-client-mock:2.2.4") // http plugin test
+                implementation("io.ktor:ktor-client-mock:2.3.0") // http plugin test
             }
         }
         val jvmMain by getting {
             dependencies {
                 implementation("io.github.kawamuray.wasmtime:wasmtime-java:0.14.0")
-                implementation("io.ktor:ktor-client-android:2.2.4") // http plugin
+                implementation("io.ktor:ktor-client-android:2.3.0") // http plugin
             }
         }
         val jvmTest by getting
 //        val jsMain by getting {
 //            dependencies {
 //                implementation(npm("@polywrap/asyncify-js", "~0.10.0-pre"))
-//                implementation("io.ktor:ktor-client-js:2.2.4") // http plugin
+//                implementation("io.ktor:ktor-client-js:2.3.0") // http plugin
 //                implementation("com.squareup.okio:okio-nodefilesystem:3.3.0") // fs plugin
 //            }
 //        }
@@ -76,9 +76,9 @@ kotlin {
             dependencies {
                 implementation("io.github.krisbitney:wasmtime-kt:1.0.0")
                 when {
-                    hostOs == "Mac OS X" -> implementation("io.ktor:ktor-client-curl:2.2.4")
-                    hostOs == "Linux" -> implementation("io.ktor:ktor-client-curl:2.2.4")
-                    isMingwX64 -> implementation("io.ktor:ktor-client-winhttp:2.2.4")
+                    hostOs == "Mac OS X" -> implementation("io.ktor:ktor-client-curl:2.3.0")
+                    hostOs == "Linux" -> implementation("io.ktor:ktor-client-curl:2.3.0")
+                    isMingwX64 -> implementation("io.ktor:ktor-client-winhttp:2.3.0")
                 }
             }
         }

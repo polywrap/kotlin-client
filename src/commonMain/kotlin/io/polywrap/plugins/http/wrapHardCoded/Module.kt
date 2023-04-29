@@ -31,12 +31,12 @@ abstract class Module<TConfig>(config: TConfig) : PluginModule<TConfig>(config) 
     abstract suspend fun get(
         args: ArgsGet,
         invoker: Invoker
-    ): Result<HttpResponse?>
+    ): HttpResponse?
 
     abstract suspend fun post(
         args: ArgsPost,
         invoker: Invoker
-    ): Result<HttpResponse?>
+    ): HttpResponse?
 
     private suspend fun __get(
         encodedArgs: ByteArray?,
@@ -47,7 +47,7 @@ abstract class Module<TConfig>(config: TConfig) : PluginModule<TConfig>(config) 
             msgPackDecode(ArgsGet.serializer(), it).getOrNull()
                 ?: throw Exception("Failed to decode args in invocation to plugin method 'get'")
         } ?: throw Exception("Missing args in invocation to plugin method 'get'")
-        val response = get(args, invoker).getOrThrow()
+        val response = get(args, invoker)
         return msgPackEncode(serializer(), response)
     }
 
@@ -60,7 +60,7 @@ abstract class Module<TConfig>(config: TConfig) : PluginModule<TConfig>(config) 
             msgPackDecode(ArgsPost.serializer(), it).getOrNull()
                 ?: throw Exception("Failed to decode args in invocation to plugin method 'post'")
         } ?: throw Exception("Missing args in invocation to plugin method 'post'")
-        val response = post(args, invoker).getOrThrow()
+        val response = post(args, invoker)
         return msgPackEncode(serializer(), response)
     }
 }

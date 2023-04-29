@@ -31,6 +31,6 @@ abstract class PluginModule<TConfig>(val config: TConfig) {
         env: ByteArray?
     ): Result<ByteArray> {
         val fn = methods[method] ?: return Result.failure(Error("Plugin missing method \"$method\""))
-        return kotlin.runCatching { fn(args, invoker, env) }
+        return runCatching { fn(args, invoker, env) }
     }
 }

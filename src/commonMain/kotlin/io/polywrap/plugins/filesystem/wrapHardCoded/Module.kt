@@ -64,37 +64,37 @@ abstract class Module<TConfig>(config: TConfig) : PluginModule<TConfig>(config) 
     abstract suspend fun readFile(
         args: ArgsReadFile,
         invoker: Invoker
-    ): Result<Bytes>
+    ): Bytes
 
     abstract suspend fun readFileAsString(
         args: ArgsReadFileAsString,
         invoker: Invoker
-    ): Result<String>
+    ): String
 
     abstract suspend fun exists(
         args: ArgsExists,
         invoker: Invoker
-    ): Result<Boolean>
+    ): Boolean
 
     abstract suspend fun writeFile(
         args: ArgsWriteFile,
         invoker: Invoker
-    ): Result<Boolean?>
+    ): Boolean?
 
     abstract suspend fun mkdir(
         args: ArgsMkdir,
         invoker: Invoker
-    ): Result<Boolean?>
+    ): Boolean?
 
     abstract suspend fun rm(
         args: ArgsRm,
         invoker: Invoker
-    ): Result<Boolean?>
+    ): Boolean?
 
     abstract suspend fun rmdir(
         args: ArgsRmdir,
         invoker: Invoker
-    ): Result<Boolean?>
+    ): Boolean?
 
     private suspend fun __readFile(
         encodedArgs: ByteArray?,
@@ -105,7 +105,7 @@ abstract class Module<TConfig>(config: TConfig) : PluginModule<TConfig>(config) 
             msgPackDecode(ArgsReadFile.serializer(), it).getOrNull()
                 ?: throw Exception("Failed to decode args in invocation to plugin method 'readFile'")
         } ?: throw Exception("Missing args in invocation to plugin method 'readFile'")
-        val response = readFile(args, invoker).getOrThrow()
+        val response = readFile(args, invoker)
         return msgPackEncode(serializer(), response)
     }
 
@@ -118,7 +118,7 @@ abstract class Module<TConfig>(config: TConfig) : PluginModule<TConfig>(config) 
             msgPackDecode(ArgsReadFileAsString.serializer(), it).getOrNull()
                 ?: throw Exception("Failed to decode args in invocation to plugin method 'readFileAsString'")
         } ?: throw Exception("Missing args in invocation to plugin method 'readFileAsString'")
-        val response = readFileAsString(args, invoker).getOrThrow()
+        val response = readFileAsString(args, invoker)
         return msgPackEncode(serializer(), response)
     }
 
@@ -131,7 +131,7 @@ abstract class Module<TConfig>(config: TConfig) : PluginModule<TConfig>(config) 
             msgPackDecode(ArgsExists.serializer(), it).getOrNull()
                 ?: throw Exception("Failed to decode args in invocation to plugin method 'exists'")
         } ?: throw Exception("Missing args in invocation to plugin method 'exists'")
-        val response = exists(args, invoker).getOrThrow()
+        val response = exists(args, invoker)
         return msgPackEncode(serializer(), response)
     }
 
@@ -144,7 +144,7 @@ abstract class Module<TConfig>(config: TConfig) : PluginModule<TConfig>(config) 
             msgPackDecode(ArgsWriteFile.serializer(), it).getOrNull()
                 ?: throw Exception("Failed to decode args in invocation to plugin method 'writeFile'")
         } ?: throw Exception("Missing args in invocation to plugin method 'writeFile'")
-        val response = writeFile(args, invoker).getOrThrow()
+        val response = writeFile(args, invoker)
         return msgPackEncode(serializer(), response)
     }
 
@@ -157,7 +157,7 @@ abstract class Module<TConfig>(config: TConfig) : PluginModule<TConfig>(config) 
             msgPackDecode(ArgsMkdir.serializer(), it).getOrNull()
                 ?: throw Exception("Failed to decode args in invocation to plugin method 'mkdir'")
         } ?: throw Exception("Missing args in invocation to plugin method 'mkdir'")
-        val response = mkdir(args, invoker).getOrThrow()
+        val response = mkdir(args, invoker)
         return msgPackEncode(serializer(), response)
     }
 
@@ -170,7 +170,7 @@ abstract class Module<TConfig>(config: TConfig) : PluginModule<TConfig>(config) 
             msgPackDecode(ArgsRm.serializer(), it).getOrNull()
                 ?: throw Exception("Failed to decode args in invocation to plugin method 'rm'")
         } ?: throw Exception("Missing args in invocation to plugin method 'rm'")
-        val response = rm(args, invoker).getOrThrow()
+        val response = rm(args, invoker)
         return msgPackEncode(serializer(), response)
     }
 
@@ -183,7 +183,7 @@ abstract class Module<TConfig>(config: TConfig) : PluginModule<TConfig>(config) 
             msgPackDecode(ArgsRmdir.serializer(), it).getOrNull()
                 ?: throw Exception("Failed to decode args in invocation to plugin method 'rmdir'")
         } ?: throw Exception("Missing args in invocation to plugin method 'rmdir'")
-        val response = rmdir(args, invoker).getOrThrow()
+        val response = rmdir(args, invoker)
         return msgPackEncode(serializer(), response)
     }
 }

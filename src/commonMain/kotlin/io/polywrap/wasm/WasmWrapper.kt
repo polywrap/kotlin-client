@@ -19,7 +19,7 @@ data class WasmWrapper(val wasmModule: ByteArray) : Wrapper {
      * @param invoker The invoker instance.
      * @return A [Deferred] [Result] containing the result as a [ByteArray] on success, or an error if one occurs.
      */
-    override fun invoke(options: InvokeOptions, invoker: Invoker): Result<ByteArray> {
+    override fun invoke(options: InvokeOptions, invoker: Invoker): Result<ByteArray> = runCatching {
         val (_, method, args, env, _) = options
         val (abortWithInvokeAborted, abortWithInternalError) = createAborts(options)
         val state = WasmModuleState(

@@ -27,7 +27,7 @@ data class PluginWrapper<TConfig>(val module: PluginModule<TConfig>) : Wrapper {
                 uri = uri.uri,
                 method = method
             )
-            Result.failure<ByteArray>(error)
+            return Result.failure(error)
         }
 
         // Invoke the function

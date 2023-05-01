@@ -43,7 +43,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("com.ensarsarajcic.kotlinx:serialization-msgpack:0.5.4")
+                implementation("com.ensarsarajcic.kotlinx:serialization-msgpack:0.5.5")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
                 implementation("com.squareup.okio:okio:3.3.0") // fs plugin
                 implementation("io.ktor:ktor-client-core:2.3.0") // http plugin

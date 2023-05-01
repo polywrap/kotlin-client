@@ -28,7 +28,7 @@ class UriResolverExtensionFileReader(
         val result = UriResolverExtensionInvoker.getFile(invoker, resolverExtensionUri, path)
 
         if (result.isFailure) {
-            return Result.failure<ByteArray>(result.exceptionOrNull()!!)
+            return Result.failure(result.exceptionOrNull()!!)
         }
 
         val fileContent = result.getOrNull()

@@ -6,6 +6,8 @@ import io.polywrap.core.types.*
 import io.polywrap.core.util.getEnvFromUriHistory
 import io.polywrap.core.wrap.WrapManifest
 import io.polywrap.msgpack.EnvSerializer
+import io.polywrap.msgpack.MapArgsSerializer
+import io.polywrap.msgpack.NullableKVSerializer
 import io.polywrap.msgpack.msgPackDecode
 import io.polywrap.msgpack.msgPackEncode
 import kotlinx.serialization.serializer
@@ -166,12 +168,15 @@ class PolywrapClient(val config: ClientConfig) : Client {
 
         val resolutionPath = resolutionContext.getResolutionPath()
 
-        val env = getEnvFromUriHistory(
-            resolutionPath.ifEmpty { listOf(options.uri) },
-            this@PolywrapClient
-        )
+        if (options.env == null) {
+            val env = getEnvFromUriHistory(
+                resolutionPath.ifEmpty { listOf(options.uri) },
+                this@PolywrapClient
+            )
+            return invokeWrapper(wrapper, options.copy(env = env))
+        }
 
-        return invokeWrapper(wrapper, options.copy(env = env))
+        return invokeWrapper(wrapper, options)
     }
 
     /**
@@ -187,20 +192,26 @@ class PolywrapClient(val config: ClientConfig) : Client {
     inline fun <reified R> invoke(
         uri: Uri,
         method: String,
-        args: Map<String, Any>? = null,
+        args: Map<String, Any?>? = null,
         env: Map<String, Any>? = null,
         resolutionContext: UriResolutionContext? = null
     ): InvokeResult<R> {
         val options = InvokeOptions(
             uri = uri,
             method = method,
-            args = args?.let { msgPackEncode(EnvSerializer, it) },
+            args = args?.let { msgPackEncode(MapArgsSerializer, it) },
             env = env?.let { msgPackEncode(EnvSerializer, it) },
             resolutionContext = resolutionContext
         )
         val result = invoke(options)
         if (result.isFailure) {
             return Result.failure(result.exceptionOrNull()!!)
+        }
+        // The only valid Map return type is Map<String, Any> and its nullable versions
+        if (R::class == Map::class) {
+            val decoded = msgPackDecode(NullableKVSerializer, result.getOrThrow())
+            return if (decoded.isFailure) Result.failure(decoded.exceptionOrNull()!!)
+            else Result.success(decoded.getOrThrow() as R)
         }
         return msgPackDecode(serializer<R>(), result.getOrThrow())
     }
@@ -233,6 +244,12 @@ class PolywrapClient(val config: ClientConfig) : Client {
         if (result.isFailure) {
             return Result.failure(result.exceptionOrNull()!!)
         }
+        // The only valid Map return type is Map<String, Any> and its nullable versions
+        if (R::class == Map::class) {
+            val decoded = msgPackDecode(NullableKVSerializer, result.getOrThrow())
+            return if (decoded.isFailure) Result.failure(decoded.exceptionOrNull()!!)
+            else Result.success(decoded.getOrThrow() as R)
+        }
         return msgPackDecode(serializer<R>(), result.getOrThrow())
     }
 
@@ -251,7 +268,7 @@ class PolywrapClient(val config: ClientConfig) : Client {
     ): Result<UriPackageOrWrapper> {
         val uriResolver = getResolver()
         val context = resolutionContext ?: BasicUriResolutionContext()
-        return uriResolver.tryResolveUri(uri, this, context, true)
+        return uriResolver.tryResolveUri(uri, this, context, resolveToPackage)
     }
 
     /**
@@ -276,7 +293,7 @@ class PolywrapClient(val config: ClientConfig) : Client {
     ): Result<Wrapper> {
         val context = resolutionContext ?: BasicUriResolutionContext()
 
-        val result = tryResolveUri(uri, context)
+        val result = tryResolveUri(uri, context, false)
 
         if (result.isFailure) {
             val history = buildCleanUriHistory(context.getHistory())

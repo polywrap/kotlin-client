@@ -3,8 +3,10 @@ package io.polywrap.msgpack
 import com.ensarsarajcic.kotlinx.serialization.msgpack.MsgPack
 import com.ensarsarajcic.kotlinx.serialization.msgpack.MsgPackConfiguration
 import com.ensarsarajcic.kotlinx.serialization.msgpack.MsgPackDynamicSerializer
+import com.ensarsarajcic.kotlinx.serialization.msgpack.MsgPackNullableDynamicSerializer
 import kotlinx.serialization.*
 import kotlinx.serialization.builtins.MapSerializer
+import kotlinx.serialization.builtins.nullable
 import kotlinx.serialization.builtins.serializer
 
 /**
@@ -24,6 +26,8 @@ val msgPack: MsgPack by lazy {
 }
 
 val EnvSerializer = MapSerializer(String.serializer(), MsgPackDynamicSerializer)
+val MapArgsSerializer = MapSerializer(String.serializer(), MsgPackNullableDynamicSerializer)
+val NullableKVSerializer = MapSerializer(String.serializer(), MsgPackNullableDynamicSerializer)::nullable.get()
 
 /**
  * Encodes a given object into a msgpack byte array using the reified type's serializer.

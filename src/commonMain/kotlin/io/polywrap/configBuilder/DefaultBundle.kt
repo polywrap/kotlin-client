@@ -47,9 +47,9 @@ class DefaultBundle {
 
         val uriResolverExts: List<Uri> = listOf(
             embeds["ipfsResolver"]!!.source,
-            textRecordResolverRedirect.first,
-            Uri("ens/wraps.eth:http-uri-resolver-ext@1.0.0"),
-             Uri("ens/wraps.eth:file-system-uri-resolver-ext@1.0.0"),
+//            textRecordResolverRedirect.first,
+            Uri("wrap://ipfs/QmbsxmNDbJ3uNp9CRBTfTVQJikCYWQrFcXbC3mVpTRTLZg"), // Uri("ens/wraps.eth:http-uri-resolver-ext@1.0.0"),
+            Uri("wrap://ipfs/QmQLEc9G4YnMxLexgkWzQo1jHVhfmdLQWX7zXm4Kh9RPMU") // Uri("ens/wraps.eth:file-system-uri-resolver-ext@1.0.0"),
 //            Uri("ens/wraps.eth:ens-uri-resolver-ext@1.0.0"),
 //            Uri("ens/wraps.eth:ens-ipfs-contenthash-uri-resolver-ext@1.0.0"),
 //            Uri("ens/wraps.eth:ens-ocr-contenthash-uri-resolver-ext@1.0.0")
@@ -113,7 +113,8 @@ class DefaultBundle {
                     mapOf(
                         "provider" to ipfsProviders[0],
                         "fallbackProviders" to ipfsProviders.slice(1 until ipfsProviders.size),
-                        "retries" to mapOf("tryResolveUri" to 2, "getFile" to 2)
+                        "retries" to mapOf("tryResolveUri" to 2, "getFile" to 2),
+                        "timeout" to 10000
                     )
             )
 

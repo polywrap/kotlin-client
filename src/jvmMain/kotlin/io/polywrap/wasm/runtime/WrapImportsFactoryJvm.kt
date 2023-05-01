@@ -9,30 +9,23 @@ class WrapImportsFactoryJvm {
 
     companion object {
         /**
-         * Factory method for creating a collection of WasmTime [Extern] objects for the given imports.
+         * Factory method for setting imports in the linker.
          *
-         * @property store The WebAssembly module state.
-         * @property memory The memory to be used by the WebAssembly module.
-         * @property requiredImports The list of imports required by the WebAssembly module.
+         * @param store The WebAssembly module state.
+         * @param memory The memory to be used by the WebAssembly module.
+         * @param linker The linker to be used by the WebAssembly module.
          * @return A collection of WasmTime [Extern] objects.
          */
-        fun get(store: Store<WasmModuleState>, memory: Memory, requiredImports: List<String>): Collection<Extern> {
+        fun define(store: Store<WasmModuleState>, memory: Memory, linker: Linker) {
             val wrapImports = WrapImportsJvm(store, memory)
-            val result = mutableListOf<Extern>()
-            for (import in requiredImports) {
-                val extern = allImports[import]?.invoke(store, wrapImports)
-                if (extern != null) {
-                    result.add(extern)
-                }
-                if (import == "memory") {
-                    val memExtern = Extern.fromMemory(memory)
-                    result.add(memExtern)
-                }
+            allImports.forEach { (name, import) ->
+                val func = import.invoke(store, wrapImports)
+                linker.define("wrap", name, func)
             }
-            return result
+            linker.define("env", "memory", Extern.fromMemory(memory))
         }
 
-        private val allImports = mapOf(
+        private val allImports = arrayOf(
             "__wrap_subinvoke" to ::__wrap_subinvoke,
             "__wrap_subinvoke_result_len" to ::__wrap_subinvoke_result_len,
             "__wrap_subinvoke_result" to ::__wrap_subinvoke_result,

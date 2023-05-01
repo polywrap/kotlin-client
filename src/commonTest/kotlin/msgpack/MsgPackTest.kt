@@ -127,7 +127,7 @@ class MsgPackTest {
         val encoded = msgPackEncode(EnvSerializer, env)
         assertTrue(encoded.contentEquals(expectedBytes))
 
-        val decoded: Result<Map<String, Any>> = msgPackDecode(EnvSerializer, encoded)
+        val decoded: Result<Map<String, Any?>> = msgPackDecode(EnvSerializer, encoded)
         assertEquals(env, decoded.getOrThrow())
     }
 

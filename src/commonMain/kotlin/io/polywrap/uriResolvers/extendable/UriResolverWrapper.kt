@@ -49,10 +49,10 @@ class UriResolverWrapper(private val implementationUri: Uri) : ResolverWithHisto
 
         val uriOrManifest = result.getOrThrow()
 
-        if (uriOrManifest.uri != null) {
+        if (uriOrManifest?.uri != null) {
             val resultUri = Uri(uriOrManifest.uri)
             return Result.success(UriPackageOrWrapper.UriValue(resultUri))
-        } else if (uriOrManifest.manifest != null) {
+        } else if (uriOrManifest?.manifest != null) {
             val wrapPackage = WasmPackage(
                 uriOrManifest.manifest,
                 UriResolverExtensionFileReader(implementationUri, uri, client)
@@ -69,7 +69,7 @@ class UriResolverWrapper(private val implementationUri: Uri) : ResolverWithHisto
         implementationUri: Uri,
         client: Client,
         resolutionContext: UriResolutionContext
-    ): Result<MaybeUriOrManifest> {
+    ): Result<MaybeUriOrManifest?> {
         val subContext = resolutionContext.createSubContext()
         val loadExtensionResult = loadResolverExtension(uri, implementationUri, client, subContext)
 

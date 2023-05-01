@@ -34,38 +34,38 @@ class WasmInstanceJvm(wasmModule: ByteArray, state: WasmModuleState) : WasmInsta
      * @param env A [ByteArray] containing the environment data, or `null` if not provided.
      * @return A [Result] containing a [ByteArray] with the method invocation result or an exception if the invocation fails.
      */
-    override fun invoke(method: String, args: ByteArray, env: ByteArray?): Result<ByteArray> {
+    override fun invoke(method: String, args: ByteArray?, env: ByteArray?): Result<ByteArray> {
         val config = Config().maxWasmStack(1024 * 1024 * 2)
         val engine = Engine(config)
         val store: Store<WasmModuleState> = Store(state, engine)
         val memory: Memory = createMemory(store, wasmModule).getOrThrow()
         val wasmTimeModule: Module = Module.fromBinary(engine, wasmModule)
 
-        val importNames = wasmTimeModule.imports().map { it.name() }
-        val imports = WrapImportsFactoryJvm.get(store, memory, importNames)
+        val linker = Linker(engine)
+        WrapImportsFactoryJvm.define(store, memory, linker)
+        linker.module(store, "wrap", wasmTimeModule)
 
-        val instance = Instance(store, wasmTimeModule, imports)
         val result: Result<ByteArray>
         try {
-            val export = instance.getFunc(store, "_wrap_invoke").get()
+            val export = linker.get(store, "wrap", "_wrap_invoke").get().func()
             export.use {
                 val fn = WasmFunctions.func(store, export, WasmValType.I32, WasmValType.I32, WasmValType.I32, WasmValType.I32)
-                val isSuccess = fn.call(method.length, args.size, env?.size ?: 0)
+                val isSuccess = fn.call(method.length, args?.size ?: 0, env?.size ?: 0)
                 result = processResult(isSuccess == 1)
             }
         } finally {
-            instance.close()
-            wasmTimeModule.close()
-            memory.close()
-            imports.forEach {
-                if (it.type() == Extern.Type.FUNC) {
-                    it.func().close()
+            wasmTimeModule.dispose()
+            linker.externs(store).forEach {
+                val extern = it.extern()
+                if (extern.type() == Extern.Type.FUNC) {
+                    extern.func().dispose()
                 } else {
-                    it.memory().close()
+                    extern.memory().dispose()
                 }
             }
-            store.close()
-            engine.close()
+            linker.dispose()
+            store.dispose()
+            engine.dispose()
         }
         return result
     }

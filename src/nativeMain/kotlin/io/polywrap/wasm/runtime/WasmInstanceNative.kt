@@ -40,7 +40,7 @@ class WasmInstanceNative(wasmModule: ByteArray, state: WasmModuleState) : WasmIn
      * @return A [Result] containing a [ByteArray] with the method invocation result or an exception if the invocation fails.
      */
     @OptIn(ExperimentalStdlibApi::class)
-    override fun invoke(method: String, args: ByteArray, env: ByteArray?): Result<ByteArray> {
+    override fun invoke(method: String, args: ByteArray?, env: ByteArray?): Result<ByteArray> {
         return Engine() {
             setMaxWasmStack(4096u)
         }.use { engine ->
@@ -54,7 +54,7 @@ class WasmInstanceNative(wasmModule: ByteArray, state: WasmModuleState) : WasmIn
                         val export = instance.getExport("_wrap_invoke") as? Func
                             ?: throw Exception("_wrap_invoke export not found")
                         val fn = FuncFactory.producer(export, ValType.I32(), ValType.I32(), ValType.I32(), ValType.I32())
-                        val isSuccess = fn(method.length, args.size, env?.size ?: 0)
+                        val isSuccess = fn(method.length, args?.size ?: 0, env?.size ?: 0)
                         processResult(isSuccess == 1)
                     }
                 }

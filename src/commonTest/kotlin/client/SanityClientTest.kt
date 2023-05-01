@@ -3,11 +3,13 @@ package client
 import io.polywrap.client.PolywrapClient
 import io.polywrap.configBuilder.ClientConfigBuilder
 import io.polywrap.core.resolution.Uri
+import io.polywrap.core.resolution.UriPackageOrWrapper
 import io.polywrap.core.types.InvokeOptions
 import io.polywrap.msgpack.msgPackEncode
 import kotlinx.serialization.Serializable
 import kotlin.test.Test
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 class SanityClientTest {
 
@@ -20,6 +22,7 @@ class SanityClientTest {
         val result = client.tryResolveUri(uri = sha3Uri)
 
         assertNull(result.exceptionOrNull())
+        assertTrue(result.getOrThrow() is UriPackageOrWrapper.WrapperValue)
     }
 
     @Test

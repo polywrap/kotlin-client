@@ -24,14 +24,14 @@ data class WasmWrapper(val wasmModule: ByteArray) : Wrapper {
         val (abortWithInvokeAborted, abortWithInternalError) = createAborts(options)
         val state = WasmModuleState(
             method = method,
-            args = args ?: byteArrayOf(0),
-            env = env ?: byteArrayOf(0),
+            args = args ?: byteArrayOf(),
+            env = env ?: byteArrayOf(),
             abortWithInvokeAborted = abortWithInvokeAborted,
             abortWithInternalError = abortWithInternalError,
             invoker = invoker
         )
         val instance = WasmInstanceFactory.createInstance(wasmModule, state)
-        return instance.invoke(method, args ?: byteArrayOf(0), env ?: byteArrayOf(0))
+        return instance.invoke(method, args, env)
     }
 
     /**

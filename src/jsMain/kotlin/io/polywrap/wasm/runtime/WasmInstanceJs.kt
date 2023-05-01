@@ -38,7 +38,7 @@ class WasmInstanceJs(module: ByteArray, state: WasmModuleState) : WasmInstance(m
      * @param env A [ByteArray] containing the environment data, or `null` if not provided.
      * @return A [Result] containing a [ByteArray] with the method invocation result or an exception if the invocation fails.
      */
-    override suspend fun invoke(method: String, args: ByteArray, env: ByteArray?): Result<ByteArray> {
+    override suspend fun invoke(method: String, args: ByteArray?, env: ByteArray?): Result<ByteArray> {
         val memory = AsyncWasmInstance.createMemory(
             jsObject {
                 module = this@WasmInstanceJs.module
@@ -52,7 +52,7 @@ class WasmInstanceJs(module: ByteArray, state: WasmModuleState) : WasmInstance(m
                 requiredExports = listOf(REQUIRED_EXPORT)
             }
         ).await()
-        val isSuccess = instance.exports._wrap_invoke(method.length, args.size, env?.size ?: 0).await()
+        val isSuccess = instance.exports._wrap_invoke(method.length, args?.size ?: 0, env?.size ?: 0).await()
         return processResult(isSuccess == 1)
     }
 }

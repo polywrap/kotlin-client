@@ -1,5 +1,7 @@
 import com.goncalossilva.resources.Resource
 
+const val pathToTestWrappers = "src/commonTest/resources/wrappers"
+
 fun readTestResource(filePath: String): Result<ByteArray> {
     val resourceRoot = "src/commonTest/resources"
     val resource = Resource("$resourceRoot/$filePath")

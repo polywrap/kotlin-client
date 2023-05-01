@@ -5,13 +5,14 @@ import io.polywrap.configBuilder.ClientConfigBuilder
 import io.polywrap.core.resolution.Uri
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import pathToTestWrappers
 import kotlin.test.*
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class EnvTestCase {
 
-    private val externalWrapperUri = Uri("fs/src/commonTest/resources/wrappers/env-type/00-external/implementations/rs")
-    private val wrapperUri = Uri("fs/src/commonTest/resources/wrappers/env-type/01-main/implementations/rs")
+    private val externalWrapperUri = Uri("fs/$pathToTestWrappers/env-type/00-external/implementations/rs")
+    private val wrapperUri = Uri("fs/$pathToTestWrappers/env-type/01-main/implementations/rs")
 
     private val envs = mapOf(
         wrapperUri.uri to mapOf(

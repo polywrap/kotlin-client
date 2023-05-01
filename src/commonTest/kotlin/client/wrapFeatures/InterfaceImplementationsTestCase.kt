@@ -10,6 +10,7 @@ import io.polywrap.uriResolvers.extendable.ExtendableUriResolver
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import mockPlugin
+import pathToTestWrappers
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
@@ -20,8 +21,8 @@ class InterfaceImplementationsTestCase {
     @Test
     fun invokeInterfaceWrappers() = runTest {
         val interfaceUri = Uri("wrap://ens/interface.eth")
-        val implementationUri = Uri("fs/src/commonTest/resources/wrappers/interface-invoke/01-implementation/implementations/rs")
-        val wrapperUri = Uri("fs/src/commonTest/resources/wrappers/interface-invoke/02-wrapper/implementations/rs")
+        val implementationUri = Uri("fs/$pathToTestWrappers/interface-invoke/01-implementation/implementations/rs")
+        val wrapperUri = Uri("fs/$pathToTestWrappers/interface-invoke/02-wrapper/implementations/rs")
 
         val config = ClientConfigBuilder()
             .addDefaults()

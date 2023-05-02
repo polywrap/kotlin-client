@@ -89,14 +89,10 @@ abstract class CommonWrapImports<TMemory>(private val state: WasmModuleState, pr
     }
 
     override fun __wrap_invoke_args(methodPtr: Int, argsPtr: Int) {
-        if (state.method.isEmpty()) {
-            state.abortWithInternalError("__wrap_invoke_args: method is not set")
-        }
-        if (state.args.isEmpty()) {
-            state.abortWithInternalError("__wrap_invoke_args: args is not set")
-        }
         writeBytes(state.method.encodeToByteArray(), memory, methodPtr)
-        writeBytes(state.args, memory, argsPtr)
+        if (state.args.isNotEmpty()) {
+            writeBytes(state.args, memory, argsPtr)
+        }
     }
 
     override fun __wrap_invoke_result(ptr: Int, len: Int) {

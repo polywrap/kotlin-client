@@ -1,12 +1,10 @@
 package io.polywrap.msgpack
 
-import com.ensarsarajcic.kotlinx.serialization.msgpack.exceptions.MsgPackSerializationException
 import com.ensarsarajcic.kotlinx.serialization.msgpack.extensions.BaseMsgPackExtensionSerializer
 import com.ensarsarajcic.kotlinx.serialization.msgpack.extensions.MsgPackExtension
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.MapSerializer
-import kotlinx.serialization.encoding.Encoder
 
 /**
  * A wrapper data class for a Map to be serialized with MsgPack format.
@@ -37,22 +35,7 @@ class MsgPackMapExtensionSerializer<K, V>(
     private val valueSerializer: KSerializer<V>
 ) : BaseMsgPackExtensionSerializer<MsgPackMap<K, V>>() {
 
-    private val serializer = MsgPackExtension.serializer()
     override val extTypeId: Byte = 1
-
-    /**
-     * Temporary: Overrides the serialization method to fix an error in the base class implementation.
-     * This method will be removed when the base class implementation is fixed.
-     * @param encoder The [Encoder] instance used for encoding the value.
-     * @param value The [MsgPackMap] instance to be serialized.
-     */
-    override fun serialize(encoder: Encoder, value: MsgPackMap<K, V>) {
-        val extension = serialize(value)
-        if (extension.extTypeId != extTypeId) {
-            throw MsgPackSerializationException.extensionSerializationWrongType(extension, extTypeId, extension.extTypeId)
-        }
-        encoder.encodeSerializableValue(serializer, extension)
-    }
 
     /**
      * Deserializes the given [MsgPackExtension] into a [MsgPackMap] instance.

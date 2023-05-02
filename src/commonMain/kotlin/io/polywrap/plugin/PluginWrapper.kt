@@ -38,7 +38,6 @@ data class PluginWrapper<TConfig>(val module: PluginModule<TConfig>) : Wrapper {
         } else {
             val exception = result.exceptionOrNull()!!
             val reason = exception.message ?: "Failed to invoke method \"$method\""
-            // TODO: add error source
             val error = WrapError(
                 reason = reason,
                 code = WrapErrorCode.WRAPPER_INVOKE_ABORTED,

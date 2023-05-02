@@ -8,7 +8,6 @@ import io.polywrap.core.resolution.UriResolutionStep
  */
 typealias CleanResolutionStep = String
 
-// TODO: this is not looking good. Need to test and revise output.
 /**
  * Builds a clean URI history from a given URI resolution history, optionally up to a specified depth.
  *

@@ -1,0 +1,16 @@
+name: kotlin-client-ci
+
+on:
+  pull_request:
+
+jobs:
+  ci:
+    name: kotlin-client-ci
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build and Test
+        run: ./gradlew build

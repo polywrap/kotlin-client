@@ -31,7 +31,16 @@ class CacheResolver(
     ): Result<UriPackageOrWrapper> {
         if (resolveToPackage) {
             val subContext = resolutionContext.createSubHistoryContext()
-            return resolver.tryResolveUri(uri, client, subContext, resolveToPackage)
+            val result = resolver.tryResolveUri(uri, client, subContext, resolveToPackage)
+            resolutionContext.trackStep(
+                UriResolutionStep(
+                    sourceUri = uri,
+                    result = result,
+                    subHistory = subContext.getHistory(),
+                    description = "CacheResolver"
+                )
+            )
+            return result
         }
 
         val wrapper = cache.get(uri)
@@ -43,7 +52,7 @@ class CacheResolver(
                 UriResolutionStep(
                     sourceUri = uri,
                     result = result,
-                    description = "SynchronizedCacheResolver (Cache)"
+                    description = "CacheResolver (Cache)"
                 )
             )
             return result
@@ -64,7 +73,7 @@ class CacheResolver(
                 sourceUri = uri,
                 result = finalResult,
                 subHistory = subContext.getHistory(),
-                description = "SynchronizedCacheResolver"
+                description = "CacheResolver"
             )
         )
 

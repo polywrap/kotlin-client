@@ -6,6 +6,7 @@ import io.polywrap.core.resolution.Uri
 import io.polywrap.core.resolution.UriPackageOrWrapper
 import io.polywrap.core.wrap.WrapManifest
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
@@ -30,13 +31,13 @@ class GetFileManifestTest {
         val manifest = WrapManifest.deserialize(result.getOrThrow())
         assertNull(manifest.exceptionOrNull())
 
-        assertTrue(manifest.getOrThrow().name == "sha3wrapper")
+        assertEquals(manifest.getOrThrow().name, "sha3-wasm-rs")
     }
 
     @Test
     fun getManifest() {
         val manifest = client.getManifest(sha3Uri)
         assertNull(manifest.exceptionOrNull())
-        assertTrue(manifest.getOrThrow().name == "sha3wrapper")
+        assertEquals(manifest.getOrThrow().name, "sha3-wasm-rs")
     }
 }

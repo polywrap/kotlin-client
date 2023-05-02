@@ -33,7 +33,7 @@ class RecursiveResolver(private val resolver: UriResolver) : UriResolver {
             return Result.failure(InfiniteLoopException(uri, resolutionContext.getHistory()))
         }
         resolutionContext.startResolving(uri)
-        val resolverResult = resolver.tryResolveUri(uri, client, resolutionContext)
+        val resolverResult = resolver.tryResolveUri(uri, client, resolutionContext, resolveToPackage)
         val result = tryResolveUriAgainIfRedirect(resolverResult, uri, client, resolutionContext, resolveToPackage)
         resolutionContext.stopResolving(uri)
         return result

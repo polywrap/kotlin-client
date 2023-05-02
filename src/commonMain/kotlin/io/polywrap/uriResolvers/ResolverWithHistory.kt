@@ -59,6 +59,6 @@ abstract class ResolverWithHistory : UriResolver {
         uri: Uri,
         client: Client,
         resolutionContext: UriResolutionContext,
-        resolveToPackage: Boolean = false
+        resolveToPackage: Boolean
     ): Result<UriPackageOrWrapper>
 }

@@ -56,6 +56,7 @@ kotlin {
                 implementation("com.goncalossilva:resources:0.3.1") // access resources in tests
                 implementation("io.ktor:ktor-client-mock:2.3.0") // http plugin test
                 implementation("com.ionspin.kotlin:bignum:0.3.8") // client test
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0") // client test
             }
         }
         val jvmMain by getting {

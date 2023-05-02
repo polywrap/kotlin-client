@@ -27,11 +27,14 @@ class MapTestCase {
 
     @Test
     fun testReturnMap() = runTest {
+        @Serializable
+        data class ArgsReturnMap(val map: MsgPackMap<String, Int>)
+
         val mapClass = mapOf("Hello" to 1, "Heyo" to 50).toMsgPackMap()
-        val result = client.invoke<MsgPackMap<String, Int>>(
+        val result = client.invoke<ArgsReturnMap, MsgPackMap<String, Int>>(
             uri = uri,
             method = "returnMap",
-            args = mapOf("map" to mapClass)
+            args = ArgsReturnMap(mapClass)
         )
         if (result.isFailure) throw result.exceptionOrNull()!!
         assertEquals(mapClass, result.getOrThrow())
@@ -68,12 +71,15 @@ class MapTestCase {
 
     @Test
     fun testReturnNestedMap() = runTest {
+        @Serializable
+        data class ArgsReturnNestedMap(val foo: MsgPackMap<String, MsgPackMap<String, Int>>)
+
         val mapClass = mapOf("Hello" to 1, "Heyo" to 50).toMsgPackMap()
         val nestedMapClass = mapOf("Nested" to mapClass).toMsgPackMap()
-        val result = client.invoke<MsgPackMap<String, MsgPackMap<String, Int>>>(
+        val result = client.invoke<ArgsReturnNestedMap, MsgPackMap<String, MsgPackMap<String, Int>>>(
             uri = uri,
             method = "returnNestedMap",
-            args = mapOf("foo" to nestedMapClass)
+            args = ArgsReturnNestedMap(nestedMapClass)
         )
         if (result.isFailure) throw result.exceptionOrNull()!!
         assertEquals(nestedMapClass, result.getOrThrow())

@@ -122,8 +122,9 @@ uniffi {
         // "aarch64-unknown-linux-gnu"
         // "x86_64-unknown-linux-gnu"
     )
-    libname = "polywrap_native" // Or whatever matches Cargo.toml's [package] name.
-    uniffiKotlinMppBindingsDir = "$clonesDir/bindings"
+    libname = "polywrap_native"
+    uniffiKotlinMppBindingsDir = "$projectDir/src/jvmMain/kotlin"
+    isRelease = false
 }
 
 android {

@@ -17,7 +17,7 @@ afterEvaluate {
         doFirst { cwd.mkdirs() }
         workingDir(cwd)
         val uri = "https://github.com/polywrap/rust-client.git"
-        val branch = "main"
+        val branch = config.rustClientRepoBranch
         commandLine("git", "clone", "-b", branch, "--depth", "1", "--single-branch", uri)
         doLast {
             val dotGitPath = "${config.clonesDir}/rust-client/.git/"

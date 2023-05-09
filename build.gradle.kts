@@ -108,6 +108,7 @@ kotlin {
 }
 
 uniffi {
+    rustClientRepoBranch = "main"
     clonesDir = "$projectDir/clones"
     desktopJniPath = "${project.buildDir}/jniLibs"
     androidJniPath = "${projectDir}/src/androidMain/jniLibs"

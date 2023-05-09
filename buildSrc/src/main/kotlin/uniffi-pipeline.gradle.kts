@@ -6,6 +6,9 @@ import java.io.File
 val config = project.extensions.create<UniffiPipelineConfig>("uniffi")
 
 afterEvaluate {
+    val rustClientRepoCloneDir = "${config.clonesDir}/rust-client"
+    val packageDir = "${rustClientRepoCloneDir}/packages/native"
+    val udl = "$packageDir/src/main.udl"
 
     // clone rust client repository
     val cloneRustClient = tasks.register<Exec>("cloneRustClient") {
@@ -20,7 +23,7 @@ afterEvaluate {
             val dotGitPath = "${config.clonesDir}/rust-client/.git/"
             File(dotGitPath).deleteRecursively()
         }
-        onlyIf { !File(config.rustClientRepoCloneDir).exists() }
+        onlyIf { !File(rustClientRepoCloneDir).exists() }
     }
 
     // add rust targets
@@ -36,7 +39,7 @@ afterEvaluate {
     config.rustTargets.map { target ->
         tasks.register<Exec>("cargoBuild_$target") {
             group = "uniffi"
-            workingDir("${config.rustClientRepoCloneDir}/packages/native")
+            workingDir(packageDir)
             val profile = if (config.isRelease) "release" else "dev"
             commandLine("cargo", "+nightly", "build", "--target", target, "--profile", profile)
             dependsOn(tasks.getByName("rustupAddTarget_$target"))
@@ -49,7 +52,7 @@ afterEvaluate {
         .map { target ->
             tasks.register<Copy>("copyNativeLibrary_$target") {
                 val profile = if (config.isRelease) "release" else "debug"
-                from("${config.rustClientRepoCloneDir}/target/$target/$profile")
+                from("${rustClientRepoCloneDir}/target/$target/$profile")
                 into("${config.androidJniPath}/${rustTargetToAndroidAbiOrDesktopValue(target)}")
                 val libname = config.libname
                 include("lib$libname.so", "lib$libname.dylib", "$libname.dll")
@@ -67,7 +70,7 @@ afterEvaluate {
         .map { target ->
             tasks.register<Copy>("copyNativeLibrary_$target") {
                 val profile = if (config.isRelease) "release" else "debug"
-                from("${config.rustClientRepoCloneDir}/target/$target/$profile")
+                from("${rustClientRepoCloneDir}/target/$target/$profile")
                 into("${config.desktopJniPath}/${rustTargetToAndroidAbiOrDesktopValue(target)}")
                 val libname = config.libname
                 include("lib$libname.so", "lib$libname.dylib", "$libname.dll")
@@ -79,20 +82,20 @@ afterEvaluate {
         dependsOn(copyNativeLibraryForDesktopTasks)
     }
 
-// clone UniFFI Kotlin MPP Bindings repository
-//tasks.register<Exec>("cloneUniffiKotlinMppBindings") {
-//    val uri = "https://gitlab.com/trixnity/uniffi-kotlin-multiplatform-bindings.git"
-//    val branch = "main"
-//    commandLine("git", "clone", "-b", branch, "--depth", "1", "--single-branch", uri)
-//    val cwd = File(clonesDir)
-//    cwd.mkdirs()
-//    workingDir(cwd)
-//    onlyIf { !File(uniffiKotlinMppBindingsDir).exists() }
-//}
+    val generateKotlinUniffiBindings = tasks.register<Exec>("generateKotlinUniffiBindings") {
+        group = "uniffi"
+        workingDir(rustClientRepoCloneDir)
+        val profile = if (config.isRelease) "release" else "debug"
+        val bin = "${rustClientRepoCloneDir}/target/${config.rustTargets[0]}/$profile/uniffi-bindgen"
+        val command = "$bin generate $udl --language kotlin --out-dir ${config.uniffiKotlinMppBindingsDir}"
+        commandLine(command.split(" "))
+        dependsOn(copyNativeLibraryForAndroid, copyNativeLibraryForDesktop)
+        onlyIf { config.rustTargets.isNotEmpty() }
+    }
 
     // run full pipeline
     tasks.register("uniffi") {
         group = "uniffi"
-        dependsOn(copyNativeLibraryForAndroid, copyNativeLibraryForDesktop)
+        dependsOn(generateKotlinUniffiBindings)
     }
 }

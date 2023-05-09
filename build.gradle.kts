@@ -109,9 +109,6 @@ kotlin {
 
 uniffi {
     clonesDir = "$projectDir/clones"
-    rustClientRepoCloneDir = "$clonesDir/rust-client"
-    rustTargetDir = "$rustClientRepoCloneDir/target"
-    rustLibsDir = "$rustTargetDir/libs"
     desktopJniPath = "${project.buildDir}/jniLibs"
     androidJniPath = "${projectDir}/src/androidMain/jniLibs"
     rustTargets = listOf(
@@ -126,7 +123,7 @@ uniffi {
         // "x86_64-unknown-linux-gnu"
     )
     libname = "polywrap_native" // Or whatever matches Cargo.toml's [package] name.
-    uniffiKotlinMppBindingsDir = "$clonesDir/uniffi-kotlin-multiplatform-bindings"
+    uniffiKotlinMppBindingsDir = "$clonesDir/bindings"
 }
 
 android {

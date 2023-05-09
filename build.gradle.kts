@@ -16,15 +16,14 @@ repositories {
     mavenCentral()
 }
 
+// Can I set this in a more elegant way?
+val uniffiBindingsDir = "${buildDir}/generated/source/uniffi/kotlin"
+
 kotlin {
     jvm {
         jvmToolchain(17)
         testRuns["test"].executionTask.configure {
             useJUnitPlatform()
-        }
-
-        tasks {
-
         }
     }
     android()
@@ -69,6 +68,7 @@ kotlin {
             }
         }
         val jvmMain by getting {
+            kotlin.srcDir(uniffiBindingsDir)
             dependencies {
                 implementation("net.java.dev.jna:jna:5.13.0@aar") // JNA
                 implementation("io.github.kawamuray.wasmtime:wasmtime-java:0.14.0")
@@ -78,6 +78,7 @@ kotlin {
         val jvmTest by getting
         val androidMain by getting {
             dependsOn(sourceSets["jvmMain"])
+            kotlin.srcDir(uniffiBindingsDir)
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
             }
@@ -124,7 +125,7 @@ uniffi {
         // "x86_64-unknown-linux-gnu"
     )
     libname = "polywrap_native"
-    uniffiKotlinMppBindingsDir = "$projectDir/src/jvmMain/kotlin"
+    bindingsDir = uniffiBindingsDir
     isRelease = false
 }
 

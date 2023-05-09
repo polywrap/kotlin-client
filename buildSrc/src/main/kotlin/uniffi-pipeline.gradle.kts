@@ -87,7 +87,7 @@ afterEvaluate {
         workingDir(rustClientRepoCloneDir)
         val profile = if (config.isRelease) "release" else "debug"
         val bin = "${rustClientRepoCloneDir}/target/${config.rustTargets[0]}/$profile/uniffi-bindgen"
-        val command = "$bin generate $udl --language kotlin --out-dir ${config.uniffiKotlinMppBindingsDir}"
+        val command = "$bin generate $udl --language kotlin --out-dir ${config.bindingsDir}"
         commandLine(command.split(" "))
         dependsOn(copyNativeLibraryForAndroid, copyNativeLibraryForDesktop)
         onlyIf { config.rustTargets.isNotEmpty() }

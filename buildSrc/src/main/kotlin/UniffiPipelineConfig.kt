@@ -5,6 +5,6 @@ open class UniffiPipelineConfig(
     var androidJniPath: String = "",
     var rustTargets: List<String> = listOf(),
     var libname: String = "",
-    var uniffiKotlinMppBindingsDir: String = "",
+    var bindingsDir: String = "",
     var rustClientRepoBranch: String = "main"
 )

@@ -16,6 +16,10 @@ afterEvaluate {
         val uri = "https://github.com/polywrap/rust-client.git"
         val branch = "main"
         commandLine("git", "clone", "-b", branch, "--depth", "1", "--single-branch", uri)
+        doLast {
+            val dotGitPath = "${config.clonesDir}/rust-client/.git/"
+            File(dotGitPath).deleteRecursively()
+        }
         onlyIf { !File(config.rustClientRepoCloneDir).exists() }
     }
 

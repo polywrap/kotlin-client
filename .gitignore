@@ -7,7 +7,6 @@
 /build/classes/kotlin/jvm/test/
 /build/classes/kotlin/native/main/klib/
 /build/classes/kotlin/native/test/klib/
-/local.properties
 
+/local.properties
 /clones/
-/src/jvmMain/kotlin/uniffi

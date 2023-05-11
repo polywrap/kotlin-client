@@ -12,3 +12,4 @@ fun rustTargetToAndroidAbiOrDesktopValue(target: String): String {
         else -> "x86_64"
     }
 }
+

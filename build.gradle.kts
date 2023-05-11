@@ -80,27 +80,25 @@ uniffi {
     desktopJniPath = "${project.buildDir}/jniLibs"
     androidJniPath = "$projectDir/src/androidMain/jniLibs"
     rustTargets = listOf(
-//        "armv7-linux-androideabi",
-//        "i686-linux-android",
-//        "aarch64-linux-android",
-//        "x86_64-linux-android",
-//        "x86_64-pc-windows-gnu",
-        // "aarch64-unknown-linux-gnu",
-        // "x86_64-unknown-linux-gnu",
-        //        "x86_64-apple-darwin",
+        "armv7-linux-androideabi",
+        "i686-linux-android",
+        "aarch64-linux-android",
+        "x86_64-linux-android",
+        "x86_64-pc-windows-gnu",
+        "aarch64-unknown-linux-gnu",
+        "x86_64-unknown-linux-gnu",
+        "x86_64-apple-darwin",
         "aarch64-apple-darwin"
     )
     libname = "polywrap_native"
     bindingsDir = uniffiBindingsDir
+    // when false, only builds for debug on current desktop platform even if its not in the list
     isRelease = false
 }
 
 android {
     namespace = "io.polywrap"
     compileSdk = 32
-    defaultConfig {
-        minSdk = 24
-    }
     compileOptions {
         targetCompatibility = JavaVersion.VERSION_17
     }

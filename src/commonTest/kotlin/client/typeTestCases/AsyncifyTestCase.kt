@@ -19,7 +19,7 @@ class AsyncifyTestCase {
         .addDefaults()
         .addPackage(
             "wrap://ens/memory-storage.polywrap.eth"
-                    to memoryStoragePlugin(null)
+                to memoryStoragePlugin(null)
         )
         .build()
     private val client = PolywrapClient(config)
@@ -79,7 +79,7 @@ class AsyncifyTestCase {
         )
         if (result.isFailure) throw result.exceptionOrNull()!!
 
-        val expectedResult = "polywrap " + ('a'..'k').joinToString("") { "${it}polywrap "} + "l"
+        val expectedResult = "polywrap " + ('a'..'k').joinToString("") { "${it}polywrap " } + "l"
         assertEquals(expectedResult, result.getOrThrow())
     }
 

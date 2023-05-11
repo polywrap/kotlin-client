@@ -52,9 +52,9 @@ class BigIntTestCase {
         if (result.isFailure) throw result.exceptionOrNull()!!
 
         val expected = "123456789123456789".toBigInteger() *
-                "123456789123456789123456789123456789".toBigInteger() *
-                "987654321987654321".toBigInteger() *
-                "987654321987654321987654321987654321".toBigInteger()
+            "123456789123456789123456789123456789".toBigInteger() *
+            "987654321987654321".toBigInteger() *
+            "987654321987654321987654321987654321".toBigInteger()
         assertEquals(expected.toString(), result.getOrThrow())
     }
 }

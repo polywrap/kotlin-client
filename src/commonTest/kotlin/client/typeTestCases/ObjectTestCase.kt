@@ -19,6 +19,7 @@ class ObjectTestCase {
 
     @Serializable
     private data class Nested(val prop: String)
+
     @Serializable
     private data class Output(val prop: String, val nested: Nested)
 
@@ -39,7 +40,7 @@ class ObjectTestCase {
         assertEquals(
             listOf(
                 Output("arg1 prop", Nested("arg1 nested prop")),
-                Output("", Nested("")),
+                Output("", Nested(""))
             ),
             result.getOrThrow()
         )
@@ -66,7 +67,7 @@ class ObjectTestCase {
         assertEquals(
             listOf(
                 Output("arg1 prop", Nested("arg1 nested prop")),
-                Output( "arg2 prop", Nested("arg2 circular prop")),
+                Output("arg2 prop", Nested("arg2 circular prop"))
             ),
             result.getOrThrow()
         )
@@ -126,7 +127,7 @@ class ObjectTestCase {
         assertEquals(
             listOf(
                 null,
-                Output("arg prop", Nested("arg nested prop")),
+                Output("arg prop", Nested("arg nested prop"))
             ),
             result.getOrThrow()
         )

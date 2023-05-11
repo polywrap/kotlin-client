@@ -5,11 +5,11 @@ import io.polywrap.configBuilder.ClientConfigBuilder
 import io.polywrap.core.resolution.Uri
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 import pathToTestWrappers
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlinx.serialization.json.buildJsonObject
-import kotlinx.serialization.json.put
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class JsonTestCase {
@@ -71,13 +71,13 @@ class JsonTestCase {
         val value = mapOf(
             "valueA" to 5,
             "valueB" to "foo",
-            "valueC" to true,
+            "valueC" to true
         )
         val result = client.invoke<String>(
-                uri = uri,
-                method = "methodJSON",
-                args = value
-            )
+            uri = uri,
+            method = "methodJSON",
+            args = value
+        )
         if (result.isFailure) throw result.exceptionOrNull()!!
 
         val expected = buildJsonObject {

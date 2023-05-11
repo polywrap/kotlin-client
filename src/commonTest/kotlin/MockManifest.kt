@@ -118,7 +118,7 @@ val encodedTestManifest = byteArrayOf(
     115, -92, 116, 121, 112, 101, -92, 119, 97, 115, 109, -89, 118, 101, 114, 115, 105, 111, 110, -91, 48, 46, 49, 46, 48
 )
 
-//val simpleMapManifest = WrapManifest(
+// val simpleMapManifest = WrapManifest(
 //    version = "0.1",
 //    name = "simple-map-type",
 //    type = "wasm",
@@ -207,4 +207,4 @@ val encodedTestManifest = byteArrayOf(
 //            )
 //        )
 //    )
-//)
+// )

@@ -210,8 +210,11 @@ class PolywrapClient(val config: ClientConfig) : Client {
         // The only valid Map return type is Map<String, Any> and its nullable versions
         if (R::class == Map::class) {
             val decoded = msgPackDecode(NullableKVSerializer, result.getOrThrow())
-            return if (decoded.isFailure) Result.failure(decoded.exceptionOrNull()!!)
-            else Result.success(decoded.getOrThrow() as R)
+            return if (decoded.isFailure) {
+                Result.failure(decoded.exceptionOrNull()!!)
+            } else {
+                Result.success(decoded.getOrThrow() as R)
+            }
         }
         return msgPackDecode(serializer<R>(), result.getOrThrow())
     }
@@ -247,8 +250,11 @@ class PolywrapClient(val config: ClientConfig) : Client {
         // The only valid Map return type is Map<String, Any> and its nullable versions
         if (R::class == Map::class) {
             val decoded = msgPackDecode(NullableKVSerializer, result.getOrThrow())
-            return if (decoded.isFailure) Result.failure(decoded.exceptionOrNull()!!)
-            else Result.success(decoded.getOrThrow() as R)
+            return if (decoded.isFailure) {
+                Result.failure(decoded.exceptionOrNull()!!)
+            } else {
+                Result.success(decoded.getOrThrow() as R)
+            }
         }
         return msgPackDecode(serializer<R>(), result.getOrThrow())
     }

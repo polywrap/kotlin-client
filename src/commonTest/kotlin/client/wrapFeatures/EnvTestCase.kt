@@ -63,6 +63,7 @@ class EnvTestCase {
             methodRequireEnvResult.getOrThrow()
         )
     }
+
     @Test
     fun testSubinvokeEnvMethod() = runTest {
         val subinvokeEnvMethodResult = client.invoke<Map<String, Any>>(

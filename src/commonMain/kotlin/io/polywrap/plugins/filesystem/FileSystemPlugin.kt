@@ -13,18 +13,6 @@ import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
 /**
- * Get a reference to the current platform's file system.
- */
-internal expect object FileSystemFactory {
-    /**
-     * Get a reference to the file system for the current platform.
-     *
-     * @return The FileSystem reference.
-     */
-    fun create(): FileSystem
-}
-
-/**
  * A plugin for interacting with the platform's file system
  *
  * @property config An optional configuration object for the plugin.
@@ -36,12 +24,10 @@ class FileSystemPlugin(config: Config? = null) : Module<FileSystemPlugin.Config?
      */
     class Config()
 
-    private val fileSystem = FileSystemFactory.create()
-
-    override suspend fun readFile(args: ArgsReadFile, invoker: Invoker): Bytes  = coroutineScope {
+    override suspend fun readFile(args: ArgsReadFile, invoker: Invoker): Bytes = coroutineScope {
         async {
             val absPath = args.path.toPath(true).absolute()
-            fileSystem.read(absPath) { readByteArray() }
+            FileSystem.SYSTEM.read(absPath) { readByteArray() }
         }.await()
     }
 
@@ -66,14 +52,14 @@ class FileSystemPlugin(config: Config? = null) : Module<FileSystemPlugin.Config?
 
     override suspend fun exists(args: ArgsExists, invoker: Invoker): Boolean {
         val absPath = args.path.toPath(true).absolute()
-        return fileSystem.exists(absPath)
+        return FileSystem.SYSTEM.exists(absPath)
     }
 
     /** writes file to path; overwrites file if exists */
     override suspend fun writeFile(args: ArgsWriteFile, invoker: Invoker): Boolean? = coroutineScope {
         async {
             val absPath = args.path.toPath(true).absolute()
-            fileSystem.write(absPath) { write(args.data) }
+            FileSystem.SYSTEM.write(absPath) { write(args.data) }
             true
         }.await()
     }
@@ -82,9 +68,9 @@ class FileSystemPlugin(config: Config? = null) : Module<FileSystemPlugin.Config?
         async {
             val absPath = args.path.toPath(true).absolute()
             if (args.recursive == true) {
-                fileSystem.createDirectories(absPath)
+                FileSystem.SYSTEM.createDirectories(absPath)
             } else {
-                fileSystem.createDirectory(absPath, true)
+                FileSystem.SYSTEM.createDirectory(absPath, true)
             }
             true
         }.await()
@@ -95,9 +81,9 @@ class FileSystemPlugin(config: Config? = null) : Module<FileSystemPlugin.Config?
             val absPath = args.path.toPath(true).absolute()
             val force = args.force == true
             if (args.recursive == true) {
-                fileSystem.deleteRecursively(absPath, !force)
+                FileSystem.SYSTEM.deleteRecursively(absPath, !force)
             } else {
-                fileSystem.delete(absPath, !force)
+                FileSystem.SYSTEM.delete(absPath, !force)
             }
             true
         }.await()
@@ -106,11 +92,10 @@ class FileSystemPlugin(config: Config? = null) : Module<FileSystemPlugin.Config?
     override suspend fun rmdir(args: ArgsRmdir, invoker: Invoker): Boolean? = coroutineScope {
         async {
             val absPath = args.path.toPath(true).absolute()
-            fileSystem.delete(absPath, true)
+            FileSystem.SYSTEM.delete(absPath, true)
             true
         }.await()
     }
-
 
     /**
      * Encode a byte array as a hex string.
@@ -127,7 +112,7 @@ class FileSystemPlugin(config: Config? = null) : Module<FileSystemPlugin.Config?
             this
         } else {
             val currentDir = "".toPath()
-            fileSystem.canonicalize(currentDir) / (this)
+            FileSystem.SYSTEM.canonicalize(currentDir) / (this)
         }
     }
 }

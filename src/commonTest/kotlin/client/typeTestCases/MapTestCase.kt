@@ -6,11 +6,11 @@ import io.polywrap.core.resolution.Uri
 import io.polywrap.msgpack.MsgPackMap
 import io.polywrap.msgpack.toMsgPackMap
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlin.test.Test
-import kotlin.test.assertEquals
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.Serializable
 import pathToTestWrappers
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class MapTestCase {
@@ -63,7 +63,7 @@ class MapTestCase {
         val result = client.invoke<CustomMap>(
             uri = uri,
             method = "returnCustomMap",
-            args = mapOf("foo" to CustomMap(mapClass,  nestedMapClass))
+            args = mapOf("foo" to CustomMap(mapClass, nestedMapClass))
         )
         if (result.isFailure) throw result.exceptionOrNull()!!
         assertEquals(CustomMap(mapClass, nestedMapClass), result.getOrThrow())

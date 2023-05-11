@@ -117,7 +117,7 @@ class InterfaceImplementationsTestCase {
                         UriRedirectResolver(from = implementation2Uri, to = implementation3Uri),
                         PackageRedirectResolver(implementation4Uri, mockPlugin(null))
                     )
-                ),
+                )
             )
             .build()
         val client = PolywrapClient(config)
@@ -186,10 +186,12 @@ class InterfaceImplementationsTestCase {
         val defaultClientConfig = builder.addDefaults().build()
 
         assertEquals(
-            ((defaultClientConfig.interfaces?.get(interfaceUri) ?: emptyList()) + listOf(
-                implementationUri1,
-                implementationUri2
-            )),
+            (
+                (defaultClientConfig.interfaces?.get(interfaceUri) ?: emptyList()) + listOf(
+                    implementationUri1,
+                    implementationUri2
+                )
+                ),
             implementationUris
         )
     }

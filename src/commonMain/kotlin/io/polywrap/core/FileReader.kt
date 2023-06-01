@@ -1,4 +1,4 @@
-package io.polywrap.core.types
+package io.polywrap.core
 
 /**
  * An abstract class for reading files.

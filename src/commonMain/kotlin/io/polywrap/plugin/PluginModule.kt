@@ -1,6 +1,6 @@
 package io.polywrap.plugin
 
-import io.polywrap.core.types.Invoker
+import io.polywrap.core.Invoker
 
 /**
  * An abstract class for plugin modules with a generic configuration type [TConfig].
@@ -17,20 +17,20 @@ abstract class PluginModule<TConfig>(val config: TConfig) {
     abstract val methods: Map<String, PluginMethod>
 
     /**
-     * A suspend function for wrapping the invocation of a plugin method.
+     * Invokes a method of the plugin module.
      * @param method The name of the method to invoke.
      * @param args The input arguments as a byte array.
-     * @param invoker The [Invoker] instance to be used during the invocation.
      * @param env The environment as a byte array.
+     * @param invoker The [Invoker] instance to be used during the invocation.
      * @return A [Result] instance containing either the result as a byte array or an error if the invocation fails.
      */
     suspend fun wrapInvoke(
         method: String,
         args: ByteArray?,
-        invoker: Invoker,
-        env: ByteArray?
+        env: ByteArray?,
+        invoker: Invoker
     ): Result<ByteArray> {
         val fn = methods[method] ?: return Result.failure(Error("Plugin missing method \"$method\""))
-        return runCatching { fn(args, invoker, env) }
+        return runCatching { fn(args, env, invoker) }
     }
 }

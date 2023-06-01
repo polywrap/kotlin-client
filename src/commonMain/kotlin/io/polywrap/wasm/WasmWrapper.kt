@@ -1,85 +1,56 @@
 package io.polywrap.wasm
 
-import io.polywrap.core.types.*
-import io.polywrap.wasm.runtime.WasmInstanceFactory
-import io.polywrap.wasm.runtime.WasmModuleState
-import kotlinx.coroutines.Deferred
+import io.polywrap.core.Wrapper
+import io.polywrap.core.AbortHandler
+import io.polywrap.core.Client
+import uniffi.main.FfiException
+import uniffi.main.FfiInvoker
+import uniffi.main.FfiWasmWrapper
 
 /**
  * Represents a WebAssembly (Wasm) wrapper for executing Wasm code.
  *
  * @property wasmModule The WebAssembly module as a ByteArray.
  */
-data class WasmWrapper(val wasmModule: ByteArray) : Wrapper {
+@OptIn(ExperimentalUnsignedTypes::class)
+data class WasmWrapper(val wasmModule: ByteArray) : Wrapper, AutoCloseable {
+
+    private val ffiWrapper = FfiWasmWrapper(wasmModule.toUByteArray().toList())
 
     /**
-     * Invokes a method in the WebAssembly module with the specified options and invoker.
+     * Invoke the Wrapper based on the provided options.
      *
-     * @param options The options for invoking the method.
-     * @param invoker The invoker instance.
-     * @return A [Deferred] [Result] containing the result as a [ByteArray] on success, or an error if one occurs.
+     * @param method The method to be called on the wrapper.
+     * @param args Arguments for the method, encoded in the MessagePack byte format
+     * @param env Env variables for the wrapper invocation, encoded in the MessagePack byte format
+     * @param invoker The invoker will be used for any sub-invocations that occur.
+     * @param abortHandler An [AbortHandler] to be called when the invocation is aborted.
+     * @return A list of MessagePack-encoded bytes representing the invocation result
+     * @throws FfiException
      */
-    override fun invoke(options: InvokeOptions, invoker: Invoker): Result<ByteArray> = runCatching {
-        val (_, method, args, env, _) = options
-        val (abortWithInvokeAborted, abortWithInternalError) = createAborts(options)
-        val state = WasmModuleState(
-            method = method,
-            args = args ?: byteArrayOf(),
-            env = env ?: byteArrayOf(),
-            abortWithInvokeAborted = abortWithInvokeAborted,
-            abortWithInternalError = abortWithInternalError,
-            invoker = invoker
-        )
-        val instance = WasmInstanceFactory.createInstance(wasmModule, state)
-        return instance.invoke(method, args, env)
-    }
+    override fun invoke(
+        method: String,
+        args: List<UByte>?,
+        env: List<UByte>?,
+        invoker: FfiInvoker,
+        abortHandler: AbortHandler?
+    ): List<UByte> = ffiWrapper.invoke(method, args, env, invoker, abortHandler)
 
-    /**
-     * Creates abort functions for handling errors during method invocation.
-     *
-     * @param options The options for invoking the method.
-     * @return A pair of abort functions for handling invocation-aborted errors and internal errors.
-     */
-    private fun createAborts(options: InvokeOptions): Pair<(String, ErrorSource?) -> Nothing, (String) -> Nothing> {
-        val abortWithInvokeAborted: (String, ErrorSource?) -> Nothing = { message, source ->
-            val prev = WrapError.parse(message)
-            val text = prev?.let { "SubInvocation exception encountered" } ?: message
-            throw WrapError(
-                reason = text,
-                code = WrapErrorCode.WRAPPER_INVOKE_ABORTED,
-                uri = options.uri.uri,
-                method = options.method,
-                args = options.args.contentToString(),
-                source = source,
-                innerError = prev
-            )
-        }
-
-        val abortWithInternalError: (String) -> Nothing = { message ->
-            throw WrapError(
-                reason = message,
-                code = WrapErrorCode.WRAPPER_INTERNAL_ERROR,
-                uri = options.uri.uri,
-                method = options.method,
-                args = options.args.contentToString()
-            )
-        }
-
-        return Pair(abortWithInvokeAborted, abortWithInternalError)
-    }
+    override fun close() = ffiWrapper.close()
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other == null || this::class != other::class) return false
+        if (javaClass != other?.javaClass) return false
 
         other as WasmWrapper
 
         if (!wasmModule.contentEquals(other.wasmModule)) return false
-
-        return true
+        return ffiWrapper == other.ffiWrapper
     }
 
     override fun hashCode(): Int {
-        return wasmModule.contentHashCode()
+        var result = wasmModule.contentHashCode()
+        result = 31 * result + ffiWrapper.hashCode()
+        return result
     }
 }

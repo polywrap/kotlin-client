@@ -1,11 +1,11 @@
 package configBuilder
 
 import io.polywrap.configBuilder.BuilderConfig
-import io.polywrap.configBuilder.ClientConfigBuilder
+import io.polywrap.configBuilder.ConfigBuilder
 import io.polywrap.configBuilder.DefaultBundle
-import io.polywrap.core.resolution.Uri
+import io.polywrap.core.Uri
 import io.polywrap.core.resolution.UriPackageOrWrapper
-import io.polywrap.core.resolution.UriResolutionContext
+import io.polywrap.core.UriResolutionContext
 import io.polywrap.core.resolution.UriResolver
 import io.polywrap.core.types.*
 import kotlin.test.Test
@@ -15,7 +15,7 @@ import kotlin.test.fail
 
 class ClientConfigBuilderTest {
 
-    private val emptyBuilderConfig = ClientConfigBuilder().config
+    private val emptyBuilderConfig = ConfigBuilder().config
 
     class MockUriResolver(val from: String, val to: String) : UriResolver {
         override fun tryResolveUri(
@@ -90,7 +90,7 @@ class ClientConfigBuilderTest {
 
     @Test
     fun shouldBuildAnEmptyPartialConfig() {
-        val config = ClientConfigBuilder().build()
+        val config = ConfigBuilder().build()
         assertEquals(config.interfaces, mapOf())
         assertEquals(config.envs, mapOf())
     }
@@ -106,7 +106,7 @@ class ClientConfigBuilderTest {
             mutableListOf(testUriResolver)
         )
 
-        val builder = ClientConfigBuilder().add(configObject)
+        val builder = ConfigBuilder().add(configObject)
 
         val clientConfig = builder.build()
         val builderConfig = builder.config
@@ -132,7 +132,7 @@ class ClientConfigBuilderTest {
 
     @Test
     fun shouldSuccessfullyAddTheDefaultConfig() {
-        val builder = ClientConfigBuilder().addDefaults()
+        val builder = ConfigBuilder().addDefaults()
 
         val clientConfig = builder.build()
         val builderConfig = builder.config
@@ -151,7 +151,7 @@ class ClientConfigBuilderTest {
             "baz" to mapOf("biz" to "buz")
         )
 
-        val config = ClientConfigBuilder().addEnv(envUri to env).build()
+        val config = ConfigBuilder().addEnv(envUri to env).build()
 
         assertNotNull(config.envs)
         assertEquals(1, config.envs!!.size)
@@ -164,7 +164,7 @@ class ClientConfigBuilderTest {
         val env1 = mapOf("foo" to "bar")
         val env2 = mapOf("baz" to mapOf("biz" to "buz"))
 
-        val config = ClientConfigBuilder()
+        val config = ConfigBuilder()
             .addEnv(envUri to env1)
             .addEnv(envUri to env2)
             .build()
@@ -178,7 +178,7 @@ class ClientConfigBuilderTest {
 
     @Test
     fun shouldSuccessfullyAddTwoSeparateEnvs() {
-        val config = ClientConfigBuilder()
+        val config = ConfigBuilder()
             .addEnv(testEnvs.keys.first() to testEnvs.values.first())
             .addEnv(testEnvs.keys.last() to testEnvs.values.last())
             .build()
@@ -191,7 +191,7 @@ class ClientConfigBuilderTest {
 
     @Test
     fun shouldRemoveAnEnv() {
-        val config = ClientConfigBuilder()
+        val config = ConfigBuilder()
             .addEnv(testEnvs.keys.first() to testEnvs.values.first())
             .addEnv(testEnvs.keys.last() to testEnvs.values.last())
             .removeEnv(testEnvs.keys.first())
@@ -208,7 +208,7 @@ class ClientConfigBuilderTest {
 
         val env = mapOf("foo" to "bar")
 
-        val config = ClientConfigBuilder().setEnv(envUri to env).build()
+        val config = ConfigBuilder().setEnv(envUri to env).build()
 
         assertNotNull(config.envs)
         assertEquals(1, config.envs!!.size)
@@ -222,7 +222,7 @@ class ClientConfigBuilderTest {
         val env1 = mapOf("foo" to "bar")
         val env2 = mapOf("bar" to "baz")
 
-        val config = ClientConfigBuilder()
+        val config = ConfigBuilder()
             .addEnv(envUri to env1)
             .setEnv(envUri to env2)
             .build()
@@ -237,7 +237,7 @@ class ClientConfigBuilderTest {
         val interfaceUri = "wrap://ens/some.interface.eth"
         val implUri = "wrap://ens/interface.impl.eth"
 
-        val config = ClientConfigBuilder()
+        val config = ConfigBuilder()
             .addInterfaceImplementation(interfaceUri, implUri)
             .build()
 
@@ -257,7 +257,7 @@ class ClientConfigBuilderTest {
         val implUri1 = "wrap://ens/interface.impl1.eth"
         val implUri2 = "wrap://ens/interface.impl2.eth"
 
-        val config = ClientConfigBuilder()
+        val config = ConfigBuilder()
             .addInterfaceImplementation(interfaceUri, implUri1)
             .addInterfaceImplementation(interfaceUri, implUri2)
             .build()
@@ -281,7 +281,7 @@ class ClientConfigBuilderTest {
         val implUri3 = "wrap://ens/interface.impl3.eth"
         val implUri4 = "wrap://ens/interface.impl4.eth"
 
-        val config = ClientConfigBuilder()
+        val config = ConfigBuilder()
             .addInterfaceImplementation(interfaceUri1, implUri1)
             .addInterfaceImplementation(interfaceUri2, implUri2)
             .addInterfaceImplementation(interfaceUri1, implUri3)
@@ -307,7 +307,7 @@ class ClientConfigBuilderTest {
         val implUri1 = "wrap://ens/interface.impl1.eth"
         val implUri2 = "wrap://ens/interface.impl2.eth"
 
-        val config = ClientConfigBuilder()
+        val config = ConfigBuilder()
             .addInterfaceImplementations(interfaceUri, listOf(implUri1, implUri2))
             .build()
 
@@ -328,7 +328,7 @@ class ClientConfigBuilderTest {
         val implUri2 = "wrap://ens/interface.impl2.eth"
         val implUri3 = "wrap://ens/interface.impl3.eth"
 
-        val config = ClientConfigBuilder()
+        val config = ConfigBuilder()
             .addInterfaceImplementations(interfaceUri, listOf(implUri1))
             .addInterfaceImplementations(interfaceUri, listOf(implUri2, implUri3))
             .build()
@@ -354,7 +354,7 @@ class ClientConfigBuilderTest {
         val implUri5 = "wrap://ens/interface.impl5.eth"
         val implUri6 = "wrap://ens/interface.impl6.eth"
 
-        val config = ClientConfigBuilder()
+        val config = ConfigBuilder()
             .addInterfaceImplementation(interfaceUri1, implUri1)
             .addInterfaceImplementation(interfaceUri2, implUri2)
             .addInterfaceImplementations(interfaceUri1, listOf(implUri3, implUri5))
@@ -381,7 +381,7 @@ class ClientConfigBuilderTest {
         val implUri1 = "wrap://ens/interface.impl1.eth"
         val implUri2 = "wrap://ens/interface.impl2.eth"
 
-        val config = ClientConfigBuilder()
+        val config = ConfigBuilder()
             .addInterfaceImplementations(interfaceUri1, listOf(implUri1, implUri2))
             .addInterfaceImplementations(interfaceUri2, listOf(implUri1, implUri2))
             .removeInterfaceImplementation(interfaceUri1, implUri2)
@@ -407,7 +407,7 @@ class ClientConfigBuilderTest {
         val implUri1 = "wrap://ens/interface.impl1.eth"
         val implUri2 = "wrap://ens/interface.impl2.eth"
 
-        val config = ClientConfigBuilder()
+        val config = ConfigBuilder()
             .addInterfaceImplementations(interfaceUri1, listOf(implUri1, implUri2))
             .addInterfaceImplementations(interfaceUri2, listOf(implUri1, implUri2))
             .removeInterfaceImplementation(interfaceUri1, implUri1)
@@ -429,7 +429,7 @@ class ClientConfigBuilderTest {
         val from = "wrap://ens/from.this.ens"
         val to = "wrap://ens/to.that.ens"
 
-        val builder = ClientConfigBuilder().addRedirect(from to to)
+        val builder = ConfigBuilder().addRedirect(from to to)
 
         val config = builder.build()
         val builderConfig = builder.config
@@ -448,7 +448,7 @@ class ClientConfigBuilderTest {
         val from2 = "wrap://ens/from.this2.ens"
         val to2 = "wrap://ens/to.that2.ens"
 
-        val builder = ClientConfigBuilder()
+        val builder = ConfigBuilder()
             .addRedirect(from1 to to1)
             .addRedirect(from2 to to2)
 
@@ -469,7 +469,7 @@ class ClientConfigBuilderTest {
         val to1 = "wrap://ens/to.that1.ens"
         val to2 = "wrap://ens/to.that2.ens"
 
-        val builder = ClientConfigBuilder()
+        val builder = ConfigBuilder()
             .addRedirect(from1 to to1)
             .addRedirect(from2 to to1)
             .addRedirect(from1 to to2)
@@ -490,7 +490,7 @@ class ClientConfigBuilderTest {
         val to1 = "wrap://ens/to.that1.ens"
         val from2 = "wrap://ens/from.this2.ens"
         val to2 = "wrap://ens/to.that2.ens"
-        val builder = ClientConfigBuilder()
+        val builder = ConfigBuilder()
             .addRedirect(from1 to to1)
             .addRedirect(from2 to to2)
             .removeRedirect(from1)
@@ -512,7 +512,7 @@ class ClientConfigBuilderTest {
             "wrap://ens/to.eth"
         )
 
-        val builder = ClientConfigBuilder().addResolver(uriResolver)
+        val builder = ConfigBuilder().addResolver(uriResolver)
 
         val config = builder.build()
         val builderConfig = builder.config
@@ -532,7 +532,7 @@ class ClientConfigBuilderTest {
             "wrap://ens/to2.eth"
         )
 
-        val builder = ClientConfigBuilder()
+        val builder = ConfigBuilder()
             .addResolver(uriResolver1)
             .addResolver(uriResolver2)
 
@@ -547,7 +547,7 @@ class ClientConfigBuilderTest {
     fun shouldAddAPackage() {
         val uri = "wrap://ens/some.package.eth"
 
-        val builderConfig = ClientConfigBuilder()
+        val builderConfig = ConfigBuilder()
             .addPackage(uri to mockWrapPackage)
             .config
 
@@ -564,7 +564,7 @@ class ClientConfigBuilderTest {
         val uri1 = "wrap://ens/some1.package.eth"
         val uri2 = "wrap://ens/some2.package.eth"
 
-        val builderConfig = ClientConfigBuilder().addPackages(
+        val builderConfig = ConfigBuilder().addPackages(
             mapOf(
                 uri1 to mockWrapPackage,
                 uri2 to mockWrapPackage
@@ -585,7 +585,7 @@ class ClientConfigBuilderTest {
         val uri1 = "wrap://ens/some1.package.eth"
         val uri2 = "wrap://ens/some2.package.eth"
 
-        val builderConfig = ClientConfigBuilder()
+        val builderConfig = ConfigBuilder()
             .addPackages(
                 mapOf(
                     uri1 to mockWrapPackage,
@@ -606,7 +606,7 @@ class ClientConfigBuilderTest {
     fun shouldAddAWrapper() {
         val uri = "wrap://ens/some.wrapper.eth"
 
-        val builderConfig = ClientConfigBuilder().addWrapper(uri to mockWrapper).config
+        val builderConfig = ConfigBuilder().addWrapper(uri to mockWrapper).config
 
         assertEquals(
             mutableMapOf(uri to mockWrapper),
@@ -619,7 +619,7 @@ class ClientConfigBuilderTest {
         val uri1 = "wrap://ens/some1.wrapper.eth"
         val uri2 = "wrap://ens/some2.wrapper.eth"
 
-        val builderConfig = ClientConfigBuilder().addWrappers(
+        val builderConfig = ConfigBuilder().addWrappers(
             mapOf(
                 uri1 to mockWrapper,
                 uri2 to mockWrapper
@@ -640,7 +640,7 @@ class ClientConfigBuilderTest {
         val uri1 = "wrap://ens/some1.wrapper.eth"
         val uri2 = "wrap://ens/some2.wrapper.eth"
 
-        val builderConfig = ClientConfigBuilder()
+        val builderConfig = ConfigBuilder()
             .addWrappers(
                 mapOf(
                     uri1 to mockWrapper,
@@ -660,7 +660,7 @@ class ClientConfigBuilderTest {
         val shortUri = "ens/some1.wrapper.eth"
         val longUri = "wrap://ens/some2.wrapper.eth"
 
-        val builderConfig1 = ClientConfigBuilder()
+        val builderConfig1 = ConfigBuilder()
             .addEnv(shortUri to mapOf("foo" to "bar"))
             .addEnv(longUri to mapOf("bar" to "baz")).config
 
@@ -672,7 +672,7 @@ class ClientConfigBuilderTest {
             builderConfig1.envs
         )
 
-        val builderConfig2 = ClientConfigBuilder()
+        val builderConfig2 = ConfigBuilder()
             .add(builderConfig1)
             .removeEnv(shortUri).config
 
@@ -689,7 +689,7 @@ class ClientConfigBuilderTest {
         val shortUri = "ens/some1.wrapper.eth"
         val longUri = "wrap://ens/some2.wrapper.eth"
 
-        val builderConfig1 = ClientConfigBuilder()
+        val builderConfig1 = ConfigBuilder()
             .addInterfaceImplementation(shortUri, longUri)
             .addInterfaceImplementation(longUri, shortUri).config
 
@@ -701,7 +701,7 @@ class ClientConfigBuilderTest {
             builderConfig1.interfaces
         )
 
-        val builderConfig2 = ClientConfigBuilder()
+        val builderConfig2 = ConfigBuilder()
             .add(builderConfig1)
             .removeInterfaceImplementation(shortUri, longUri).config
 
@@ -718,7 +718,7 @@ class ClientConfigBuilderTest {
         val shortUri = "ens/some1.wrapper.eth"
         val longUri = "wrap://ens/some2.wrapper.eth"
 
-        val builderConfig1 = ClientConfigBuilder()
+        val builderConfig1 = ConfigBuilder()
             .addRedirect(shortUri to longUri)
             .addRedirect(longUri to shortUri).config
 
@@ -730,7 +730,7 @@ class ClientConfigBuilderTest {
             builderConfig1.redirects
         )
 
-        val builderConfig2 = ClientConfigBuilder()
+        val builderConfig2 = ConfigBuilder()
             .add(builderConfig1)
             .removeRedirect(shortUri).config
 
@@ -747,7 +747,7 @@ class ClientConfigBuilderTest {
         val shortUri = "ens/some1.package.eth"
         val longUri = "wrap://ens/some2.package.eth"
 
-        val builderConfig1 = ClientConfigBuilder().addPackages(
+        val builderConfig1 = ConfigBuilder().addPackages(
             mapOf(
                 shortUri to mockWrapPackage,
                 longUri to mockWrapPackage
@@ -762,7 +762,7 @@ class ClientConfigBuilderTest {
             builderConfig1.packages
         )
 
-        val builderConfig2 = ClientConfigBuilder()
+        val builderConfig2 = ConfigBuilder()
             .add(builderConfig1)
             .removePackage(shortUri).config
 
@@ -779,7 +779,7 @@ class ClientConfigBuilderTest {
         val shortUri = "ens/some1.wrapper.eth"
         val longUri = "wrap://ens/some2.wrapper.eth"
 
-        val builderConfig1 = ClientConfigBuilder().addWrappers(
+        val builderConfig1 = ConfigBuilder().addWrappers(
             mapOf(
                 shortUri to mockWrapper,
                 longUri to mockWrapper
@@ -794,7 +794,7 @@ class ClientConfigBuilderTest {
             builderConfig1.wrappers
         )
 
-        val builderConfig2 = ClientConfigBuilder()
+        val builderConfig2 = ConfigBuilder()
             .add(builderConfig1)
             .removeWrapper(shortUri).config
 

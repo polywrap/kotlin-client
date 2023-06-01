@@ -1,6 +1,6 @@
 package core
 
-import io.polywrap.core.resolution.Uri
+import io.polywrap.core.Uri
 import io.polywrap.core.resolution.UriConfig
 import kotlin.test.*
 

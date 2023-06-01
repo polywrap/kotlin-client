@@ -1,8 +1,8 @@
 package io.polywrap.uriResolvers.embedded
 
-import io.polywrap.core.resolution.Uri
+import io.polywrap.core.Uri
 import io.polywrap.core.resolution.UriPackageOrWrapper
-import io.polywrap.core.resolution.UriResolutionContext
+import io.polywrap.core.UriResolutionContext
 import io.polywrap.core.resolution.UriResolver
 import io.polywrap.core.types.Client
 import io.polywrap.uriResolvers.ResolverWithHistory

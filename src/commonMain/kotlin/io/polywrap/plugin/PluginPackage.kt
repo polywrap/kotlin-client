@@ -1,7 +1,7 @@
 package io.polywrap.plugin
 
-import io.polywrap.core.types.WrapPackage
-import io.polywrap.core.types.Wrapper
+import io.polywrap.core.WrapPackage
+import io.polywrap.core.Wrapper
 import io.polywrap.core.wrap.WrapManifest
 
 /**
@@ -28,7 +28,7 @@ data class PluginPackage<TConfig>(
      *
      * @return A [PluginWrapper] instance
      */
-    override fun createWrapper(): Result<Wrapper> = Result.success(PluginWrapper(pluginModule))
+    override fun createWrapper(): Wrapper = PluginWrapper(pluginModule)
 
     /**
      * Not Implemented. Throws a NotImplementedError.

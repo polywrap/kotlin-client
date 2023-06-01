@@ -1,7 +1,7 @@
 package plugin
 
 import emptyMockInvoker
-import io.polywrap.core.resolution.Uri
+import io.polywrap.core.Uri
 import io.polywrap.core.types.InvokeOptions
 import io.polywrap.msgpack.msgPackDecode
 import io.polywrap.msgpack.msgPackEncode

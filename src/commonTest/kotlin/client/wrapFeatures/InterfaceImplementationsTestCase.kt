@@ -1,8 +1,8 @@
 package client.wrapFeatures
 
 import io.polywrap.client.PolywrapClient
-import io.polywrap.configBuilder.ClientConfigBuilder
-import io.polywrap.core.resolution.Uri
+import io.polywrap.configBuilder.ConfigBuilder
+import io.polywrap.core.Uri
 import io.polywrap.uriResolvers.SequentialResolver
 import io.polywrap.uriResolvers.embedded.PackageRedirectResolver
 import io.polywrap.uriResolvers.embedded.UriRedirectResolver
@@ -24,7 +24,7 @@ class InterfaceImplementationsTestCase {
         val implementationUri = Uri("fs/$pathToTestWrappers/interface-invoke/01-implementation/implementations/rs")
         val wrapperUri = Uri("fs/$pathToTestWrappers/interface-invoke/02-wrapper/implementations/rs")
 
-        val config = ClientConfigBuilder()
+        val config = ConfigBuilder()
             .addDefaults()
             .addInterfaceImplementation(interfaceUri.uri, implementationUri.uri)
             .build()
@@ -57,7 +57,7 @@ class InterfaceImplementationsTestCase {
         val implementation1Uri = Uri("wrap://ens/some-implementation1.eth")
         val implementation2Uri = Uri("wrap://ens/some-implementation2.eth")
 
-        val config = ClientConfigBuilder()
+        val config = ConfigBuilder()
             .addInterfaceImplementations(
                 interfaceUri.uri,
                 listOf(implementation1Uri.uri, implementation2Uri.uri)
@@ -96,7 +96,7 @@ class InterfaceImplementationsTestCase {
         val implementation3Uri = Uri("wrap://ens/some-implementation3.eth")
         val implementation4Uri = Uri("wrap://ens/some-implementation4.eth")
 
-        val config = ClientConfigBuilder()
+        val config = ConfigBuilder()
             .addInterfaceImplementations(
                 interface1Uri.uri,
                 listOf(implementation1Uri.uri, implementation2Uri.uri)
@@ -148,7 +148,7 @@ class InterfaceImplementationsTestCase {
         val implementationUri1 = Uri("wrap://ens/implementation1.eth")
         val implementationUri2 = Uri("wrap://ens/implementation2.eth")
 
-        val config = ClientConfigBuilder()
+        val config = ConfigBuilder()
             .addDefaults()
             .addInterfaceImplementations(
                 interfaceUri.uri,
@@ -171,7 +171,7 @@ class InterfaceImplementationsTestCase {
         val implementationUri1 = Uri("wrap://ens/implementation1.eth")
         val implementationUri2 = Uri("wrap://ens/implementation2.eth")
 
-        val config = ClientConfigBuilder()
+        val config = ConfigBuilder()
             .addDefaults()
             .addInterfaceImplementations(
                 interfaceUri.uri,
@@ -182,7 +182,7 @@ class InterfaceImplementationsTestCase {
 
         val implementationUris = client.getInterfaces()?.get(interfaceUri)
 
-        val builder = ClientConfigBuilder()
+        val builder = ConfigBuilder()
         val defaultClientConfig = builder.addDefaults().build()
 
         assertEquals(
@@ -202,7 +202,7 @@ class InterfaceImplementationsTestCase {
         val implementation1Uri = Uri("wrap://ens/some-implementation1.eth")
         val implementation2Uri = Uri("wrap://ens/some-implementation2.eth")
 
-        val config = ClientConfigBuilder()
+        val config = ConfigBuilder()
             .addInterfaceImplementation(interfaceUri.uri, implementation2Uri.uri)
             .addResolver(PackageRedirectResolver(implementation1Uri, mockPlugin(null)))
             .build()
@@ -222,7 +222,7 @@ class InterfaceImplementationsTestCase {
         val implementation1Uri = Uri("wrap://ens/some-implementation1.eth")
         val implementation2Uri = Uri("wrap://ens/some-implementation2.eth")
 
-        val config = ClientConfigBuilder()
+        val config = ConfigBuilder()
             .addInterfaceImplementations(
                 interfaceUri.uri,
                 listOf(implementation1Uri.uri, implementation2Uri.uri)

@@ -1,8 +1,8 @@
 package io.polywrap.wasm
 
-import io.polywrap.core.types.FileReader
-import io.polywrap.core.types.WrapPackage
-import io.polywrap.core.types.Wrapper
+import io.polywrap.core.FileReader
+import io.polywrap.core.WrapPackage
+import io.polywrap.core.Wrapper
 import io.polywrap.core.wrap.WrapManifest
 
 /**
@@ -31,6 +31,15 @@ data class WasmPackage(private val fileReader: FileReader) : WrapPackage {
     constructor(manifestBuffer: ByteArray, fileReader: FileReader) : this(FileReaderFactory.fromManifest(manifestBuffer, fileReader))
 
     /**
+     * Creates a new [WasmPackage] instance with the given wasm module and file reader.
+     *
+     * @param fileReader a file reader used to read other package files
+     * @param wasmModule the wasm module buffer
+     */
+    constructor(fileReader: FileReader, wasmModule: ByteArray) : this(FileReaderFactory.fromWasmModule(wasmModule, fileReader))
+
+
+    /**
      * Produce an instance of the WrapPackage's WRAP manifest
      *
      * @return A [WrapManifest] instance
@@ -47,15 +56,10 @@ data class WasmPackage(private val fileReader: FileReader) : WrapPackage {
      * Construct an instance of the package's Wasm Wrapper
      *
      * @return A [WasmWrapper] instance
+     *
+     * @throws Exception if the package does not contain a Wasm module
      */
-    override fun createWrapper(): Result<Wrapper> {
-        val module = getWasmModule()
-        if (module.isFailure) {
-            return Result.failure(module.exceptionOrNull()!!)
-        }
-        val wrapper = WasmWrapper(module.getOrThrow())
-        return Result.success(wrapper)
-    }
+    override fun createWrapper(): Wrapper = WasmWrapper(getWasmModule().getOrThrow())
 
     /**
      * Retrieves the file at the specified path within the Wrap package.
@@ -66,7 +70,7 @@ data class WasmPackage(private val fileReader: FileReader) : WrapPackage {
     override fun getFile(path: String): Result<ByteArray> {
         val dataResult = fileReader.readFile(path)
         if (dataResult.isFailure) {
-            Result.failure<ByteArray>(Error("WasmWrapper: File was not found.\nSubpath: $path"))
+            Result.failure<ByteArray>(Exception("WasmWrapper: File was not found.\nSubpath: $path"))
         }
         return dataResult
     }
@@ -79,7 +83,7 @@ data class WasmPackage(private val fileReader: FileReader) : WrapPackage {
     fun getWasmModule(): Result<ByteArray> {
         val result = fileReader.readFile(FileReader.WRAP_MODULE_PATH)
         if (!result.isSuccess) {
-            return Result.failure(Error("Wrapper does not contain a Wasm module"))
+            return Result.failure(Exception("Wrapper does not contain a Wasm module"))
         }
         return result
     }

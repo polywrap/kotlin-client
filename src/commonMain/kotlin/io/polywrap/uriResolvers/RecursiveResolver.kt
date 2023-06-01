@@ -1,18 +1,22 @@
 package io.polywrap.uriResolvers
 
-import io.polywrap.core.resolution.Uri
+import io.polywrap.core.Uri
 import io.polywrap.core.resolution.UriPackageOrWrapper
+import io.polywrap.core.UriResolutionContext
+import io.polywrap.core.resolution.Uri
 import io.polywrap.core.resolution.UriResolutionContext
 import io.polywrap.core.resolution.UriResolver
 import io.polywrap.core.types.Client
 import io.polywrap.uriResolvers.util.InfiniteLoopException
+import uniffi.main.FfiInvokerInterface
+import uniffi.main.FfiUriResolver
 
 /**
  * A [UriResolver] implementation that resolves URIs recursively.
  *
  * @property resolver The [UriResolver] instance used for resolving URIs.
  */
-class RecursiveResolver(private val resolver: UriResolver) : UriResolver {
+class RecursiveResolver(private val resolver: UriResolver) : FfiUriResolver {
 
     /**
      * Tries to resolve the given [Uri] recursively by trying to resolve it again if a redirect to another [Uri] occurs.
@@ -25,7 +29,7 @@ class RecursiveResolver(private val resolver: UriResolver) : UriResolver {
      */
     override fun tryResolveUri(
         uri: Uri,
-        client: Client,
+        client: FfiInvokerInterface,
         resolutionContext: UriResolutionContext,
         resolveToPackage: Boolean
     ): Result<UriPackageOrWrapper> {

@@ -1,6 +1,6 @@
 package io.polywrap.uriResolvers.extendable
 
-import io.polywrap.core.resolution.Uri
+import io.polywrap.core.Uri
 import io.polywrap.core.types.FileReader
 import io.polywrap.core.types.Invoker
 import io.polywrap.core.util.combinePaths

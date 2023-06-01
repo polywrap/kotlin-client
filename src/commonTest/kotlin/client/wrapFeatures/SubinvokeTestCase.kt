@@ -1,8 +1,8 @@
 package client.wrapFeatures
 
 import io.polywrap.client.PolywrapClient
-import io.polywrap.configBuilder.ClientConfigBuilder
-import io.polywrap.core.resolution.Uri
+import io.polywrap.configBuilder.ConfigBuilder
+import io.polywrap.core.Uri
 import pathToTestWrappers
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -13,7 +13,7 @@ class SubinvokeTestCase {
         val subinvokeUri = "fs/$pathToTestWrappers/subinvoke/00-subinvoke/implementations/rs"
         val wrapperUri = "fs/$pathToTestWrappers/subinvoke/01-invoke/implementations/rs"
 
-        val config = ClientConfigBuilder()
+        val config = ConfigBuilder()
             .addDefaults()
             .addRedirect("ens/imported-subinvoke.eth" to subinvokeUri)
             .build()

@@ -1,8 +1,8 @@
 package client.typeTestCases
 
 import io.polywrap.client.PolywrapClient
-import io.polywrap.configBuilder.ClientConfigBuilder
-import io.polywrap.core.resolution.Uri
+import io.polywrap.configBuilder.ConfigBuilder
+import io.polywrap.core.Uri
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import memoryStoragePlugin
@@ -15,7 +15,7 @@ import kotlin.test.assertTrue
 class AsyncifyTestCase {
 
     private val uri = Uri("fs/$pathToTestWrappers/asyncify/implementations/rs")
-    private val config = ClientConfigBuilder()
+    private val config = ConfigBuilder()
         .addDefaults()
         .addPackage(
             "wrap://ens/memory-storage.polywrap.eth"

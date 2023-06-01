@@ -1,8 +1,8 @@
 package client.typeTestCases
 
 import io.polywrap.client.PolywrapClient
-import io.polywrap.configBuilder.ClientConfigBuilder
-import io.polywrap.core.resolution.Uri
+import io.polywrap.configBuilder.ConfigBuilder
+import io.polywrap.core.Uri
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import pathToTestWrappers
@@ -14,7 +14,7 @@ import kotlin.test.assertFalse
 class InvalidTypesTestCase {
 
     private val uri = Uri("fs/$pathToTestWrappers/invalid-type/implementations/rs")
-    private val config = ClientConfigBuilder().addDefaults().build()
+    private val config = ConfigBuilder().addDefaults().build()
     private val client = PolywrapClient(config)
 
     @Test

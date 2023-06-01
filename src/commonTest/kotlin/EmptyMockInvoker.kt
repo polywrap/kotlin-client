@@ -1,5 +1,5 @@
-import io.polywrap.core.resolution.Uri
-import io.polywrap.core.resolution.UriResolutionContext
+import io.polywrap.core.Uri
+import io.polywrap.core.UriResolutionContext
 import io.polywrap.core.types.InvokeOptions
 import io.polywrap.core.types.Invoker
 import io.polywrap.core.types.Wrapper

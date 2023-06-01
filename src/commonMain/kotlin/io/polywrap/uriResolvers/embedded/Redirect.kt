@@ -1,6 +1,6 @@
 package io.polywrap.uriResolvers.embedded
 
-import io.polywrap.core.resolution.Uri
+import io.polywrap.core.Uri
 import io.polywrap.core.types.WrapPackage
 import io.polywrap.core.types.Wrapper
 

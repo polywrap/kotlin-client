@@ -1,8 +1,8 @@
 package io.polywrap.uriResolvers.util
 
-import io.polywrap.core.resolution.Uri
+import io.polywrap.core.Uri
 import io.polywrap.core.resolution.UriPackageOrWrapper
-import io.polywrap.core.resolution.UriResolutionStep
+import io.polywrap.core.UriResolutionStep
 
 /**
  * An exception that is thrown when an infinite loop is detected while resolving a URI.

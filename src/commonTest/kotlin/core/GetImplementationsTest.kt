@@ -1,5 +1,7 @@
 package core
 
+import io.polywrap.core.Uri
+import io.polywrap.core.UriResolutionContext
 import io.polywrap.core.resolution.*
 import io.polywrap.core.resolution.algorithms.getImplementations
 import io.polywrap.uriResolvers.embedded.UriRedirect

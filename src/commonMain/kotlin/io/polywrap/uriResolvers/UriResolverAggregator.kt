@@ -1,7 +1,10 @@
 package io.polywrap.uriResolvers
 
+import io.polywrap.core.Uri
+import io.polywrap.core.UriResolutionContext
+import io.polywrap.core.UriResolutionStep
+import io.polywrap.core.UriResolver
 import io.polywrap.core.resolution.*
-import io.polywrap.core.types.Client
 
 /**
  * An abstract class for aggregating URI resolvers.

@@ -1,7 +1,10 @@
 package io.polywrap.plugin
 
-import io.polywrap.core.types.*
+import io.polywrap.core.AbortHandler
+import io.polywrap.core.DefaultAbortHandler
+import io.polywrap.core.Wrapper
 import kotlinx.coroutines.runBlocking
+import uniffi.main.FfiInvoker
 
 /**
  * Represents a plugin wrapper, allowing the plugin module to be invoked as a [Wrapper].
@@ -14,38 +17,35 @@ data class PluginWrapper<TConfig>(val module: PluginModule<TConfig>) : Wrapper {
     /**
      * Invokes a method in the plugin module with the specified options and invoker.
      *
-     * @param options The options for invoking the method.
+     * @param method The method to be called on the wrapper.
+     * @param args Arguments for the method, encoded in the MessagePack byte format
+     * @param env Env variables for the wrapper invocation, encoded in the MessagePack byte format
      * @param invoker The invoker instance.
-     * @return A [Result] containing the result as a [ByteArray] on success, or an error if one occurs.
+     * @param abortHandler An [AbortHandler] to be called when the invocation is aborted.
+     * @return A list of MessagePack-encoded bytes representing the invocation result
      */
-    override fun invoke(options: InvokeOptions, invoker: Invoker): Result<ByteArray> {
-        val (uri, method, args, env, _) = options
-        if (module.methods[method] == null) {
-            val error = WrapError(
-                reason = "Plugin missing method \"$method\"",
-                code = WrapErrorCode.WRAPPER_METHOD_NOT_FOUND,
-                uri = uri.uri,
-                method = method
+    override fun invoke(
+        method: String,
+        args: List<UByte>?,
+        env: List<UByte>?,
+        invoker: FfiInvoker,
+        abortHandler: AbortHandler?
+    ): List<UByte> {
+        val result = runBlocking {
+            module.wrapInvoke(
+                method,
+                args?.toUByteArray()?.toByteArray(),
+                env?.toUByteArray()?.toByteArray(),
+                invoker
             )
-            return Result.failure(error)
         }
 
-        // Invoke the function
-        val result = runBlocking { module.wrapInvoke(method, args, invoker, env) }
-
-        return if (result.isSuccess) {
-            result
-        } else {
+        if (result.isFailure) {
             val exception = result.exceptionOrNull()!!
-            val reason = exception.message ?: "Failed to invoke method \"$method\""
-            val error = WrapError(
-                reason = reason,
-                code = WrapErrorCode.WRAPPER_INVOKE_ABORTED,
-                uri = options.uri.toString(),
-                method = method,
-                args = args.contentToString()
-            )
-            Result.failure(error)
+            val handler = abortHandler ?: DefaultAbortHandler()
+            handler.abort(exception.message ?: "Failed to invoke method \"$method\"")
         }
+
+        return result.getOrThrow().toUByteArray().toList()
     }
 }

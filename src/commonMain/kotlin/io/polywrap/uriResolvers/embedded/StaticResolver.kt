@@ -1,5 +1,8 @@
 package io.polywrap.uriResolvers.embedded
 
+import io.polywrap.core.Uri
+import io.polywrap.core.UriResolutionContext
+import io.polywrap.core.UriResolutionStep
 import io.polywrap.core.resolution.*
 import io.polywrap.core.types.Client
 import io.polywrap.core.types.WrapPackage

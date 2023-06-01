@@ -1,8 +1,8 @@
 package client
 
 import io.polywrap.client.PolywrapClient
-import io.polywrap.configBuilder.ClientConfigBuilder
-import io.polywrap.core.resolution.Uri
+import io.polywrap.configBuilder.ConfigBuilder
+import io.polywrap.core.Uri
 import io.polywrap.core.resolution.UriPackageOrWrapper
 import io.polywrap.core.types.InvokeOptions
 import io.polywrap.msgpack.msgPackEncode
@@ -17,7 +17,7 @@ class SanityClientTest {
 
     @Test
     fun tryResolveUri() {
-        val config = ClientConfigBuilder().addDefaults().build()
+        val config = ConfigBuilder().addDefaults().build()
         val client = PolywrapClient(config)
         val result = client.tryResolveUri(uri = sha3Uri)
 
@@ -27,7 +27,7 @@ class SanityClientTest {
 
     @Test
     fun invoke() {
-        val config = ClientConfigBuilder().addDefaults().build()
+        val config = ConfigBuilder().addDefaults().build()
         val client = PolywrapClient(config)
         val result = client.invoke(
             InvokeOptions(
@@ -41,7 +41,7 @@ class SanityClientTest {
 
     @Test
     fun invokeWithMapStringAnyArgs() {
-        val config = ClientConfigBuilder().addDefaults().build()
+        val config = ConfigBuilder().addDefaults().build()
         val client = PolywrapClient(config)
         val result = client.invoke<String>(
             uri = sha3Uri,
@@ -56,7 +56,7 @@ class SanityClientTest {
         @Serializable
         data class Keccak256Args(val message: String)
 
-        val config = ClientConfigBuilder().addDefaults().build()
+        val config = ConfigBuilder().addDefaults().build()
         val client = PolywrapClient(config)
         val result = client.invoke<Keccak256Args, String>(
             uri = sha3Uri,

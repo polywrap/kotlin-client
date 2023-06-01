@@ -1,4 +1,4 @@
-package io.polywrap.core.types
+package io.polywrap.core
 
 class ErrorSource(
     val file: String?,

@@ -13,3 +13,5 @@ pluginManagement {
     }
 }
 rootProject.name = "polywrap"
+
+includeBuild("convention-plugins")

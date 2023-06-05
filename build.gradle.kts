@@ -4,7 +4,9 @@ plugins {
     id("com.goncalossilva.resources") version "0.2.5"
     id("org.jlleitschuh.gradle.ktlint") version "11.3.1"
     id("com.android.library") version "8.2"
+    id("org.jetbrains.dokka") version "1.8.10"
     id("uniffi-pipeline")
+    id("convention.publication")
 }
 
 group = "io.polywrap"
@@ -116,6 +118,13 @@ tasks.named<Test>("jvmTest") {
 tasks.named<Jar>("jvmJar") {
     val uniffi = project.extensions.getByName("uniffi") as UniffiPipelineConfig
     from(uniffi.desktopJniPath)
+}
+
+// javadoc generation for Maven repository publication
+tasks.register<Jar>("dokkaJavadocJar") {
+    dependsOn(tasks.dokkaJavadoc)
+    from(tasks.dokkaJavadoc.flatMap { it.outputDirectory })
+    archiveClassifier.set("javadoc")
 }
 
 // print stdout during tests

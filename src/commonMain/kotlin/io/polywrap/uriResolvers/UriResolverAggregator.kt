@@ -1,10 +1,16 @@
 package io.polywrap.uriResolvers
 
-import io.polywrap.core.Uri
-import io.polywrap.core.UriResolutionContext
-import io.polywrap.core.UriResolutionStep
-import io.polywrap.core.UriResolver
-import io.polywrap.core.resolution.*
+import io.polywrap.core.resolution.Uri
+import io.polywrap.core.resolution.UriResolutionContext
+import io.polywrap.core.resolution.UriResolutionStep
+import io.polywrap.core.resolution.UriResolver
+import io.polywrap.core.Invoker
+import io.polywrap.core.resolution.UriPackageOrWrapper
+import io.polywrap.core.resolution.UriValue
+import uniffi.main.FfiException
+import uniffi.main.FfiInvoker
+import uniffi.main.FfiUriPackageOrWrapper
+import uniffi.main.FfiUriPackageOrWrapperKind
 
 /**
  * An abstract class for aggregating URI resolvers.
@@ -15,71 +21,77 @@ abstract class UriResolverAggregator : UriResolver {
     /**
      * Returns a list of URI resolvers for the given URI, client, and resolution context.
      * @param uri The URI being resolved.
-     * @param client The [Client] instance for the current request.
+     * @param invoker The [Invoker] instance for the current request.
      * @param resolutionContext The [UriResolutionContext] for the current URI resolution process.
      * @return A [Result] containing a list of [UriResolver] instances.
      */
     abstract fun getUriResolvers(
         uri: Uri,
-        client: Client,
+        invoker: FfiInvoker,
         resolutionContext: UriResolutionContext
     ): Result<List<UriResolver>>
 
     /**
-     * Tries to resolve the given URI with a list of resolvers.
-     * @param uri The URI being resolved.
-     * @param client The [Client] instance for the current request.
-     * @param resolutionContext The [UriResolutionContext] for the current URI resolution process.
-     * @param resolveToPackage A flag indicating whether the URI should be resolved to a package or not.
-     * @return A [Result] containing a [UriPackageOrWrapper] instance.
-     */
-    override fun tryResolveUri(
-        uri: Uri,
-        client: Client,
-        resolutionContext: UriResolutionContext,
-        resolveToPackage: Boolean
-    ): Result<UriPackageOrWrapper> {
-        val resolverResult = getUriResolvers(uri, client, resolutionContext)
-        if (resolverResult.isFailure) {
-            return Result.failure(resolverResult.exceptionOrNull()!!)
-        }
-        val resolvers = resolverResult.getOrThrow()
-        return tryResolveUriWithResolvers(uri, client, resolvers, resolutionContext, resolveToPackage)
-    }
-
-    /**
      * Returns the description of the current resolver step.
      * @param uri The URI being resolved.
-     * @param result The result of the URI resolution as a [Result] of [UriPackageOrWrapper].
+     * @param result The result of the URI resolution.
      * @return A string representing the step description.
      */
     protected abstract fun getStepDescription(
         uri: Uri,
-        result: Result<UriPackageOrWrapper>
+        result: FfiUriPackageOrWrapper
     ): String
 
     /**
+     * Tries to resolve the given URI with a list of resolvers.
+     * @param uri The [Uri] to resolve.
+     * @param invoker The [Invoker] instance.
+     * @param resolutionContext The [UriResolutionContext] for keeping track of the resolution history.
+     * @return An [FfiUriPackageOrWrapper] if the resolution is successful
+     * @throws [FfiException] if resolution fails
+     */
+    override fun tryResolveUri(
+        uri: Uri,
+        invoker: FfiInvoker,
+        resolutionContext: UriResolutionContext
+    ): FfiUriPackageOrWrapper {
+        val resolvers = getUriResolvers(uri, invoker, resolutionContext).getOrThrow()
+        return tryResolveUriWithResolvers(uri, invoker, resolutionContext, resolvers, false)
+    }
+
+    override fun tryResolveUriToPackage(
+        uri: Uri,
+        invoker: FfiInvoker,
+        resolutionContext: UriResolutionContext
+    ): FfiUriPackageOrWrapper {
+        val resolvers = getUriResolvers(uri, invoker, resolutionContext).getOrThrow()
+        return tryResolveUriWithResolvers(uri, invoker, resolutionContext, resolvers, true)
+    }
+
+    /**
      * Tries to resolve the given URI with the provided list of resolvers.
-     * @param uri The URI being resolved.
-     * @param client The [Client] instance for the current request.
-     * @param resolvers A list of [UriResolver] instances to use for resolving the URI.
-     * @param resolutionContext The [UriResolutionContext] for the current URI resolution process.
-     * @param resolveToPackage A flag indicating whether the URI should be resolved to a package or not.
-     * @return A [Result] containing a [UriPackageOrWrapper] instance.
+     *
+     * @param uri The [Uri] to resolve.
+     * @param invoker The [Invoker] instance.
+     * @param resolutionContext The [UriResolutionContext] for keeping track of the resolution history.
+     * @return An [FfiUriPackageOrWrapper] if the resolution is successful
+     * @throws [FfiException] if resolution fails
      */
     protected fun tryResolveUriWithResolvers(
         uri: Uri,
-        client: Client,
-        resolvers: List<UriResolver>,
+        invoker: FfiInvoker,
         resolutionContext: UriResolutionContext,
+        resolvers: List<UriResolver>,
         resolveToPackage: Boolean
-    ): Result<UriPackageOrWrapper> {
+    ): FfiUriPackageOrWrapper {
         val subContext = resolutionContext.createSubHistoryContext()
 
         for (resolver in resolvers) {
-            val result = resolver.tryResolveUri(uri, client, subContext, resolveToPackage)
-            val resultVal = result.getOrNull()
-            val isUri = resultVal is UriPackageOrWrapper.UriValue && resultVal.uri == uri
+            val result = when (resolveToPackage) {
+                true -> resolver.tryResolveUriToPackage(uri, invoker, subContext)
+                false -> resolver.tryResolveUri(uri, invoker, subContext)
+            }
+            val isUri = result.getKind() == FfiUriPackageOrWrapperKind.URI && result.asUri() == uri
             if (!isUri) {
                 resolutionContext.trackStep(
                     UriResolutionStep(
@@ -94,17 +106,15 @@ abstract class UriResolverAggregator : UriResolver {
             }
         }
 
-        val result = Result.success(UriPackageOrWrapper.UriValue(uri))
-
-        resolutionContext.trackStep(
-            UriResolutionStep(
-                sourceUri = uri,
-                result = result,
-                subHistory = subContext.getHistory(),
-                description = getStepDescription(uri, result)
+        return UriValue(uri).also {
+            resolutionContext.trackStep(
+                UriResolutionStep(
+                    sourceUri = uri,
+                    result = it,
+                    subHistory = subContext.getHistory(),
+                    description = getStepDescription(uri, it)
+                )
             )
-        )
-
-        return result
+        }
     }
 }

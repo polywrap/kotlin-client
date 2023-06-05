@@ -1,7 +1,0 @@
-format: 0.3.0
-project:
-  type: plugin/kotlin
-  name: TestPlugin
-source:
-  module: ./TestPlugin.kt
-  schema: ./polywrap.graphql

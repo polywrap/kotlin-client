@@ -30,5 +30,5 @@ interface Client : Invoker {
      * @param uri the URI used to register the env
      * @return an env, or undefined if an env is not found at the given URI
      */
-    fun getEnvByUri(uri: Uri): WrapperEnv?
+    fun getEnvByUri(uri: String): WrapperEnv?
 }

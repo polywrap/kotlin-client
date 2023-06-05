@@ -2,9 +2,9 @@ package io.polywrap.core
 
 import io.polywrap.core.resolution.Uri
 import io.polywrap.core.resolution.UriResolutionContext
-import uniffi.main.FfiInvokerInterface
+import uniffi.main.FfiInvoker
 
-interface Invoker : FfiInvokerInterface {
+interface Invoker : FfiInvoker {
     /**
      * Invoke a wrapper. Unlike [invokeWrapperRaw], this method automatically retrieves and caches the wrapper.
      *

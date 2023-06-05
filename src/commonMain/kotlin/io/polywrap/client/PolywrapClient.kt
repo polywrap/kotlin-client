@@ -143,18 +143,6 @@ class PolywrapClient(val ffiClient: FfiClient) : Client, AutoCloseable {
     }
 
     /**
-     * Retrieves the [WrapperEnv] associated with the specified URI.
-     *
-     * @param uri The URI of the wrapper environment to retrieve.
-     * @return The [WrapperEnv] associated with the given URI, or null if not found.
-     */
-    override fun getEnvByUri(uri: Uri): WrapperEnv? = ffiClient.getEnvByUri(uri)
-        ?.toUByteArray()
-        ?.toByteArray()
-        ?.let { msgPackDecode(EnvSerializer, it) }
-        ?.getOrThrow()
-
-    /**
      * Returns the interface implementations stored in the configuration.
      *
      * @return A map of interface URIs to a list of their respective implementation URIs.
@@ -173,6 +161,22 @@ class PolywrapClient(val ffiClient: FfiClient) : Client, AutoCloseable {
      * @note Each Uri returned is owned by the caller and must be manually deallocated
      */
     override fun getImplementations(uri: FfiUri): List<FfiUri> = ffiClient.getImplementations(uri)
+
+    /**
+     * Retrieves the [WrapperEnv] associated with the specified URI.
+     *
+     * @param uri The URI of the wrapper environment to retrieve.
+     * @return The [WrapperEnv] associated with the given URI, or null if not found.
+     */
+    override fun getEnvByUri(uri: Uri): List<UByte>? = ffiClient.getEnvByUri(uri)
+
+    override fun getEnvByUri(uri: String): WrapperEnv? = Uri.fromString(uri).let { ffiUri ->
+        ffiClient.getEnvByUri(ffiUri)
+            ?.toUByteArray()
+            ?.toByteArray()
+            ?.let { msgPackDecode(EnvSerializer, it) }
+            ?.getOrThrow()
+    }
 
     override fun loadWrapper(
         uri: Uri,

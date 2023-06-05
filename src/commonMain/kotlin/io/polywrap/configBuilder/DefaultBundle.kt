@@ -5,7 +5,7 @@ import io.polywrap.configBuilder.embeds.getIpfsResolverWrap
 import io.polywrap.core.WrapPackage
 import io.polywrap.plugins.filesystem.fileSystemPlugin
 import io.polywrap.plugins.http.httpPlugin
-import io.polywrap.uriResolvers.extendable.ExtendableUriResolver
+import io.polywrap.uriResolvers.ExtendableUriResolver
 
 class DefaultBundle {
 
@@ -71,6 +71,11 @@ class DefaultBundle {
             }
         )
 
+        val defaultExtInterfaceUris: List<String> = listOf(
+            "wrap://ens/wraps.eth:uri-resolver-ext@1.1.0",
+            "wrap://ens/wraps.eth:uri-resolver-ext@1.0.0"
+        )
+
         /**
          * Get the default Client configuration bundle
          */
@@ -100,8 +105,8 @@ class DefaultBundle {
 
             // Add all uri-resolver-ext interface implementations
             builder.addInterfaceImplementations(
-                ExtendableUriResolver.defaultExtInterfaceUris[0].uri,
-                uriResolverExts.map { it }
+                defaultExtInterfaceUris[0],
+                uriResolverExts
             )
             builder.addRedirect(textRecordResolverRedirect.first to textRecordResolverRedirect.second)
 

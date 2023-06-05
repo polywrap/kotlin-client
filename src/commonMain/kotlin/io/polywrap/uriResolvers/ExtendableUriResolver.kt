@@ -1,27 +1,27 @@
 package io.polywrap.uriResolvers
 
+import io.polywrap.core.Invoker
 import io.polywrap.core.resolution.Uri
+import io.polywrap.core.resolution.UriPackageOrWrapper
 import io.polywrap.core.resolution.UriResolutionContext
 import io.polywrap.core.resolution.UriResolver
-import io.polywrap.core.Invoker
-import uniffi.main.FfiInvoker
-import uniffi.main.FfiRecursiveUriResolver
-import uniffi.main.FfiUriPackageOrWrapper
 import uniffi.main.FfiException
+import uniffi.main.FfiExtendableUriResolver
+import uniffi.main.FfiInvoker
 import uniffi.main.FfiUri
+import uniffi.main.FfiUriPackageOrWrapper
 import uniffi.main.FfiUriResolutionContext
 
 /**
- * A [UriResolver] implementation that resolves URIs recursively.
- *
- * @property resolver The [UriResolver] instance used for resolving URIs.
+ * A URI resolver class that aggregates multiple URI resolvers from Polywrap wrappers implementing the
+ * URI Resolver Extension wrapper interface.
  */
-class RecursiveResolver(private val resolver: UriResolver) : UriResolver, AutoCloseable {
+class ExtendableUriResolver() : UriResolver, AutoCloseable {
 
-    private val ffiResolver = FfiRecursiveUriResolver(resolver)
+    private val ffiResolver = FfiExtendableUriResolver("ExtendableUriResolver")
 
     /**
-     * Tries to resolve the given [Uri] recursively by trying to resolve it again if a redirect to another [Uri] occurs.
+     * Attempts to resolve the given URI using the extension URI resolvers.
      *
      * @param uri The [Uri] to resolve.
      * @param invoker The [Invoker] instance.
@@ -30,9 +30,9 @@ class RecursiveResolver(private val resolver: UriResolver) : UriResolver, AutoCl
      * @throws [FfiException] if resolution fails
      */
     override fun tryResolveUri(
-        uri: Uri,
+        uri: FfiUri,
         invoker: FfiInvoker,
-        resolutionContext: UriResolutionContext
+        resolutionContext: FfiUriResolutionContext
     ): FfiUriPackageOrWrapper = ffiResolver.tryResolveUri(uri, invoker, resolutionContext)
 
     override fun tryResolveUriToPackage(

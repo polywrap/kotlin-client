@@ -1,10 +1,17 @@
 package io.polywrap.uriResolvers.cache
 
-import io.polywrap.core.Uri
-import io.polywrap.core.UriResolutionContext
-import io.polywrap.core.UriResolutionStep
-import io.polywrap.core.resolution.*
-import io.polywrap.core.types.*
+import io.polywrap.core.Invoker
+import io.polywrap.core.resolution.Uri
+import io.polywrap.core.resolution.UriResolutionContext
+import io.polywrap.core.resolution.UriResolutionStep
+import io.polywrap.core.resolution.UriResolver
+import io.polywrap.core.resolution.UriWrapper
+import uniffi.main.FfiException
+import uniffi.main.FfiInvoker
+import uniffi.main.FfiUri
+import uniffi.main.FfiUriPackageOrWrapper
+import uniffi.main.FfiUriPackageOrWrapperKind
+import uniffi.main.FfiUriResolutionContext
 
 /**
  * A URI resolver that uses a cache to store and retrieve the results of resolved URIs.
@@ -15,47 +22,33 @@ import io.polywrap.core.types.*
 class CacheResolver(
     private val resolver: UriResolver,
     private val cache: WrapperCache
-) : UriResolver {
+) : UriResolver, AutoCloseable {
 
     /**
      * Tries to resolve the given URI using a cache and returns the result.
      *
-     * @param uri The URI to resolve.
-     * @param client The invoker of the resolution.
-     * @param resolutionContext The context for the resolution.
-     * @param resolveToPackage If `true`, the resolver will resolve the URI to a [WrapPackage] instead of a [Wrapper].
-     * @return A [Result] containing the resolved [UriPackageOrWrapper] on success, or an exception on failure.
+     * @param uri The [Uri] to resolve.
+     * @param invoker The [Invoker] instance.
+     * @param resolutionContext The [UriResolutionContext] for keeping track of the resolution history.
+     * @return An [FfiUriPackageOrWrapper] if the resolution is successful
+     * @throws [FfiException] if resolution fails
      */
     override fun tryResolveUri(
         uri: Uri,
-        client: Client,
-        resolutionContext: UriResolutionContext,
-        resolveToPackage: Boolean
-    ): Result<UriPackageOrWrapper> {
-        if (resolveToPackage) {
-            val subContext = resolutionContext.createSubHistoryContext()
-            val result = resolver.tryResolveUri(uri, client, subContext, resolveToPackage)
-            resolutionContext.trackStep(
-                UriResolutionStep(
-                    sourceUri = uri,
-                    result = result,
-                    subHistory = subContext.getHistory(),
-                    description = "CacheResolver"
-                )
-            )
-            return result
-        }
-
-        val wrapper = cache.get(uri)
+        invoker: FfiInvoker,
+        resolutionContext: UriResolutionContext
+    ): FfiUriPackageOrWrapper {
+        val wrapper = cache.get(uri.toStringUri())
 
         // return from cache if available
         if (wrapper != null) {
-            val result = Result.success(UriPackageOrWrapper.WrapperValue(uri, wrapper))
+            val result = UriWrapper(uri, wrapper)
             resolutionContext.trackStep(
                 UriResolutionStep(
                     sourceUri = uri,
                     result = result,
-                    description = "CacheResolver (Cache)"
+                    description = "CacheResolver (Cache)",
+                    subHistory = null
                 )
             )
             return result
@@ -63,13 +56,9 @@ class CacheResolver(
 
         // resolve uri if not in cache
         val subContext = resolutionContext.createSubHistoryContext()
-        val result = resolver.tryResolveUri(uri, client, subContext, resolveToPackage)
+        val result = resolver.tryResolveUri(uri, invoker, subContext)
 
-        val finalResult = if (result.isSuccess) {
-            cacheResult(result.getOrThrow(), subContext)
-        } else {
-            result
-        }
+        val finalResult = cacheResult(result, subContext)
 
         resolutionContext.trackStep(
             UriResolutionStep(
@@ -83,47 +72,68 @@ class CacheResolver(
         return finalResult
     }
 
+    override fun tryResolveUriToPackage(
+        uri: FfiUri,
+        invoker: FfiInvoker,
+        resolutionContext: FfiUriResolutionContext
+    ): FfiUriPackageOrWrapper {
+        val subContext = resolutionContext.createSubHistoryContext()
+        val result = resolver.tryResolveUriToPackage(uri, invoker, subContext)
+        resolutionContext.trackStep(
+            UriResolutionStep(
+                sourceUri = uri,
+                result = result,
+                subHistory = subContext.getHistory(),
+                description = "CacheResolver"
+            )
+        )
+        return result
+    }
+
     /**
      * Caches the result of a resolved URI based on its type.
      *
      * @param uriPackageOrWrapper The resolved URI to cache.
      * @param subContext The context for the resolution.
-     * @return A [Result] containing the cached [UriPackageOrWrapper] on success, or an exception on failure.
+     * @return An [FfiUriPackageOrWrapper]
      */
     private fun cacheResult(
-        uriPackageOrWrapper: UriPackageOrWrapper,
+        uriPackageOrWrapper: FfiUriPackageOrWrapper,
         subContext: UriResolutionContext
-    ): Result<UriPackageOrWrapper> {
-        return when (uriPackageOrWrapper) {
-            is UriPackageOrWrapper.UriValue -> Result.success(uriPackageOrWrapper)
+    ): FfiUriPackageOrWrapper {
+        return when (uriPackageOrWrapper.getKind()) {
+            FfiUriPackageOrWrapperKind.URI -> uriPackageOrWrapper
 
-            is UriPackageOrWrapper.PackageValue -> {
-                val resolvedUri = uriPackageOrWrapper.uri
-                val wrapPackage = uriPackageOrWrapper.pkg
-                val createResult = wrapPackage.createWrapper()
+            FfiUriPackageOrWrapperKind.PACKAGE -> {
+                val uriWrapPackage = uriPackageOrWrapper.asPackage()
+                val resolvedUri = uriWrapPackage.getUri()
+                val wrapPackage = uriWrapPackage.getPackage()
+                val wrapper = wrapPackage.createWrapper()
 
-                if (createResult.isFailure) {
-                    Result.failure(createResult.exceptionOrNull()!!)
-                } else {
-                    val wrapper = createResult.getOrThrow()
-                    val resolutionPath = subContext.getResolutionPath()
-                    for (uri: Uri in resolutionPath) {
-                        cache.set(uri, wrapper)
-                    }
-
-                    Result.success(UriPackageOrWrapper.WrapperValue(resolvedUri, wrapper))
-                }
-            }
-
-            is UriPackageOrWrapper.WrapperValue -> {
-                val wrapper = uriPackageOrWrapper.wrapper
                 val resolutionPath = subContext.getResolutionPath()
                 for (uri: Uri in resolutionPath) {
-                    cache.set(uri, wrapper)
+                    cache.set(uri.toStringUri(), wrapper)
                 }
 
-                Result.success(uriPackageOrWrapper)
+                UriWrapper(resolvedUri, wrapper)
             }
+
+            FfiUriPackageOrWrapperKind.WRAPPER -> {
+                val wrapper = uriPackageOrWrapper.asWrapper()
+
+                val resolutionPath = subContext.getResolutionPath()
+                for (uri: Uri in resolutionPath) {
+                    cache.set(uri.toStringUri(), wrapper.getWrapper())
+                }
+
+                uriPackageOrWrapper
+            }
+        }
+    }
+
+    override fun close() {
+        if (cache is AutoCloseable) {
+            cache.close()
         }
     }
 }

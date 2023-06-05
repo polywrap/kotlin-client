@@ -86,9 +86,9 @@ internal class FfiConfigBuilder : AutoCloseable {
     }
 
     /**
-     * Consumes this [FfiConfigBuilder] and returns an [FfiClient] instance.
+     * Returns a configured [FfiClient] instance.
      */
-    fun build(): FfiClient = this.use { ffiBuilderConfig.build() }
+    fun build(): FfiClient = ffiBuilderConfig.build()
 
     override fun close() = ffiBuilderConfig.close()
 }

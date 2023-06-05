@@ -1,28 +1,25 @@
 package io.polywrap.uriResolvers.cache
 
-import io.polywrap.core.Uri
-import io.polywrap.core.types.Wrapper
+import io.polywrap.core.Wrapper
 
 /**
  * A simple cache for storing [Wrapper] instances.
  */
-class BasicWrapperCache : WrapperCache {
+class BasicWrapperCache : WrapperCache, AutoCloseable {
 
-    private val cache: MutableMap<Uri, Wrapper> = mutableMapOf()
+    private val cache: MutableMap<String, Wrapper> = mutableMapOf()
 
-    /**
-     * Gets the [Wrapper] instance for the given [Uri].
-     * @param uri The [Uri] to get the [Wrapper] for.
-     * @return The [Wrapper] instance for the given [Uri], or null if it does not exist.
-     */
-    override fun get(uri: Uri): Wrapper? = cache[uri]
+    override fun get(uri: String): Wrapper? = cache[uri]
 
-    /**
-     * Sets the [Wrapper] instance for the given [Uri].
-     * @param uri The [Uri] to set the [Wrapper] for.
-     * @param wrapper The [Wrapper] instance to set.
-     */
-    override fun set(uri: Uri, wrapper: Wrapper) {
+    override fun set(uri: String, wrapper: Wrapper) {
         cache[uri] = wrapper
+    }
+
+    override fun close() {
+        cache.values.forEach {
+            if (it is AutoCloseable) {
+                it.close()
+            }
+        }
     }
 }

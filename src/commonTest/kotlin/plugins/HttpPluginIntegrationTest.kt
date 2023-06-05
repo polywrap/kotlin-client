@@ -3,10 +3,10 @@ package plugins
 import io.polywrap.client.PolywrapClient
 import io.polywrap.configBuilder.ConfigBuilder
 import io.polywrap.configBuilder.DefaultBundle
-import io.polywrap.msgpack.MsgPackMap
-import io.polywrap.msgpack.msgPackDecode
-import io.polywrap.msgpack.msgPackEncode
-import io.polywrap.msgpack.toMsgPackMap
+import io.polywrap.core.msgpack.MsgPackMap
+import io.polywrap.core.msgpack.msgPackDecode
+import io.polywrap.core.msgpack.msgPackEncode
+import io.polywrap.core.msgpack.toMsgPackMap
 import io.polywrap.plugins.http.wrapHardCoded.*
 import kotlin.test.Test
 import kotlin.test.assertContentEquals

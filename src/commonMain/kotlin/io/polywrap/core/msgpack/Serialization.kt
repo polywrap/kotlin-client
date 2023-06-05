@@ -1,4 +1,4 @@
-package io.polywrap.msgpack
+package io.polywrap.core.msgpack
 
 import com.ensarsarajcic.kotlinx.serialization.msgpack.MsgPack
 import com.ensarsarajcic.kotlinx.serialization.msgpack.MsgPackConfiguration

@@ -5,8 +5,8 @@ import io.polywrap.core.resolution.UriPackageOrWrapper
 import io.polywrap.core.UriResolutionContext
 import io.polywrap.core.types.*
 import io.polywrap.core.util.getEnvFromUriHistory
-import io.polywrap.msgpack.msgPackDecode
-import io.polywrap.msgpack.msgPackEncode
+import io.polywrap.core.msgpack.msgPackDecode
+import io.polywrap.core.msgpack.msgPackEncode
 import io.polywrap.uriResolvers.ResolverWithHistory
 import io.polywrap.wasm.WasmPackage
 import kotlinx.serialization.serializer

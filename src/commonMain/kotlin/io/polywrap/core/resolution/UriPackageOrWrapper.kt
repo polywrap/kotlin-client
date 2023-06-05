@@ -1,13 +1,11 @@
 package io.polywrap.core.resolution
 
-import io.polywrap.core.Uri
-import io.polywrap.core.UriPackageOrWrapperKind
-import uniffi.main.FfiUri
+
+import io.polywrap.core.Wrapper
 import uniffi.main.FfiUriPackageOrWrapper
 import uniffi.main.FfiUriWrapPackage
 import uniffi.main.FfiUriWrapper
 import uniffi.main.FfiWrapPackage
-import uniffi.main.FfiWrapper
 
 /**
  * Indicates that a URI resolved to either a wrap package, a wrapper, or a URI
@@ -23,7 +21,7 @@ sealed class UriPackageOrWrapper : FfiUriPackageOrWrapper {
         }
     }
 
-    override fun asUri(): FfiUri {
+    override fun asUri(): Uri {
         if (this is UriValue) {
             return this.uri
         } else {
@@ -60,7 +58,7 @@ data class UriValue(override val uri: Uri) : UriPackageOrWrapper()
  * @property uri The resolved URI value
  */
 data class UriWrapPackage(override val uri: Uri, val pkg: FfiWrapPackage) : UriPackageOrWrapper(), FfiUriWrapPackage {
-    override fun getUri(): FfiUri = uri
+    override fun getUri(): Uri = uri
 
     override fun getPackage(): FfiWrapPackage = pkg
 
@@ -71,9 +69,9 @@ data class UriWrapPackage(override val uri: Uri, val pkg: FfiWrapPackage) : UriP
  * @property wrapper The resolved wrapper value
  * @property uri The resolved URI value
  */
-data class UriWrapper(override val uri: Uri, val wrapper: FfiWrapper) : UriPackageOrWrapper(), FfiUriWrapper {
-    override fun getUri(): FfiUri = uri
+data class UriWrapper(override val uri: Uri, val wrapper: Wrapper) : UriPackageOrWrapper(), FfiUriWrapper {
+    override fun getUri(): Uri = uri
 
-    override fun getWrapper(): FfiWrapper = wrapper
+    override fun getWrapper(): Wrapper = wrapper
 
 }

@@ -2,10 +2,11 @@ package client
 
 import io.polywrap.client.PolywrapClient
 import io.polywrap.configBuilder.ConfigBuilder
+import io.polywrap.core.InvokeResult
 import io.polywrap.core.Uri
 import io.polywrap.core.resolution.UriPackageOrWrapper
 import io.polywrap.core.types.InvokeOptions
-import io.polywrap.msgpack.msgPackEncode
+import io.polywrap.core.msgpack.msgPackEncode
 import kotlinx.serialization.Serializable
 import kotlin.test.Test
 import kotlin.test.assertNull
@@ -58,7 +59,7 @@ class SanityClientTest {
 
         val config = ConfigBuilder().addDefaults().build()
         val client = PolywrapClient(config)
-        val result = client.invoke<Keccak256Args, String>(
+        val result: InvokeResult<String> = client.invoke(
             uri = sha3Uri,
             method = "keccak_256",
             args = Keccak256Args("Hello World!")

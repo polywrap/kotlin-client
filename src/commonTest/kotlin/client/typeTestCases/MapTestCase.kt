@@ -3,8 +3,8 @@ package client.typeTestCases
 import io.polywrap.client.PolywrapClient
 import io.polywrap.configBuilder.ConfigBuilder
 import io.polywrap.core.Uri
-import io.polywrap.msgpack.MsgPackMap
-import io.polywrap.msgpack.toMsgPackMap
+import io.polywrap.core.msgpack.MsgPackMap
+import io.polywrap.core.msgpack.toMsgPackMap
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.Serializable

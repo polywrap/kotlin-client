@@ -2,22 +2,22 @@ package io.polywrap.client
 
 import io.polywrap.core.Client
 import io.polywrap.core.InvokeResult
-import io.polywrap.core.Invoker
 import io.polywrap.core.Wrapper
 import io.polywrap.core.WrapperEnv
 import io.polywrap.core.resolution.Uri
 import io.polywrap.core.resolution.UriResolutionContext
-import io.polywrap.msgpack.EnvSerializer
-import io.polywrap.msgpack.MapArgsSerializer
-import io.polywrap.msgpack.NullableKVSerializer
-import io.polywrap.msgpack.msgPackDecode
-import io.polywrap.msgpack.msgPackEncode
+import io.polywrap.core.msgpack.EnvSerializer
+import io.polywrap.core.msgpack.MapArgsSerializer
+import io.polywrap.core.msgpack.NullableKVSerializer
+import io.polywrap.core.msgpack.msgPackDecode
+import io.polywrap.core.msgpack.msgPackEncode
 import kotlinx.serialization.serializer
 import uniffi.main.FfiClient
 import uniffi.main.FfiException
+import uniffi.main.FfiUri
 
 @OptIn(ExperimentalUnsignedTypes::class)
-class PolywrapClient(private val ffiClient: FfiClient) : Client, AutoCloseable {
+class PolywrapClient(val ffiClient: FfiClient) : Client, AutoCloseable {
 
     /**
      * Invokes the wrapper at the specified URI with the provided options.
@@ -31,7 +31,7 @@ class PolywrapClient(private val ffiClient: FfiClient) : Client, AutoCloseable {
      * @throws FfiException
      */
     override fun invokeRaw(
-        uri: Uri,
+        uri: FfiUri,
         method: String,
         args: List<UByte>?,
         env: List<UByte>?,
@@ -39,8 +39,8 @@ class PolywrapClient(private val ffiClient: FfiClient) : Client, AutoCloseable {
     ): List<UByte> = ffiClient.invokeRaw(
         uri = uri,
         method = method,
-        args = args?.toUByteArray()?.toList(),
-        env = env?.toUByteArray()?.toList(),
+        args = args,
+        env = env,
         resolutionContext = resolutionContext
     )
 
@@ -154,7 +154,6 @@ class PolywrapClient(private val ffiClient: FfiClient) : Client, AutoCloseable {
         ?.let { msgPackDecode(EnvSerializer, it) }
         ?.getOrThrow()
 
-    // TODO: make sure returned URIs are deallocated internally
     /**
      * Returns the interface implementations stored in the configuration.
      *
@@ -162,9 +161,8 @@ class PolywrapClient(private val ffiClient: FfiClient) : Client, AutoCloseable {
      *
      * @note Each Uri returned is owned by the caller and must be manually deallocated
      */
-    override fun getInterfaces(): Map<String, List<Uri>>? = ffiClient.getInterfaces()
+    override fun getInterfaces(): Map<String, List<FfiUri>>? = ffiClient.getInterfaces()
 
-    // TODO: make sure returned URIs are deallocated internally
     /**
      * Retrieves the list of implementation URIs for the specified interface URI.
      *
@@ -174,7 +172,7 @@ class PolywrapClient(private val ffiClient: FfiClient) : Client, AutoCloseable {
      *
      * @note Each Uri returned is owned by the caller and must be manually deallocated
      */
-    override fun getImplementations(uri: Uri): List<Uri> = ffiClient.getImplementations(uri)
+    override fun getImplementations(uri: FfiUri): List<FfiUri> = ffiClient.getImplementations(uri)
 
     override fun loadWrapper(
         uri: Uri,

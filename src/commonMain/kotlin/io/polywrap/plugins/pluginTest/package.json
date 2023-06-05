@@ -1,0 +1,11 @@
+{
+  "name": "@polywrap/fs-plugin-kt",
+  "description": "Polywrap file system Kotlin Plugin",
+  "version": "0.10.0",
+  "scripts": {
+    "codegen": "npx polywrap codegen"
+  },
+  "devDependencies": {
+    "polywrap": "0.10.3"
+  }
+}

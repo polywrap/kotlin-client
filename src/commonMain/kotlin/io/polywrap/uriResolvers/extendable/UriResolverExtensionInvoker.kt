@@ -3,8 +3,8 @@ package io.polywrap.uriResolvers.extendable
 import io.polywrap.core.Uri
 import io.polywrap.core.types.InvokeOptions
 import io.polywrap.core.types.Invoker
-import io.polywrap.msgpack.msgPackDecode
-import io.polywrap.msgpack.msgPackEncode
+import io.polywrap.core.msgpack.msgPackDecode
+import io.polywrap.core.msgpack.msgPackEncode
 import kotlinx.serialization.serializer
 
 object UriResolverExtensionInvoker {

@@ -6,8 +6,8 @@ import io.polywrap.core.Wrapper
 import io.polywrap.core.WrapperEnv
 import io.polywrap.core.resolution.Uri
 import io.polywrap.core.resolution.UriResolver
-import io.polywrap.msgpack.EnvSerializer
-import io.polywrap.msgpack.msgPackEncode
+import io.polywrap.core.msgpack.EnvSerializer
+import io.polywrap.core.msgpack.msgPackEncode
 import uniffi.main.FfiBuilderConfig
 
 @OptIn(ExperimentalUnsignedTypes::class)

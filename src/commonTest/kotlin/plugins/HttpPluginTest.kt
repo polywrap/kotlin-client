@@ -5,7 +5,7 @@ import io.ktor.client.*
 import io.ktor.client.engine.mock.*
 import io.ktor.client.plugins.*
 import io.ktor.http.*
-import io.polywrap.msgpack.toMsgPackMap
+import io.polywrap.core.msgpack.toMsgPackMap
 import io.polywrap.plugins.http.HttpPlugin
 import io.polywrap.plugins.http.wrapHardCoded.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi

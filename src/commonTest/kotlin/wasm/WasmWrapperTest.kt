@@ -3,8 +3,8 @@ package wasm
 import emptyMockInvoker
 import io.polywrap.core.Uri
 import io.polywrap.core.types.InvokeOptions
-import io.polywrap.msgpack.msgPackDecode
-import io.polywrap.msgpack.msgPackEncode
+import io.polywrap.core.msgpack.msgPackDecode
+import io.polywrap.core.msgpack.msgPackEncode
 import io.polywrap.wasm.WasmWrapper
 import readTestResource
 import kotlin.test.*

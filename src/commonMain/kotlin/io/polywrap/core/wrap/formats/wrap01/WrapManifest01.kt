@@ -1,8 +1,8 @@
 package io.polywrap.core.wrap.formats.wrap01
 
 import io.polywrap.core.wrap.formats.wrap01.abi.Abi01
-import io.polywrap.msgpack.msgPackDecode
-import io.polywrap.msgpack.msgPackEncode
+import io.polywrap.core.msgpack.msgPackDecode
+import io.polywrap.core.msgpack.msgPackEncode
 import kotlinx.serialization.Serializable
 
 /**

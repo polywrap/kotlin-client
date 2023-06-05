@@ -1,82 +1,85 @@
 package io.polywrap.configBuilder
 
 import io.polywrap.client.PolywrapClient
-import io.polywrap.core.WrapPackage
-import io.polywrap.core.Wrapper
-import io.polywrap.core.WrapperEnv
-import io.polywrap.core.resolution.Uri
-import io.polywrap.core.resolution.UriResolver
-import io.polywrap.core.msgpack.EnvSerializer
-import io.polywrap.core.msgpack.msgPackEncode
-import uniffi.main.FfiBuilderConfig
+import io.polywrap.core.resolution.*
+import io.polywrap.uriResolvers.RecursiveResolver
+import io.polywrap.uriResolvers.SequentialResolver
+import io.polywrap.uriResolvers.cache.BasicWrapperCache
+import io.polywrap.uriResolvers.cache.CacheResolver
+import io.polywrap.uriResolvers.cache.WrapperCache
+import io.polywrap.uriResolvers.embedded.StaticResolver
+import io.polywrap.uriResolvers.extendable.ExtendableUriResolver
 
-@OptIn(ExperimentalUnsignedTypes::class)
-class ConfigBuilder : AutoCloseable {
+/**
+ * A concrete implementation of the [BaseClientConfigBuilder] class.
+ * This class builds [ClientConfig] instances using provided configurations.
+ */
+class ConfigBuilder : BaseConfigBuilder() {
 
-    private val ffiBuilderConfig: FfiBuilderConfig = FfiBuilderConfig()
-
-    fun addEnv(uri: String, env: WrapperEnv) {
-        val ffiUri = Uri.fromString(uri)
-        val serializedEnv = msgPackEncode(EnvSerializer, env).toUByteArray().toList()
-        ffiBuilderConfig.addEnv(ffiUri, serializedEnv)
+    override fun addDefaults(): IConfigBuilder {
+        return add(DefaultBundle.getConfig())
     }
 
-    fun removeEnv(uri: String) {
-        val ffiUri = Uri.fromString(uri)
-        ffiBuilderConfig.removeEnv(ffiUri)
-    }
-
-    fun addInterfaceImplementation(interfaceUri: String, implementationUri: String) {
-        val ffiInterfaceUri = Uri.fromString(interfaceUri)
-        val ffiImplementationUri = Uri.fromString(implementationUri)
-        ffiBuilderConfig.addInterfaceImplementation(ffiInterfaceUri, ffiImplementationUri)
-    }
-
-    fun removeInterfaceImplementation(interfaceUri: String, implementationUri: String) {
-        val ffiInterfaceUri = Uri.fromString(interfaceUri)
-        val ffiImplementationUri = Uri.fromString(implementationUri)
-        ffiBuilderConfig.removeInterfaceImplementation(ffiInterfaceUri, ffiImplementationUri)
-    }
-
-    fun addWrapper(uri: String, wrapper: Wrapper) {
-        val ffiUri = Uri.fromString(uri)
-        ffiBuilderConfig.addWrapper(ffiUri, wrapper)
-    }
-
-    fun removeWrapper(uri: String) {
-        val ffiUri = Uri.fromString(uri)
-        ffiBuilderConfig.removeWrapper(ffiUri)
-    }
-
-    fun addPackage(uri: String, packageWrapper: WrapPackage) {
-        val ffiUri = Uri.fromString(uri)
-        ffiBuilderConfig.addPackage(ffiUri, packageWrapper)
-    }
-
-    fun removePackage(uri: String) {
-        val ffiUri = Uri.fromString(uri)
-        ffiBuilderConfig.removePackage(ffiUri)
-    }
-
-    fun addRedirect(from: String, to: String) {
-        val fromUri = Uri.fromString(from)
-        val toUri = Uri.fromString(to)
-        ffiBuilderConfig.addRedirect(fromUri, toUri)
-    }
-
-    fun removeRedirect(from: String) {
-        val fromUri = Uri.fromString(from)
-        ffiBuilderConfig.removeRedirect(fromUri)
-    }
-
-    fun addResolver(resolver: UriResolver) {
-        ffiBuilderConfig.addResolver(resolver)
-    }
-
-    fun build(configure: (ConfigBuilder.() -> Unit)? = null): PolywrapClient = this.run {
+    override fun build(cache: WrapperCache, configure: (IConfigBuilder.() -> Unit)?): PolywrapClient {
         configure?.let { this.apply(it) }
-        PolywrapClient(ffiBuilderConfig.build())
+        val static = StaticResolver.from(
+            buildRedirects() + buildWrappers() + buildPackages()
+        )
+        return ClientConfig(
+            envs = buildEnvs(),
+            interfaces = buildInterfaces(),
+            resolver = RecursiveResolver(
+                CacheResolver(
+                    SequentialResolver(
+                        listOf(static) + config.resolvers + listOf(ExtendableUriResolver())
+                    ),
+                    cache
+                )
+            )
+        )
     }
 
-    override fun close() = ffiBuilderConfig.close()
+    // TODO: add cache?
+    override fun build(configure: (IConfigBuilder.() -> Unit)?): PolywrapClient {
+        configure?.let { this.apply(it) }
+        val ffiConfigBuilder = FfiConfigBuilder()
+        buildEnvs(ffiConfigBuilder)
+        buildInterfaces(ffiConfigBuilder)
+        buildRedirects(ffiConfigBuilder)
+        buildWrappers(ffiConfigBuilder)
+        buildPackages(ffiConfigBuilder)
+        return PolywrapClient(ffiConfigBuilder.build())
+    }
+
+    private fun buildEnvs(ffiConfigBuilder: FfiConfigBuilder) {
+        config.envs.forEach { (key, value) ->
+            ffiConfigBuilder.addEnv(key, value)
+        }
+    }
+
+    private fun buildInterfaces(ffiConfigBuilder: FfiConfigBuilder) {
+        config.interfaces.forEach { (key, value) ->
+            value.forEach {
+                ffiConfigBuilder.addInterfaceImplementation(key, it)
+            }
+        }
+    }
+
+    private fun buildRedirects(ffiConfigBuilder: FfiConfigBuilder) {
+        config.redirects.forEach { (key, value) ->
+            ffiConfigBuilder.addRedirect(key, value)
+        }
+    }
+
+    private fun buildWrappers(ffiConfigBuilder: FfiConfigBuilder) {
+        config.wrappers.forEach { (key, value) ->
+            ffiConfigBuilder.addWrapper(key, value)
+        }
+    }
+
+    private fun buildPackages(ffiConfigBuilder: FfiConfigBuilder) {
+        config.packages.forEach { (key, value) ->
+            ffiConfigBuilder.addPackage(key, value)
+        }
+    }
 }

@@ -1,12 +1,11 @@
 package io.polywrap.uriResolvers
 
+import io.polywrap.core.Invoker
 import io.polywrap.core.resolution.Uri
+import io.polywrap.core.resolution.UriPackageOrWrapper
 import io.polywrap.core.resolution.UriResolutionContext
 import io.polywrap.core.resolution.UriResolutionStep
 import io.polywrap.core.resolution.UriResolver
-import io.polywrap.core.Invoker
-import io.polywrap.core.resolution.UriPackageOrWrapper
-import io.polywrap.core.resolution.UriValue
 import uniffi.main.FfiException
 import uniffi.main.FfiInvoker
 import uniffi.main.FfiUriPackageOrWrapper
@@ -106,7 +105,7 @@ abstract class UriResolverAggregator : UriResolver {
             }
         }
 
-        return UriValue(uri).also {
+        return UriPackageOrWrapper.UriValue(uri).also {
             resolutionContext.trackStep(
                 UriResolutionStep(
                     sourceUri = uri,

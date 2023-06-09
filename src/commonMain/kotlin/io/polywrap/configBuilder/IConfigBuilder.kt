@@ -1,8 +1,8 @@
 package io.polywrap.configBuilder
 
 import io.polywrap.client.PolywrapClient
-import io.polywrap.core.resolution.UriResolver
 import io.polywrap.core.*
+import io.polywrap.core.resolution.UriResolver
 import io.polywrap.uriResolvers.cache.WrapperCache
 import kotlin.collections.List
 import kotlin.collections.Map

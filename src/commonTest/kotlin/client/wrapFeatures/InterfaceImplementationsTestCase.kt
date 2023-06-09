@@ -3,10 +3,10 @@ package client.wrapFeatures
 import io.polywrap.client.PolywrapClient
 import io.polywrap.configBuilder.ConfigBuilder
 import io.polywrap.core.Uri
+import io.polywrap.uriResolvers.ExtendableUriResolver
 import io.polywrap.uriResolvers.SequentialResolver
 import io.polywrap.uriResolvers.embedded.PackageRedirectResolver
 import io.polywrap.uriResolvers.embedded.UriRedirectResolver
-import io.polywrap.uriResolvers.ExtendableUriResolver
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import mockPlugin

@@ -1,8 +1,8 @@
 package io.polywrap.uriResolvers
 
+import io.polywrap.core.Invoker
 import io.polywrap.core.resolution.Uri
 import io.polywrap.core.resolution.UriResolutionContext
-import io.polywrap.core.Invoker
 import io.polywrap.core.resolution.UriResolver
 import uniffi.main.FfiInvoker
 import uniffi.main.FfiUriPackageOrWrapper

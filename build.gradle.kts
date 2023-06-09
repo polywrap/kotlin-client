@@ -61,7 +61,6 @@ kotlin {
             dependencies {
                 implementation("net.java.dev.jna:jna:5.13.0@aar")
             }
-
         }
         val androidUnitTest by getting {
             dependencies {
@@ -77,7 +76,7 @@ kotlin {
 }
 
 uniffi {
-    rustClientRepoBranch = "namesty/stable-ffi"
+    rustClientRepoBranch = "main"
     clonesDir = "$projectDir/clones"
     desktopJniPath = "${project.buildDir}/jniLibs"
     androidJniPath = "$projectDir/src/androidMain/jniLibs"

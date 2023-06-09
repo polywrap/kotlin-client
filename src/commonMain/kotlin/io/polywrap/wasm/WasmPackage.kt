@@ -38,7 +38,6 @@ data class WasmPackage(private val fileReader: FileReader) : WrapPackage {
      */
     constructor(fileReader: FileReader, wasmModule: ByteArray) : this(FileReaderFactory.fromWasmModule(wasmModule, fileReader))
 
-
     /**
      * Produce an instance of the WrapPackage's WRAP manifest
      *

@@ -1,8 +1,7 @@
 package io.polywrap.wasm
 
-import io.polywrap.core.Wrapper
 import io.polywrap.core.AbortHandler
-import io.polywrap.core.Client
+import io.polywrap.core.Wrapper
 import uniffi.main.FfiException
 import uniffi.main.FfiInvoker
 import uniffi.main.FfiWasmWrapper

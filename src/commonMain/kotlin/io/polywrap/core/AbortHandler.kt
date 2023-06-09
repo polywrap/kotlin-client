@@ -11,5 +11,4 @@ class DefaultAbortHandler : AbortHandler {
     override fun abort(msg: String) {
         throw Exception(msg)
     }
-
 }

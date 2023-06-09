@@ -1,7 +1,6 @@
 package io.polywrap.configBuilder
 
 import io.polywrap.client.PolywrapClient
-import io.polywrap.core.resolution.*
 import io.polywrap.uriResolvers.cache.WrapperCache
 
 /**

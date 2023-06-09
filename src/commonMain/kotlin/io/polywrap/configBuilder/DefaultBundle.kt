@@ -5,7 +5,6 @@ import io.polywrap.configBuilder.embeds.getIpfsResolverWrap
 import io.polywrap.core.WrapPackage
 import io.polywrap.plugins.filesystem.fileSystemPlugin
 import io.polywrap.plugins.http.httpPlugin
-import io.polywrap.uriResolvers.ExtendableUriResolver
 
 class DefaultBundle {
 

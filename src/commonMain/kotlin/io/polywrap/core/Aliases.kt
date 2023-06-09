@@ -13,5 +13,3 @@ typealias WrapperEnv = Map<String, Any>
 typealias InvokeResult<TData> = Result<TData>
 
 typealias Wrapper = FfiWrapper
-
-

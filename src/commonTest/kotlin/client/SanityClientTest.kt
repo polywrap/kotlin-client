@@ -4,9 +4,9 @@ import io.polywrap.client.PolywrapClient
 import io.polywrap.configBuilder.ConfigBuilder
 import io.polywrap.core.InvokeResult
 import io.polywrap.core.Uri
+import io.polywrap.core.msgpack.msgPackEncode
 import io.polywrap.core.resolution.UriPackageOrWrapper
 import io.polywrap.core.types.InvokeOptions
-import io.polywrap.core.msgpack.msgPackEncode
 import kotlinx.serialization.Serializable
 import kotlin.test.Test
 import kotlin.test.assertNull

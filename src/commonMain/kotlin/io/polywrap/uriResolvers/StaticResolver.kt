@@ -1,13 +1,11 @@
 package io.polywrap.uriResolvers
 
-import io.polywrap.core.resolution.Uri
-import io.polywrap.core.resolution.UriResolutionContext
 import io.polywrap.core.WrapPackage
 import io.polywrap.core.Wrapper
+import io.polywrap.core.resolution.Uri
+import io.polywrap.core.resolution.UriPackageOrWrapper
+import io.polywrap.core.resolution.UriResolutionContext
 import io.polywrap.core.resolution.UriResolver
-import io.polywrap.core.resolution.UriValue
-import io.polywrap.core.resolution.UriWrapPackage
-import io.polywrap.core.resolution.UriWrapper
 import uniffi.main.FfiInvoker
 import uniffi.main.FfiStaticUriResolver
 import uniffi.main.FfiUri
@@ -38,13 +36,13 @@ class StaticResolver(uriMap: Map<String, FfiUriPackageOrWrapper>) : UriResolver,
                 val uri = staticResolverLike.first
                 when (val item = staticResolverLike.second) {
                     is Uri -> {
-                        uriMap[uri.toStringUri()] = UriValue(item)
+                        uriMap[uri.toStringUri()] = UriPackageOrWrapper.UriValue(item)
                     }
                     is WrapPackage -> {
-                        uriMap[uri.toStringUri()] = UriWrapPackage(uri, item)
+                        uriMap[uri.toStringUri()] = UriPackageOrWrapper.UriWrapPackage(uri, item)
                     }
                     is Wrapper -> {
-                        uriMap[uri.toStringUri()] = UriWrapper(uri, item)
+                        uriMap[uri.toStringUri()] = UriPackageOrWrapper.UriWrapper(uri, item)
                     }
                 }
             }

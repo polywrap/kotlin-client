@@ -4,8 +4,8 @@ import io.polywrap.configBuilder.BuilderConfig
 import io.polywrap.configBuilder.ConfigBuilder
 import io.polywrap.configBuilder.DefaultBundle
 import io.polywrap.core.Uri
-import io.polywrap.core.resolution.UriPackageOrWrapper
 import io.polywrap.core.UriResolutionContext
+import io.polywrap.core.resolution.UriPackageOrWrapper
 import io.polywrap.core.resolution.UriResolver
 import io.polywrap.core.types.*
 import kotlin.test.Test

@@ -3,10 +3,10 @@ package io.polywrap.configBuilder
 import io.polywrap.core.WrapPackage
 import io.polywrap.core.Wrapper
 import io.polywrap.core.WrapperEnv
-import io.polywrap.core.resolution.Uri
-import io.polywrap.core.resolution.UriResolver
 import io.polywrap.core.msgpack.EnvSerializer
 import io.polywrap.core.msgpack.msgPackEncode
+import io.polywrap.core.resolution.Uri
+import io.polywrap.core.resolution.UriResolver
 import uniffi.main.FfiBuilderConfig
 import uniffi.main.FfiClient
 

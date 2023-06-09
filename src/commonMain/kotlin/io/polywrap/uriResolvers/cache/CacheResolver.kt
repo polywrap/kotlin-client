@@ -2,10 +2,10 @@ package io.polywrap.uriResolvers.cache
 
 import io.polywrap.core.Invoker
 import io.polywrap.core.resolution.Uri
+import io.polywrap.core.resolution.UriPackageOrWrapper
 import io.polywrap.core.resolution.UriResolutionContext
 import io.polywrap.core.resolution.UriResolutionStep
 import io.polywrap.core.resolution.UriResolver
-import io.polywrap.core.resolution.UriWrapper
 import uniffi.main.FfiException
 import uniffi.main.FfiInvoker
 import uniffi.main.FfiUri
@@ -42,7 +42,7 @@ class CacheResolver(
 
         // return from cache if available
         if (wrapper != null) {
-            val result = UriWrapper(uri, wrapper)
+            val result = UriPackageOrWrapper.UriWrapper(uri, wrapper)
             resolutionContext.trackStep(
                 UriResolutionStep(
                     sourceUri = uri,
@@ -115,7 +115,7 @@ class CacheResolver(
                     cache.set(uri.toStringUri(), wrapper)
                 }
 
-                UriWrapper(resolvedUri, wrapper)
+                UriPackageOrWrapper.UriWrapper(resolvedUri, wrapper)
             }
 
             FfiUriPackageOrWrapperKind.WRAPPER -> {

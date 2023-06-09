@@ -1,14 +1,14 @@
 package io.polywrap.uriResolvers
 
+import io.polywrap.core.Invoker
 import io.polywrap.core.resolution.Uri
 import io.polywrap.core.resolution.UriResolutionContext
 import io.polywrap.core.resolution.UriResolver
-import io.polywrap.core.Invoker
+import uniffi.main.FfiException
 import uniffi.main.FfiInvoker
 import uniffi.main.FfiRecursiveUriResolver
-import uniffi.main.FfiUriPackageOrWrapper
-import uniffi.main.FfiException
 import uniffi.main.FfiUri
+import uniffi.main.FfiUriPackageOrWrapper
 import uniffi.main.FfiUriResolutionContext
 
 /**

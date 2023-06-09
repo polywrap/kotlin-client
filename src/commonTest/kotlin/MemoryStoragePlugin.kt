@@ -1,6 +1,6 @@
-import io.polywrap.core.types.Invoker
 import io.polywrap.core.msgpack.msgPackDecode
 import io.polywrap.core.msgpack.msgPackEncode
+import io.polywrap.core.types.Invoker
 import io.polywrap.plugin.*
 import kotlinx.coroutines.delay
 import kotlinx.serialization.Serializable

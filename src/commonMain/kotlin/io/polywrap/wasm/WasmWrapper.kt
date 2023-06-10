@@ -1,8 +1,8 @@
 package io.polywrap.wasm
 
 import io.polywrap.core.AbortHandler
+import io.polywrap.core.Invoker
 import io.polywrap.core.Wrapper
-import uniffi.main.FfiException
 import uniffi.main.FfiInvoker
 import uniffi.main.FfiWasmWrapper
 
@@ -14,19 +14,8 @@ import uniffi.main.FfiWasmWrapper
 @OptIn(ExperimentalUnsignedTypes::class)
 data class WasmWrapper(val wasmModule: ByteArray) : Wrapper, AutoCloseable {
 
-    private val ffiWrapper = FfiWasmWrapper(wasmModule.toUByteArray().toList())
+    private val ffiWrapper = FfiWasmWrapper(wasmModule.asUByteArray().toList())
 
-    /**
-     * Invoke the Wrapper based on the provided options.
-     *
-     * @param method The method to be called on the wrapper.
-     * @param args Arguments for the method, encoded in the MessagePack byte format
-     * @param env Env variables for the wrapper invocation, encoded in the MessagePack byte format
-     * @param invoker The invoker will be used for any sub-invocations that occur.
-     * @param abortHandler An [AbortHandler] to be called when the invocation is aborted.
-     * @return A list of MessagePack-encoded bytes representing the invocation result
-     * @throws FfiException
-     */
     override fun invoke(
         method: String,
         args: List<UByte>?,
@@ -34,6 +23,22 @@ data class WasmWrapper(val wasmModule: ByteArray) : Wrapper, AutoCloseable {
         invoker: FfiInvoker,
         abortHandler: AbortHandler?
     ): List<UByte> = ffiWrapper.invoke(method, args, env, invoker, abortHandler)
+
+    override fun invoke(
+        method: String,
+        args: ByteArray?,
+        env: ByteArray?,
+        invoker: Invoker,
+        abortHandler: AbortHandler?
+    ): Result<ByteArray> = runCatching {
+        ffiWrapper.invoke(
+            method = method,
+            args = args?.asUByteArray()?.toList(),
+            env = env?.asUByteArray()?.toList(),
+            invoker = invoker,
+            abortHandler = abortHandler
+        ).toUByteArray().asByteArray()
+    }
 
     override fun close() = ffiWrapper.close()
 

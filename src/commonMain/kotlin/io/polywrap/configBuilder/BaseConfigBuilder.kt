@@ -5,7 +5,6 @@ import io.polywrap.core.WrapPackage
 import io.polywrap.core.Wrapper
 import io.polywrap.core.WrapperEnv
 import io.polywrap.core.resolution.UriResolver
-import io.polywrap.uriResolvers.cache.WrapperCache
 import kotlin.collections.Map
 
 /**
@@ -13,10 +12,7 @@ import kotlin.collections.Map
  */
 abstract class BaseConfigBuilder : IConfigBuilder {
 
-    /**
-     * Holds the current configuration being built.
-     */
-    val config = BuilderConfig(
+    override val config = BuilderConfig(
         envs = mutableMapOf(),
         interfaces = mutableMapOf(),
         redirects = mutableMapOf(),
@@ -26,8 +22,6 @@ abstract class BaseConfigBuilder : IConfigBuilder {
     )
 
     abstract override fun build(configure: (IConfigBuilder.() -> Unit)?): PolywrapClient
-
-    abstract override fun build(cache: WrapperCache, configure: (IConfigBuilder.() -> Unit)?): PolywrapClient
 
     override fun add(config: BuilderConfig): IConfigBuilder = this.apply {
         addEnvs(config.envs)

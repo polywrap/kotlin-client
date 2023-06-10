@@ -1,9 +1,10 @@
 package wasm
 
-import io.polywrap.core.types.FileReader
+import io.polywrap.core.FileReader
 import io.polywrap.core.wrap.WrapManifest
 import io.polywrap.wasm.FileReaderFactory
 import io.polywrap.wasm.WasmPackage
+import io.polywrap.wasm.WasmWrapper
 import readTestResource
 import kotlin.test.*
 
@@ -53,6 +54,7 @@ class WasmPackageTest {
         val pkg = WasmPackage(fileReader)
 
         val wrapperResult = pkg.createWrapper()
-        assertTrue(wrapperResult.isSuccess)
+        assertNotNull(wrapperResult)
+        assertTrue(wrapperResult is WasmWrapper)
     }
 }

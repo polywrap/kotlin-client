@@ -17,7 +17,7 @@ internal class FfiConfigBuilder : AutoCloseable {
 
     fun addEnv(uri: String, env: WrapperEnv) {
         val ffiUri = Uri.fromString(uri)
-        val serializedEnv = msgPackEncode(EnvSerializer, env).toUByteArray().toList()
+        val serializedEnv = msgPackEncode(EnvSerializer, env).asUByteArray().toList()
         ffiBuilderConfig.addEnv(ffiUri, serializedEnv)
     }
 

@@ -10,6 +10,7 @@ import uniffi.main.FfiException
 import uniffi.main.FfiInvoker
 import uniffi.main.FfiUriPackageOrWrapper
 import uniffi.main.FfiUriPackageOrWrapperKind
+import kotlin.jvm.Throws
 
 /**
  * An abstract class for aggregating URI resolvers.
@@ -49,22 +50,14 @@ abstract class UriResolverAggregator : UriResolver {
      * @return An [FfiUriPackageOrWrapper] if the resolution is successful
      * @throws [FfiException] if resolution fails
      */
+    @Throws(FfiException::class)
     override fun tryResolveUri(
         uri: Uri,
         invoker: FfiInvoker,
         resolutionContext: UriResolutionContext
     ): FfiUriPackageOrWrapper {
         val resolvers = getUriResolvers(uri, invoker, resolutionContext).getOrThrow()
-        return tryResolveUriWithResolvers(uri, invoker, resolutionContext, resolvers, false)
-    }
-
-    override fun tryResolveUriToPackage(
-        uri: Uri,
-        invoker: FfiInvoker,
-        resolutionContext: UriResolutionContext
-    ): FfiUriPackageOrWrapper {
-        val resolvers = getUriResolvers(uri, invoker, resolutionContext).getOrThrow()
-        return tryResolveUriWithResolvers(uri, invoker, resolutionContext, resolvers, true)
+        return tryResolveUriWithResolvers(uri, invoker, resolutionContext, resolvers)
     }
 
     /**
@@ -76,20 +69,17 @@ abstract class UriResolverAggregator : UriResolver {
      * @return An [FfiUriPackageOrWrapper] if the resolution is successful
      * @throws [FfiException] if resolution fails
      */
+    @Throws(FfiException::class)
     protected fun tryResolveUriWithResolvers(
         uri: Uri,
         invoker: FfiInvoker,
         resolutionContext: UriResolutionContext,
-        resolvers: List<UriResolver>,
-        resolveToPackage: Boolean
+        resolvers: List<UriResolver>
     ): FfiUriPackageOrWrapper {
         val subContext = resolutionContext.createSubHistoryContext()
 
         for (resolver in resolvers) {
-            val result = when (resolveToPackage) {
-                true -> resolver.tryResolveUriToPackage(uri, invoker, subContext)
-                false -> resolver.tryResolveUri(uri, invoker, subContext)
-            }
+            val result = resolver.tryResolveUri(uri, invoker, subContext)
             val isUri = result.getKind() == FfiUriPackageOrWrapperKind.URI && result.asUri() == uri
             if (!isUri) {
                 resolutionContext.trackStep(

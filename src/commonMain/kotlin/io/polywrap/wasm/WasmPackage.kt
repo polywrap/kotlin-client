@@ -4,6 +4,7 @@ import io.polywrap.core.FileReader
 import io.polywrap.core.WrapPackage
 import io.polywrap.core.Wrapper
 import io.polywrap.core.wrap.WrapManifest
+import kotlin.jvm.Throws
 
 /**
  * Implementation of the [WrapPackage] interface for Wasm Wrap packages
@@ -58,6 +59,7 @@ data class WasmPackage(private val fileReader: FileReader) : WrapPackage {
      *
      * @throws Exception if the package does not contain a Wasm module
      */
+    @Throws(Exception::class)
     override fun createWrapper(): Wrapper = WasmWrapper(getWasmModule().getOrThrow())
 
     /**

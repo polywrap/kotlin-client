@@ -1,7 +1,6 @@
 package io.polywrap.configBuilder
 
 import io.polywrap.client.PolywrapClient
-import io.polywrap.uriResolvers.cache.WrapperCache
 
 /**
  * A concrete implementation of the [BaseConfigBuilder] class.
@@ -11,25 +10,6 @@ class ConfigBuilder : BaseConfigBuilder() {
 
     override fun addDefaults(): IConfigBuilder {
         return add(DefaultBundle.getConfig())
-    }
-
-    override fun build(cache: WrapperCache, configure: (IConfigBuilder.() -> Unit)?): PolywrapClient {
-        throw NotImplementedError("Custom wrapper cache support is not implemented")
-//        val static = StaticResolver.from(
-//            buildRedirects() + buildWrappers() + buildPackages()
-//        )
-//        return ClientConfig(
-//            envs = buildEnvs(),
-//            interfaces = buildInterfaces(),
-//            resolver = RecursiveResolver(
-//                CacheResolver(
-//                    SequentialResolver(
-//                        listOf(static) + config.resolvers + listOf(ExtendableUriResolver())
-//                    ),
-//                    cache
-//                )
-//            )
-//        )
     }
 
     override fun build(configure: (IConfigBuilder.() -> Unit)?): PolywrapClient {

@@ -7,6 +7,7 @@ import uniffi.main.FfiInvoker
 import uniffi.main.FfiUri
 import uniffi.main.FfiUriPackageOrWrapper
 import uniffi.main.FfiUriResolutionContext
+import kotlin.jvm.Throws
 
 /**
  * An abstract class that implements [UriResolver] and provides additional history tracking
@@ -24,31 +25,13 @@ abstract class ResolverWithHistory : UriResolver {
      * @return An [FfiUriPackageOrWrapper] if the resolution is successful
      * @throws [FfiException] if resolution fails
      */
+    @Throws(FfiException::class)
     override fun tryResolveUri(
         uri: FfiUri,
         invoker: FfiInvoker,
         resolutionContext: FfiUriResolutionContext
     ): FfiUriPackageOrWrapper {
         val result = this._tryResolveUri(uri, invoker, resolutionContext, false)
-
-        resolutionContext.trackStep(
-            UriResolutionStep(
-                sourceUri = uri,
-                result = result,
-                description = this.getStepDescription(uri, result),
-                subHistory = null
-            )
-        )
-
-        return result
-    }
-
-    override fun tryResolveUriToPackage(
-        uri: FfiUri,
-        invoker: FfiInvoker,
-        resolutionContext: FfiUriResolutionContext
-    ): FfiUriPackageOrWrapper {
-        val result = this._tryResolveUri(uri, invoker, resolutionContext, true)
 
         resolutionContext.trackStep(
             UriResolutionStep(
@@ -80,6 +63,7 @@ abstract class ResolverWithHistory : UriResolver {
      * @return A [UriPackageOrWrapper] if successful.
      * @throws [Exception] if resolution fails
      */
+    @Throws(Exception::class)
     protected abstract fun _tryResolveUri(
         uri: FfiUri,
         invoker: FfiInvoker,

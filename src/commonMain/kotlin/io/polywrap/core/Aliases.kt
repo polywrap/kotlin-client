@@ -1,6 +1,6 @@
 package io.polywrap.core
 
-import uniffi.main.FfiWrapper
+import uniffi.main.FfiAbortHandler
 
 /** A map of string-indexed, Msgpack-serializable environmental variables associated with a wrapper */
 typealias WrapperEnv = Map<String, Any>
@@ -12,4 +12,4 @@ typealias WrapperEnv = Map<String, Any>
  */
 typealias InvokeResult<TData> = Result<TData>
 
-typealias Wrapper = FfiWrapper
+typealias AbortHandler = FfiAbortHandler

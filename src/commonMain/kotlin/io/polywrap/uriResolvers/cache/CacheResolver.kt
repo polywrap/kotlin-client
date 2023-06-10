@@ -1,6 +1,7 @@
 package io.polywrap.uriResolvers.cache
 
 import io.polywrap.core.Invoker
+import io.polywrap.core.Wrapper
 import io.polywrap.core.resolution.Uri
 import io.polywrap.core.resolution.UriPackageOrWrapper
 import io.polywrap.core.resolution.UriResolutionContext
@@ -8,10 +9,9 @@ import io.polywrap.core.resolution.UriResolutionStep
 import io.polywrap.core.resolution.UriResolver
 import uniffi.main.FfiException
 import uniffi.main.FfiInvoker
-import uniffi.main.FfiUri
 import uniffi.main.FfiUriPackageOrWrapper
 import uniffi.main.FfiUriPackageOrWrapperKind
-import uniffi.main.FfiUriResolutionContext
+import kotlin.jvm.Throws
 
 /**
  * A URI resolver that uses a cache to store and retrieve the results of resolved URIs.
@@ -33,6 +33,7 @@ class CacheResolver(
      * @return An [FfiUriPackageOrWrapper] if the resolution is successful
      * @throws [FfiException] if resolution fails
      */
+    @Throws(FfiException::class)
     override fun tryResolveUri(
         uri: Uri,
         invoker: FfiInvoker,
@@ -72,24 +73,6 @@ class CacheResolver(
         return finalResult
     }
 
-    override fun tryResolveUriToPackage(
-        uri: FfiUri,
-        invoker: FfiInvoker,
-        resolutionContext: FfiUriResolutionContext
-    ): FfiUriPackageOrWrapper {
-        val subContext = resolutionContext.createSubHistoryContext()
-        val result = resolver.tryResolveUriToPackage(uri, invoker, subContext)
-        resolutionContext.trackStep(
-            UriResolutionStep(
-                sourceUri = uri,
-                result = result,
-                subHistory = subContext.getHistory(),
-                description = "CacheResolver"
-            )
-        )
-        return result
-    }
-
     /**
      * Caches the result of a resolved URI based on its type.
      *
@@ -112,10 +95,10 @@ class CacheResolver(
 
                 val resolutionPath = subContext.getResolutionPath()
                 for (uri: Uri in resolutionPath) {
-                    cache.set(uri.toStringUri(), wrapper)
+                    cache.set(uri.toStringUri(), wrapper as Wrapper)
                 }
 
-                UriPackageOrWrapper.UriWrapper(resolvedUri, wrapper)
+                UriPackageOrWrapper.UriWrapper(resolvedUri, wrapper as Wrapper)
             }
 
             FfiUriPackageOrWrapperKind.WRAPPER -> {
@@ -123,7 +106,7 @@ class CacheResolver(
 
                 val resolutionPath = subContext.getResolutionPath()
                 for (uri: Uri in resolutionPath) {
-                    cache.set(uri.toStringUri(), wrapper.getWrapper())
+                    cache.set(uri.toStringUri(), wrapper.getWrapper() as Wrapper)
                 }
 
                 uriPackageOrWrapper

@@ -8,9 +8,7 @@ import io.polywrap.core.resolution.UriResolutionContext
 import io.polywrap.core.resolution.UriResolver
 import uniffi.main.FfiInvoker
 import uniffi.main.FfiStaticUriResolver
-import uniffi.main.FfiUri
 import uniffi.main.FfiUriPackageOrWrapper
-import uniffi.main.FfiUriResolutionContext
 
 /**
  * A class that implements [UriResolver] using a map of URI to [FfiUriPackageOrWrapper].
@@ -55,12 +53,6 @@ class StaticResolver(uriMap: Map<String, FfiUriPackageOrWrapper>) : UriResolver,
         invoker: FfiInvoker,
         resolutionContext: UriResolutionContext
     ): FfiUriPackageOrWrapper = ffiResolver.tryResolveUri(uri, invoker, resolutionContext)
-
-    override fun tryResolveUriToPackage(
-        uri: FfiUri,
-        invoker: FfiInvoker,
-        resolutionContext: FfiUriResolutionContext
-    ): FfiUriPackageOrWrapper = tryResolveUri(uri, invoker, resolutionContext)
 
     override fun close() = ffiResolver.close()
 }

@@ -3,7 +3,6 @@ package io.polywrap.configBuilder
 import io.polywrap.client.PolywrapClient
 import io.polywrap.core.*
 import io.polywrap.core.resolution.UriResolver
-import io.polywrap.uriResolvers.cache.WrapperCache
 import kotlin.collections.List
 import kotlin.collections.Map
 
@@ -14,6 +13,11 @@ import kotlin.collections.Map
 interface IConfigBuilder {
 
     /**
+     * Holds the current configuration being built.
+     */
+    val config: BuilderConfig
+
+    /**
      * Builds a [PolywrapClient] instance with the current builder configuration and
      * optional additional configuration specified through a builder DSL.
      *
@@ -21,16 +25,6 @@ interface IConfigBuilder {
      * @return A [PolywrapClient] instance with the specified configuration.
      */
     fun build(configure: (IConfigBuilder.() -> Unit)? = null): PolywrapClient
-
-    /**
-     * Builds a [PolywrapClient] instance with the current builder configuration,
-     * a custom [WrapperCache], and optional additional configuration specified through a builder DSL.
-     *
-     * @param cache Optional [WrapperCache] to be used with the created [PolywrapClient] instance.
-     * @param configure Additional configuration to be applied to the builder.
-     * @return A [PolywrapClient] instance with the specified configuration.
-     */
-    fun build(cache: WrapperCache, configure: (IConfigBuilder.() -> Unit)? = null): PolywrapClient
 
     /**
      * Adds the given [BuilderConfig] to the current configuration.

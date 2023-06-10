@@ -3,6 +3,7 @@ package io.polywrap.core
 import io.polywrap.core.resolution.Uri
 import io.polywrap.core.resolution.UriResolutionContext
 import uniffi.main.FfiException
+import kotlin.jvm.Throws
 
 /**
  * Client invokes wrappers and interacts with wrap packages.
@@ -35,6 +36,7 @@ interface Client {
      *
      * @note The returned Wrapper is owned by the caller and must be manually deallocated
      */
+    @Throws(FfiException::class)
     fun loadWrapper(
         uri: Uri,
         resolutionContext: UriResolutionContext? = null

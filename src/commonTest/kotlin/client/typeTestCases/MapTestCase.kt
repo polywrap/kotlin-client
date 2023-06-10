@@ -1,10 +1,9 @@
 package client.typeTestCases
 
-import io.polywrap.client.PolywrapClient
 import io.polywrap.configBuilder.ConfigBuilder
-import io.polywrap.core.Uri
 import io.polywrap.core.msgpack.MsgPackMap
 import io.polywrap.core.msgpack.toMsgPackMap
+import io.polywrap.core.resolution.Uri
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.Serializable
@@ -15,9 +14,8 @@ import kotlin.test.assertEquals
 @OptIn(ExperimentalCoroutinesApi::class)
 class MapTestCase {
 
-    private val uri = Uri("fs/$pathToTestWrappers/map-type/implementations/rs")
-    private val config = ConfigBuilder().addDefaults().build()
-    private val client = PolywrapClient(config)
+    private val uri = Uri.fromString("fs/$pathToTestWrappers/map-type/implementations/rs")
+    private val client = ConfigBuilder().addDefaults().build()
 
     @Serializable
     private data class CustomMap(

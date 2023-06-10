@@ -11,6 +11,7 @@ import io.polywrap.core.resolution.UriResolutionContext
 import uniffi.main.FfiClient
 import uniffi.main.FfiException
 import uniffi.main.FfiUri
+import kotlin.jvm.Throws
 
 @OptIn(ExperimentalUnsignedTypes::class)
 class PolywrapClient(val ffiClient: FfiClient) : Invoker(), Client, AutoCloseable {
@@ -26,6 +27,7 @@ class PolywrapClient(val ffiClient: FfiClient) : Invoker(), Client, AutoCloseabl
      * @return A list of MessagePack-encoded bytes representing the invocation result
      * @throws FfiException
      */
+    @Throws(FfiException::class)
     override fun invokeRaw(
         uri: FfiUri,
         method: String,
@@ -50,12 +52,12 @@ class PolywrapClient(val ffiClient: FfiClient) : Invoker(), Client, AutoCloseabl
         ffiClient.invokeRaw(
             uri = uri,
             method = method,
-            args = args?.toUByteArray()?.toList(),
-            env = env?.toUByteArray()?.toList(),
+            args = args?.asUByteArray()?.toList(),
+            env = env?.asUByteArray()?.toList(),
             resolutionContext = resolutionContext
         )
     }.map {
-        it.toUByteArray().toByteArray()
+        it.toUByteArray().asByteArray()
     }
 
     override fun invokeWrapperRaw(
@@ -70,12 +72,12 @@ class PolywrapClient(val ffiClient: FfiClient) : Invoker(), Client, AutoCloseabl
             wrapper = wrapper,
             uri = uri,
             method = method,
-            args = args?.toUByteArray()?.toList(),
-            env = env?.toUByteArray()?.toList(),
+            args = args?.asUByteArray()?.toList(),
+            env = env?.asUByteArray()?.toList(),
             resolutionContext = resolutionContext
         )
     }.map {
-        it.toUByteArray().toByteArray()
+        it.toUByteArray().asByteArray()
     }
 
     /**
@@ -96,6 +98,7 @@ class PolywrapClient(val ffiClient: FfiClient) : Invoker(), Client, AutoCloseabl
      *
      * @note Each Uri returned is owned by the caller and must be manually deallocated
      */
+    @Throws(FfiException::class)
     override fun getImplementations(uri: FfiUri): List<FfiUri> = ffiClient.getImplementations(uri)
 
     override fun getImplementations(uri: String): Result<List<String>> = runCatching {
@@ -123,7 +126,7 @@ class PolywrapClient(val ffiClient: FfiClient) : Invoker(), Client, AutoCloseabl
         }
         return envBytes
             ?.toUByteArray()
-            ?.toByteArray()
+            ?.asByteArray()
             ?.let { msgPackDecode(EnvSerializer, it) }
     }
 
@@ -131,7 +134,7 @@ class PolywrapClient(val ffiClient: FfiClient) : Invoker(), Client, AutoCloseabl
         uri: Uri,
         resolutionContext: UriResolutionContext?
     ): Result<Wrapper> = runCatching {
-        ffiClient.loadWrapper(uri, resolutionContext)
+        ffiClient.loadWrapper(uri, resolutionContext) as Wrapper
     }
 
     override fun close() = ffiClient.close()

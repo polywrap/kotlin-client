@@ -1,8 +1,7 @@
 package client.typeTestCases
 
-import io.polywrap.client.PolywrapClient
 import io.polywrap.configBuilder.ConfigBuilder
-import io.polywrap.core.Uri
+import io.polywrap.core.resolution.Uri
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.buildJsonObject
@@ -14,9 +13,8 @@ import kotlin.test.assertEquals
 @OptIn(ExperimentalCoroutinesApi::class)
 class JsonTestCase {
 
-    private val uri = Uri("fs/$pathToTestWrappers/json-type/implementations/rs")
-    private val config = ConfigBuilder().addDefaults().build()
-    private val client = PolywrapClient(config)
+    private val uri = Uri.fromString("fs/$pathToTestWrappers/json-type/implementations/rs")
+    private val client = ConfigBuilder().addDefaults().build()
 
     @Test
     fun testParse() = runTest {

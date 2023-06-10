@@ -1,13 +1,12 @@
 package io.polywrap.core
 
-import uniffi.main.FfiAbortHandler
-
-typealias AbortHandler = FfiAbortHandler
+import uniffi.main.FfiException
 
 class DefaultAbortHandler : AbortHandler {
     /**
-     * @throws Exception
+     * @throws FfiException
      */
+    @Throws(FfiException::class)
     override fun abort(msg: String) {
         throw Exception(msg)
     }

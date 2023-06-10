@@ -7,9 +7,8 @@ import io.polywrap.core.resolution.UriResolver
 import uniffi.main.FfiException
 import uniffi.main.FfiInvoker
 import uniffi.main.FfiRecursiveUriResolver
-import uniffi.main.FfiUri
 import uniffi.main.FfiUriPackageOrWrapper
-import uniffi.main.FfiUriResolutionContext
+import kotlin.jvm.Throws
 
 /**
  * A [UriResolver] implementation that resolves URIs recursively.
@@ -29,17 +28,12 @@ class RecursiveResolver(private val resolver: UriResolver) : UriResolver, AutoCl
      * @return An [FfiUriPackageOrWrapper] if the resolution is successful
      * @throws [FfiException] if resolution fails
      */
+    @Throws(FfiException::class)
     override fun tryResolveUri(
         uri: Uri,
         invoker: FfiInvoker,
         resolutionContext: UriResolutionContext
     ): FfiUriPackageOrWrapper = ffiResolver.tryResolveUri(uri, invoker, resolutionContext)
-
-    override fun tryResolveUriToPackage(
-        uri: FfiUri,
-        invoker: FfiInvoker,
-        resolutionContext: FfiUriResolutionContext
-    ): FfiUriPackageOrWrapper = tryResolveUri(uri, invoker, resolutionContext)
 
     override fun close() = ffiResolver.close()
 }

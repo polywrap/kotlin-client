@@ -1,6 +1,8 @@
 package io.polywrap.core.wrap.formats.wrap01.abi
 
 import kotlinx.serialization.Serializable
+import uniffi.main.FfiException
+import kotlin.jvm.Throws
 
 /**
  * Definition of a scalar in a Wrap ABI.

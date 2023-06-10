@@ -1,8 +1,7 @@
 package client.typeTestCases
 
-import io.polywrap.client.PolywrapClient
 import io.polywrap.configBuilder.ConfigBuilder
-import io.polywrap.core.Uri
+import io.polywrap.core.resolution.Uri
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import memoryStoragePlugin
@@ -14,15 +13,14 @@ import kotlin.test.assertTrue
 @OptIn(ExperimentalCoroutinesApi::class)
 class AsyncifyTestCase {
 
-    private val uri = Uri("fs/$pathToTestWrappers/asyncify/implementations/rs")
-    private val config = ConfigBuilder()
+    private val uri = Uri.fromString("fs/$pathToTestWrappers/asyncify/implementations/rs")
+    private val client = ConfigBuilder()
         .addDefaults()
         .addPackage(
             "wrap://ens/memory-storage.polywrap.eth"
                 to memoryStoragePlugin(null)
         )
         .build()
-    private val client = PolywrapClient(config)
 
     @Test
     fun testSubsequentInvokes() = runTest {

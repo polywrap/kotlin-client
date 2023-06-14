@@ -46,4 +46,34 @@ interface Wrapper : FfiWrapper {
         invoker: Invoker,
         abortHandler: AbortHandler? = null
     ): Result<ByteArray>
+
+
+    companion object {
+        @OptIn(ExperimentalUnsignedTypes::class)
+        fun fromFfi(ffiWrapper: FfiWrapper): Wrapper = object : Wrapper {
+            override fun invoke(
+                method: String,
+                args: List<UByte>?,
+                env: List<UByte>?,
+                invoker: FfiInvoker,
+                abortHandler: AbortHandler?
+            ): List<UByte> = ffiWrapper.invoke(method, args, env, invoker, abortHandler)
+
+            override fun invoke(
+                method: String,
+                args: ByteArray?,
+                env: ByteArray?,
+                invoker: Invoker,
+                abortHandler: AbortHandler?
+            ): Result<ByteArray> = runCatching {
+                ffiWrapper.invoke(
+                    method = method,
+                    args = args?.asUByteArray()?.toList(),
+                    env = env?.asUByteArray()?.toList(),
+                    invoker = invoker,
+                    abortHandler = abortHandler
+                ).toUByteArray().asByteArray()
+            }
+        }
+    }
 }

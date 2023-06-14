@@ -34,7 +34,7 @@ interface Client {
      *
      * @throws FfiException
      *
-     * @note The returned Wrapper is owned by the caller and must be manually deallocated
+     * @note The returned result may cause a memory leak if it is not consumed by a call to invokeWrapper
      */
     @Throws(FfiException::class)
     fun loadWrapper(

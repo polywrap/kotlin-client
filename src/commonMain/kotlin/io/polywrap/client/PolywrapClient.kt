@@ -134,7 +134,8 @@ class PolywrapClient(val ffiClient: FfiClient) : Invoker(), Client, AutoCloseabl
         uri: Uri,
         resolutionContext: UriResolutionContext?
     ): Result<Wrapper> = runCatching {
-        ffiClient.loadWrapper(uri, resolutionContext) as Wrapper
+        val ffiWrapper = ffiClient.loadWrapper(uri, resolutionContext)
+        Wrapper.fromFfi(ffiWrapper)
     }
 
     override fun close() = ffiClient.close()

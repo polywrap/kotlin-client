@@ -664,6 +664,7 @@ class ConfigBuilderTest {
     @Test
     fun shouldSanitizeIncomingUrisForEnvs() {
         val shortUri = "ens/some1.wrapper.eth"
+        val shortUriSanitized = "wrap://$shortUri"
         val longUri = "wrap://ens/some2.wrapper.eth"
 
         val builder1 = ConfigBuilder()
@@ -673,7 +674,7 @@ class ConfigBuilderTest {
 
         assertEquals(
             mutableMapOf(
-                shortUri to mapOf<String, Any>("foo" to "bar"),
+                shortUriSanitized to mapOf<String, Any>("foo" to "bar"),
                 longUri to mapOf("bar" to "baz")
             ),
             config1.envs
@@ -695,6 +696,7 @@ class ConfigBuilderTest {
     @Test
     fun shouldSanitizeIncomingUrisForInterfaceImplementations() {
         val shortUri = "ens/some1.wrapper.eth"
+        val shortUriSanitized = "wrap://$shortUri"
         val longUri = "wrap://ens/some2.wrapper.eth"
 
         val builder1 = ConfigBuilder()
@@ -704,8 +706,8 @@ class ConfigBuilderTest {
 
         assertEquals(
             mapOf(
-                shortUri to mutableSetOf(longUri),
-                longUri to mutableSetOf(shortUri)
+                shortUriSanitized to mutableSetOf(longUri),
+                longUri to mutableSetOf(shortUriSanitized)
             ),
             config1.interfaces
         )
@@ -716,7 +718,7 @@ class ConfigBuilderTest {
         val config2 = builder2.config
 
         assertEquals(
-            mapOf(longUri to setOf(shortUri)),
+            mapOf(longUri to setOf(shortUriSanitized)),
             config2.interfaces
         )
     }
@@ -724,6 +726,7 @@ class ConfigBuilderTest {
     @Test
     fun shouldSanitizeIncomingUrisForRedirects() {
         val shortUri = "ens/some1.wrapper.eth"
+        val shortUriSanitized = "wrap://$shortUri"
         val longUri = "wrap://ens/some2.wrapper.eth"
 
         val builder1 = ConfigBuilder()
@@ -733,8 +736,8 @@ class ConfigBuilderTest {
 
         assertEquals(
             mapOf(
-                shortUri to longUri,
-                longUri to shortUri
+                shortUriSanitized to longUri,
+                longUri to shortUriSanitized
             ),
             config1.redirects
         )
@@ -745,7 +748,7 @@ class ConfigBuilderTest {
         val config2 = builder2.config
 
         assertEquals(
-            mapOf(longUri to shortUri),
+            mapOf(longUri to shortUriSanitized),
             config2.redirects
         )
     }
@@ -753,6 +756,7 @@ class ConfigBuilderTest {
     @Test
     fun shouldSanitizeIncomingUrisForPackages() {
         val shortUri = "ens/some1.package.eth"
+        val shortUriSanitized = "wrap://$shortUri"
         val longUri = "wrap://ens/some2.package.eth"
 
         val builder1 = ConfigBuilder().addPackages(
@@ -765,7 +769,7 @@ class ConfigBuilderTest {
 
         assertEquals(
             mapOf(
-                shortUri to mockWrapPackage,
+                shortUriSanitized to mockWrapPackage,
                 longUri to mockWrapPackage
             ),
             config1.packages
@@ -785,6 +789,7 @@ class ConfigBuilderTest {
     @Test
     fun shouldSanitizeIncomingUrisForWrappers() {
         val shortUri = "ens/some1.wrapper.eth"
+        val shortUriSanitized = "wrap://$shortUri"
         val longUri = "wrap://ens/some2.wrapper.eth"
 
         val builder1 = ConfigBuilder().addWrappers(
@@ -797,7 +802,7 @@ class ConfigBuilderTest {
 
         assertEquals(
             mapOf(
-                shortUri to mockWrapper,
+                shortUriSanitized to mockWrapper,
                 longUri to mockWrapper
             ),
             config1.wrappers

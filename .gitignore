@@ -9,4 +9,16 @@
 /build/classes/kotlin/native/test/klib/
 
 /local.properties
+
+# generated
 /clones/
+/src/androidMain/resources/android-armeabi-v7a
+/src/androidMain/resources/android-x86
+/src/androidMain/resources/android-arm64-v8a
+/src/androidMain/resources/android-x86-64
+/src/jvmMain/resources/darwin
+/src/jvmMain/resources/darwin-aarch64
+/src/jvmMain/resources/linux-aarch64
+/src/jvmMain/resources/linux-x86-64
+/src/jvmMain/resources/win32-x86-64
+

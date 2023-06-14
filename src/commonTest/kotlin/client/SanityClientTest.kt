@@ -12,15 +12,6 @@ class SanityClientTest {
 
     private val sha3Uri = Uri.fromString("ipfs/QmThRxFfr7Hj9Mq6WmcGXjkRrgqMG3oD93SLX27tinQWy5")
 
-//    @Test
-//    fun tryResolveUri() {
-//        val client = ConfigBuilder().addDefaults().build()
-//        val result = client.tryResolveUri(uri = sha3Uri)
-//
-//        assertNull(result.exceptionOrNull())
-//        assertTrue(result.getOrThrow() is UriPackageOrWrapper.WrapperValue)
-//    }
-
     @Test
     fun invokeRaw() {
         val client = ConfigBuilder().addDefaults().build()
@@ -29,6 +20,7 @@ class SanityClientTest {
             method = "keccak_256",
             args = msgPackEncode(mapOf("message" to "Hello World!"))
         )
+        if (result.isFailure) throw result.exceptionOrNull()!!
         assertNull(result.exceptionOrNull())
     }
 

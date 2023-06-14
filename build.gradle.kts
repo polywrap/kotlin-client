@@ -78,8 +78,8 @@ kotlin {
 uniffi {
     rustClientRepoBranch = "main"
     clonesDir = "$projectDir/clones"
-    desktopJniPath = "${project.buildDir}/jniLibs"
-    androidJniPath = "$projectDir/src/androidMain/jniLibs"
+    desktopJnaPath = "$projectDir/src/jvmMain/resources"
+    androidJnaPath = "$projectDir/src/androidMain/resources"
     rustTargets = listOf(
         "armv7-linux-androideabi",
         "i686-linux-android",
@@ -91,9 +91,10 @@ uniffi {
         "x86_64-apple-darwin",
         "aarch64-apple-darwin"
     )
-    libname = "polywrap_native"
+    packageName = "polywrap_native"
+    libname = "uniffi_main"
     bindingsDir = uniffiBindingsDir
-    // when false, only builds for debug on current desktop platform even if its not in the list
+    // when false, only builds for current desktop platform even if its not in the list
     isRelease = false
 }
 
@@ -103,20 +104,6 @@ android {
     compileOptions {
         targetCompatibility = JavaVersion.VERSION_17
     }
-}
-
-// make sure dynamic library is available during jvm tests
-tasks.named<Test>("jvmTest") {
-    doFirst {
-        val uniffi = project.extensions.getByName("uniffi") as UniffiPipelineConfig
-        systemProperty("java.library.path", uniffi.desktopJniPath)
-    }
-}
-
-// make sure dynamic library is packaged with jvm release
-tasks.named<Jar>("jvmJar") {
-    val uniffi = project.extensions.getByName("uniffi") as UniffiPipelineConfig
-    from(uniffi.desktopJniPath)
 }
 
 // javadoc generation for Maven repository publication
@@ -138,12 +125,30 @@ configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
     // this rule is not getting picked up in .editorconfig for some reason
     disabledRules.set(setOf("no-wildcard-imports"))
     filter {
+        exclude("**/build/**")
         exclude("**/generated/**")
+        exclude("**/resources/**")
         exclude("**/commonTest/**")
         exclude("**/jvmTest/**")
         exclude("**/androidUnitTest/**")
         exclude("**/androidInstrumentedTest/**")
         exclude("**/wrap/**")
-        exclude("**/wrapHardCoded/**")
+    }
+}
+// ktlint has a bug where 'exclude' does not work, so this is a workaround
+tasks {
+    listOf(
+        runKtlintCheckOverCommonMainSourceSet,
+        runKtlintCheckOverCommonTestSourceSet
+    ).forEach {
+        it {
+            setSource(
+                project.sourceSets.map { sourceSet ->
+                    sourceSet.allSource.filter { file ->
+                        !file.path.contains("/generated/")
+                    }
+                }
+            )
+        }
     }
 }

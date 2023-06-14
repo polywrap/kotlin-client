@@ -669,7 +669,7 @@ class ConfigBuilderTest {
         val builder1 = ConfigBuilder()
             .addEnv(shortUri to mapOf("foo" to "bar"))
             .addEnv(longUri to mapOf("bar" to "baz"))
-        val config1 = (builder1 as BaseConfigBuilder).config
+        val config1 = builder1.config
 
         assertEquals(
             mutableMapOf(
@@ -682,7 +682,7 @@ class ConfigBuilderTest {
         val builder2 = ConfigBuilder()
             .add(config1)
             .removeEnv(shortUri)
-        val config2 = (builder2 as BaseConfigBuilder).config
+        val config2 = builder2.config
 
         assertEquals(
             mutableMapOf(
@@ -700,7 +700,7 @@ class ConfigBuilderTest {
         val builder1 = ConfigBuilder()
             .addInterfaceImplementation(shortUri, longUri)
             .addInterfaceImplementation(longUri, shortUri)
-        val config1 = (builder1 as BaseConfigBuilder).config
+        val config1 = builder1.config
 
         assertEquals(
             mapOf(
@@ -713,7 +713,7 @@ class ConfigBuilderTest {
         val builder2 = ConfigBuilder()
             .add(config1)
             .removeInterfaceImplementation(shortUri, longUri)
-        val config2 = (builder2 as BaseConfigBuilder).config
+        val config2 = builder2.config
 
         assertEquals(
             mapOf(longUri to setOf(shortUri)),
@@ -729,7 +729,7 @@ class ConfigBuilderTest {
         val builder1 = ConfigBuilder()
             .addRedirect(shortUri to longUri)
             .addRedirect(longUri to shortUri)
-        val config1 = (builder1 as BaseConfigBuilder).config
+        val config1 = builder1.config
 
         assertEquals(
             mapOf(
@@ -742,7 +742,7 @@ class ConfigBuilderTest {
         val builder2 = ConfigBuilder()
             .add(config1)
             .removeRedirect(shortUri)
-        val config2 = (builder2 as BaseConfigBuilder).config
+        val config2 = builder2.config
 
         assertEquals(
             mapOf(longUri to shortUri),
@@ -761,7 +761,7 @@ class ConfigBuilderTest {
                 longUri to mockWrapPackage
             )
         )
-        val config1 = (builder1 as BaseConfigBuilder).config
+        val config1 = builder1.config
 
         assertEquals(
             mapOf(
@@ -774,7 +774,7 @@ class ConfigBuilderTest {
         val builder2 = ConfigBuilder()
             .add(config1)
             .removePackage(shortUri)
-        val config2 = (builder2 as BaseConfigBuilder).config
+        val config2 = builder2.config
 
         assertEquals(
             mapOf(longUri to mockWrapPackage),
@@ -793,7 +793,7 @@ class ConfigBuilderTest {
                 longUri to mockWrapper
             )
         )
-        val config1 = (builder1 as BaseConfigBuilder).config
+        val config1 = builder1.config
 
         assertEquals(
             mapOf(
@@ -806,7 +806,7 @@ class ConfigBuilderTest {
         val builder2 = ConfigBuilder()
             .add(config1)
             .removeWrapper(shortUri)
-        val config2 = (builder2 as BaseConfigBuilder).config
+        val config2 = builder2.config
 
         assertEquals(
             mapOf(longUri to mockWrapper),

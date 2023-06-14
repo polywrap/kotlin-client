@@ -22,7 +22,6 @@ afterEvaluate {
     val udl = "$packageDir/src/main.udl"
 
     // Adjust parameters if not release build
-    val targetProfile = if (config.isRelease) "release" else "debug"
     val rustTargets = if (config.isRelease) {
         config.rustTargets
     } else {
@@ -49,7 +48,7 @@ afterEvaluate {
     rustTargets.map {
         tasks.register<Exec>("rustupAddTarget_$it") {
             group = "uniffi"
-            commandLine("rustup", "target", "add", it, "--toolchain", "nightly")
+            commandLine("rustup", "target", "add", it)
             dependsOn(cloneRustClient)
         }
     }
@@ -59,8 +58,7 @@ afterEvaluate {
         tasks.register<Exec>("cargoBuild_$target") {
             group = "uniffi"
             workingDir(packageDir)
-            val profile = if (config.isRelease) "release" else "dev"
-            commandLine("cargo", "+nightly", "build", "--target", target, "--profile", profile)
+            commandLine("cargo", "build", "--target", target, "--profile", "release")
             dependsOn(tasks.getByName("rustupAddTarget_$target"))
         }
     }
@@ -70,10 +68,11 @@ afterEvaluate {
         .filter { it.contains("android") }
         .map { target ->
             tasks.register<Copy>("copyNativeLibrary_$target") {
-                from("${rustClientRepoCloneDir}/target/$target/$targetProfile")
-                into("${config.androidJniPath}/${rustTargetToAndroidAbiOrDesktopValue(target)}")
-                val libname = config.libname
-                include("lib$libname.so", "lib$libname.dylib", "$libname.dll")
+                from("${rustClientRepoCloneDir}/target/$target/release")
+                into("${config.androidJnaPath}/${rustTargetToAndroidAbiOrDesktopValue(target)}")
+                val packageName = config.packageName
+                include("lib$packageName.so", "lib$packageName.dylib", "$packageName.dll")
+                rename(packageName, config.libname)
                 dependsOn(tasks.getByName("cargoBuild_$target"))
             }
         }
@@ -87,10 +86,11 @@ afterEvaluate {
         .filter { !it.contains("android") }
         .map { target ->
             tasks.register<Copy>("copyNativeLibrary_$target") {
-                from("${rustClientRepoCloneDir}/target/$target/$targetProfile")
-                into("${config.desktopJniPath}/${rustTargetToAndroidAbiOrDesktopValue(target)}")
-                val libname = config.libname
-                include("lib$libname.so", "lib$libname.dylib", "$libname.dll")
+                from("${rustClientRepoCloneDir}/target/$target/release")
+                into("${config.desktopJnaPath}/${rustTargetToAndroidAbiOrDesktopValue(target)}")
+                val packageName = config.packageName
+                include("lib$packageName.so", "lib$packageName.dylib", "$packageName.dll")
+                rename(packageName, config.libname)
                 dependsOn(tasks.getByName("cargoBuild_$target"))
             }
         }
@@ -102,7 +102,7 @@ afterEvaluate {
     val generateKotlinUniffiBindings = tasks.register<Exec>("generateKotlinUniffiBindings") {
         group = "uniffi"
         workingDir(rustClientRepoCloneDir)
-        val bin = "${rustClientRepoCloneDir}/target/${rustTargets[0]}/$targetProfile/uniffi-bindgen"
+        val bin = "${rustClientRepoCloneDir}/target/${rustTargets[0]}/release/uniffi-bindgen"
         val command = "$bin generate $udl --language kotlin --out-dir ${config.bindingsDir}"
         commandLine(command.split(" "))
         dependsOn(copyNativeLibraryForAndroid, copyNativeLibraryForDesktop)

@@ -7,7 +7,7 @@ val config = project.extensions.create<UniffiPipelineConfig>("uniffi")
 
 fun getCurrentDesktopPlatform(): String {
     val hostOs: String = System.getProperty("os.name")
-    val arch: String = System.getProperty("os.arch")
+    val arch: String = System.getProperty("os.arch").replace("amd64", "x86_64")
     return arch + when {
         hostOs == "Mac OS X" -> "-apple-darwin"
         hostOs == "Linux" -> "-unknown-linux-gnu"

@@ -94,7 +94,7 @@ uniffi {
     packageName = "polywrap_native"
     libname = "uniffi_main"
     bindingsDir = uniffiBindingsDir
-    // when false, only builds for current desktop platform even if its not in the list
+    // when false, only builds for current desktop platform even if it's not in the list
     isRelease = false
 }
 

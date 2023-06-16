@@ -9,6 +9,8 @@ import io.polywrap.core.resolution.Uri
 import io.polywrap.core.resolution.UriResolutionContext
 import kotlinx.serialization.serializer
 import uniffi.main.FfiInvoker
+import uniffi.main.FfiUri
+import uniffi.main.FfiUriResolutionContext
 
 abstract class Invoker : FfiInvoker {
     /**
@@ -21,33 +23,23 @@ abstract class Invoker : FfiInvoker {
      * @param resolutionContext The [UriResolutionContext] to be used during URI resolution, or null for a default context.
      * @return A [Result] containing the invocation result as a [ByteArray], or an error if the invocation fails.
      */
-    abstract fun invokeRaw(
+    fun invokeRaw(
         uri: Uri,
         method: String,
-        args: ByteArray? = null,
-        env: ByteArray? = null,
-        resolutionContext: UriResolutionContext? = null
-    ): Result<ByteArray>
-
-    /**
-     * Invoke a wrapper using an instance of the wrapper.
-     *
-     * @param wrapper An instance of a Wrapper to invoke.
-     * @param uri The URI of the wrapper to be invoked.
-     * @param method The method to be called on the wrapper.
-     * @param args Arguments for the method, encoded in the MessagePack byte format
-     * @param env Env variables for the wrapper invocation, encoded in the MessagePack byte format
-     * @param resolutionContext The [UriResolutionContext] to be used during URI resolution, or null for a default context.
-     * @return A [Result] containing a MsgPack encoded byte array or an error.
-     */
-    abstract fun invokeWrapperRaw(
-        wrapper: Wrapper,
-        uri: Uri,
-        method: String,
-        args: ByteArray? = null,
-        env: ByteArray? = null,
-        resolutionContext: UriResolutionContext? = null
-    ): Result<ByteArray>
+        args: ByteArray?,
+        env: ByteArray?,
+        resolutionContext: UriResolutionContext?
+    ): Result<ByteArray> = runCatching {
+        this.invokeRaw(
+            uri = uri,
+            method = method,
+            args = args?.asUByteArray()?.toList(),
+            env = env?.asUByteArray()?.toList(),
+            resolutionContext = resolutionContext
+        )
+    }.map {
+        it.toUByteArray().asByteArray()
+    }
 
     /**
      * Invokes the wrapper at the specified URI with the provided method, arguments, and environment.
@@ -106,6 +98,36 @@ abstract class Invoker : FfiInvoker {
             msgPackDecode(NullableKVSerializer, it).getOrThrow() as R
         } else {
             msgPackDecode(serializer<R>(), it).getOrThrow()
+        }
+    }
+
+    companion object {
+        /**
+         * Creates an [Invoker] from an [FfiInvoker].
+         *
+         * @param ffiInvoker The [FfiInvoker] to be wrapped.
+         * @return An [Invoker] that wraps the provided [FfiInvoker].
+         */
+        fun fromFfi(ffiInvoker: FfiInvoker): Invoker = object : Invoker() {
+            override fun invokeRaw(
+                uri: FfiUri,
+                method: String,
+                args: List<UByte>?,
+                env: List<UByte>?,
+                resolutionContext: FfiUriResolutionContext?
+            ): List<UByte> = ffiInvoker.invokeRaw(uri, method, args, env, resolutionContext)
+
+            override fun getImplementations(uri: FfiUri): List<FfiUri> {
+                return ffiInvoker.getImplementations(uri)
+            }
+
+            override fun getInterfaces(): Map<String, List<FfiUri>>? {
+                return ffiInvoker.getInterfaces()
+            }
+
+            override fun getEnvByUri(uri: FfiUri): List<UByte>? {
+                return ffiInvoker.getEnvByUri(uri)
+            }
         }
     }
 }

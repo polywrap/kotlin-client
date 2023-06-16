@@ -42,24 +42,6 @@ class PolywrapClient(val ffiClient: FfiClient) : Invoker(), Client, AutoCloseabl
         resolutionContext = resolutionContext
     )
 
-    override fun invokeRaw(
-        uri: Uri,
-        method: String,
-        args: ByteArray?,
-        env: ByteArray?,
-        resolutionContext: UriResolutionContext?
-    ) = runCatching {
-        ffiClient.invokeRaw(
-            uri = uri,
-            method = method,
-            args = args?.asUByteArray()?.toList(),
-            env = env?.asUByteArray()?.toList(),
-            resolutionContext = resolutionContext
-        )
-    }.map {
-        it.toUByteArray().asByteArray()
-    }
-
     override fun invokeWrapperRaw(
         wrapper: Wrapper,
         uri: Uri,

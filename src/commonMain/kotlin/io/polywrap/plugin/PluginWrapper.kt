@@ -26,7 +26,7 @@ data class PluginWrapper<TConfig>(val module: PluginModule<TConfig>) : Wrapper {
         method = method,
         args = args?.toUByteArray()?.asByteArray(),
         env = env?.toUByteArray()?.asByteArray(),
-        invoker = invoker as Invoker,
+        invoker = Invoker.fromFfi(invoker),
         abortHandler = abortHandler
     ).getOrThrow().asUByteArray().toList()
 

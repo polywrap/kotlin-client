@@ -4,9 +4,12 @@ import io.polywrap.core.AbortHandler
 import io.polywrap.core.DefaultAbortHandler
 import io.polywrap.core.Invoker
 import io.polywrap.core.Wrapper
+import io.polywrap.core.wrap
 import kotlinx.coroutines.runBlocking
 import uniffi.main.FfiAbortHandlerWrapping
 import uniffi.main.FfiInvoker
+
+// TODO: do i need to free the FfiAbortHandlerWrapping in invoke?
 
 /**
  * Represents a plugin wrapper, allowing the plugin module to be invoked as a [Wrapper].
@@ -28,7 +31,7 @@ data class PluginWrapper<TConfig>(val module: PluginModule<TConfig>) : Wrapper {
         args = args?.toUByteArray()?.asByteArray(),
         env = env?.toUByteArray()?.asByteArray(),
         invoker = Invoker(invoker),
-        abortHandler = null
+        abortHandler = abortHandler?.wrap()
     ).getOrThrow().asUByteArray().toList()
 
     override fun invoke(

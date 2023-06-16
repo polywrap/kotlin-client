@@ -8,11 +8,40 @@ import io.polywrap.core.msgpack.msgPackEncode
 import io.polywrap.core.resolution.Uri
 import io.polywrap.core.resolution.UriResolutionContext
 import kotlinx.serialization.serializer
+import uniffi.main.FfiException
 import uniffi.main.FfiInvoker
 import uniffi.main.FfiUri
-import uniffi.main.FfiUriResolutionContext
+import kotlin.jvm.Throws
 
-abstract class Invoker : FfiInvoker {
+@OptIn(ExperimentalUnsignedTypes::class)
+open class Invoker(val ffiInvoker: FfiInvoker) {
+
+    /**
+     * Invokes the wrapper at the specified URI with the provided options.
+     *
+     * @param uri The URI of the wrapper to be invoked.
+     * @param method The method to be called on the wrapper.
+     * @param args Arguments for the method, encoded in the MessagePack byte format
+     * @param env Env variables for the wrapper invocation, encoded in the MessagePack byte format
+     * @param resolutionContext The [UriResolutionContext] to be used during URI resolution, or null for a default context.
+     * @return A list of MessagePack-encoded bytes representing the invocation result
+     * @throws FfiException
+     */
+    @Throws(FfiException::class)
+    fun invokeRaw(
+        uri: FfiUri,
+        method: String,
+        args: List<UByte>? = null,
+        env: List<UByte>? = null,
+        resolutionContext: UriResolutionContext? = null
+    ): List<UByte> = ffiInvoker.invokeRaw(
+        uri = uri,
+        method = method,
+        args = args,
+        env = env,
+        resolutionContext = resolutionContext
+    )
+
     /**
      * Invoke a wrapper. Unlike [invokeWrapperRaw], this method automatically retrieves and caches the wrapper.
      *
@@ -27,10 +56,10 @@ abstract class Invoker : FfiInvoker {
         uri: Uri,
         method: String,
         args: ByteArray?,
-        env: ByteArray?,
-        resolutionContext: UriResolutionContext?
+        env: ByteArray? = null,
+        resolutionContext: UriResolutionContext? = null
     ): Result<ByteArray> = runCatching {
-        this.invokeRaw(
+        ffiInvoker.invokeRaw(
             uri = uri,
             method = method,
             args = args?.asUByteArray()?.toList(),
@@ -101,33 +130,52 @@ abstract class Invoker : FfiInvoker {
         }
     }
 
-    companion object {
-        /**
-         * Creates an [Invoker] from an [FfiInvoker].
-         *
-         * @param ffiInvoker The [FfiInvoker] to be wrapped.
-         * @return An [Invoker] that wraps the provided [FfiInvoker].
-         */
-        fun fromFfi(ffiInvoker: FfiInvoker): Invoker = object : Invoker() {
-            override fun invokeRaw(
-                uri: FfiUri,
-                method: String,
-                args: List<UByte>?,
-                env: List<UByte>?,
-                resolutionContext: FfiUriResolutionContext?
-            ): List<UByte> = ffiInvoker.invokeRaw(uri, method, args, env, resolutionContext)
-
-            override fun getImplementations(uri: FfiUri): List<FfiUri> {
-                return ffiInvoker.getImplementations(uri)
-            }
-
-            override fun getInterfaces(): Map<String, List<FfiUri>>? {
-                return ffiInvoker.getInterfaces()
-            }
-
-            override fun getEnvByUri(uri: FfiUri): List<UByte>? {
-                return ffiInvoker.getEnvByUri(uri)
-            }
+    /**
+     * Returns the interface implementations stored in the configuration.
+     *
+     * @return A map of interface URIs to a list of their respective implementation URIs.
+     */
+    fun getInterfaces(): Map<String, List<String>>? {
+        val interfaces = ffiInvoker.getInterfaces()
+        val result = interfaces?.mapValues { (_, implementations) ->
+            implementations.map { it.toStringUri() }
         }
+        interfaces?.values?.forEach { implementations ->
+            implementations.forEach { it.close() }
+        }
+        return result
+    }
+
+    /**
+     * Retrieves the list of implementation URIs for the specified interface URI.
+     *
+     * @param uri The URI of the interface for which implementations are being requested.
+     * @return A [Result] containing the list of implementation URIs.
+     */
+    fun getImplementations(uri: String): Result<List<String>> = runCatching {
+        val ffiUri = Uri.fromString(uri)
+        val implementations = ffiInvoker.getImplementations(ffiUri)
+        val result = implementations.map { it.toStringUri() }
+        implementations.forEach { it.close() }
+        result
+    }
+
+    /**
+     * Returns an env (a set of environmental variables) from the configuration
+     * used to instantiate the client.
+     * @param uri the URI used to register the env
+     * @return an env, or null if an env is not found at the given URI
+     */
+    fun getEnvByUri(uri: String): Result<WrapperEnv>? {
+        val envBytes = runCatching {
+            val ffiUri = Uri.fromString(uri)
+            ffiInvoker.getEnvByUri(ffiUri)
+        }.getOrElse {
+            return Result.failure(it)
+        }
+        return envBytes
+            ?.toUByteArray()
+            ?.asByteArray()
+            ?.let { msgPackDecode(EnvSerializer, it) }
     }
 }

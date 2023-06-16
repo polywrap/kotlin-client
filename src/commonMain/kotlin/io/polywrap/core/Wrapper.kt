@@ -1,5 +1,6 @@
 package io.polywrap.core
 
+import uniffi.main.FfiAbortHandlerWrapping
 import uniffi.main.FfiException
 import uniffi.main.FfiInvoker
 import uniffi.main.FfiWrapper
@@ -26,7 +27,7 @@ interface Wrapper : FfiWrapper {
         args: List<UByte>?,
         env: List<UByte>?,
         invoker: FfiInvoker,
-        abortHandler: AbortHandler?
+        abortHandler: FfiAbortHandlerWrapping?
     ): List<UByte>
 
     /**
@@ -56,7 +57,7 @@ interface Wrapper : FfiWrapper {
                 args: List<UByte>?,
                 env: List<UByte>?,
                 invoker: FfiInvoker,
-                abortHandler: AbortHandler?
+                abortHandler: FfiAbortHandlerWrapping?
             ): List<UByte> = ffiWrapper.invoke(method, args, env, invoker, abortHandler)
 
             override fun invoke(
@@ -70,8 +71,8 @@ interface Wrapper : FfiWrapper {
                     method = method,
                     args = args?.asUByteArray()?.toList(),
                     env = env?.asUByteArray()?.toList(),
-                    invoker = invoker,
-                    abortHandler = abortHandler
+                    invoker = invoker.ffiInvoker,
+                    abortHandler = abortHandler?.let { FfiAbortHandlerWrapping(it) }
                 ).toUByteArray().asByteArray()
             }
         }

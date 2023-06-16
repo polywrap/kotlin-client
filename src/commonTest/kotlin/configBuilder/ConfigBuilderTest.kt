@@ -12,6 +12,7 @@ import io.polywrap.core.WrapperEnv
 import io.polywrap.core.resolution.Uri
 import io.polywrap.core.resolution.UriResolutionContext
 import io.polywrap.core.resolution.UriResolver
+import uniffi.main.FfiAbortHandlerWrapping
 import uniffi.main.FfiInvoker
 import uniffi.main.FfiUriPackageOrWrapper
 import kotlin.test.Test
@@ -47,7 +48,7 @@ class ConfigBuilderTest {
             args: List<UByte>?,
             env: List<UByte>?,
             invoker: FfiInvoker,
-            abortHandler: AbortHandler?
+            abortHandler: FfiAbortHandlerWrapping?
         ): List<UByte> {
             throw NotImplementedError()
         }

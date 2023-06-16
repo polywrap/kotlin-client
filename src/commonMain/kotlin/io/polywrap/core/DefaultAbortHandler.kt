@@ -1,5 +1,6 @@
 package io.polywrap.core
 
+import uniffi.main.FfiAbortHandlerWrapping
 import uniffi.main.FfiException
 
 class DefaultAbortHandler : AbortHandler {
@@ -11,3 +12,5 @@ class DefaultAbortHandler : AbortHandler {
         throw Exception(msg)
     }
 }
+
+fun AbortHandler.wrap(): FfiAbortHandlerWrapping = FfiAbortHandlerWrapping(this)

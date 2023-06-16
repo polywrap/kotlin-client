@@ -9,6 +9,7 @@ import kotlinx.coroutines.test.runTest
 import pathToTestWrappers
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -52,14 +53,14 @@ class InterfaceImplementationsTestCase {
 
     @Test
     fun `should register interface implementations successfully`() = runTest {
-        val interfaceUri = Uri.fromString("wrap://ens/some-interface1.eth")
-        val implementation1Uri = Uri.fromString("wrap://ens/some-implementation1.eth")
-        val implementation2Uri = Uri.fromString("wrap://ens/some-implementation2.eth")
+        val interfaceUri = "wrap://ens/some-interface1.eth"
+        val implementation1Uri = "wrap://ens/some-implementation1.eth"
+        val implementation2Uri = "wrap://ens/some-implementation2.eth"
 
         val client = ConfigBuilder()
             .addInterfaceImplementations(
-                interfaceUri.toStringUri(),
-                listOf(implementation1Uri.toStringUri(), implementation2Uri.toStringUri())
+                interfaceUri,
+                listOf(implementation1Uri, implementation2Uri)
             )
             .addResolver(
                 StaticResolver(
@@ -72,21 +73,15 @@ class InterfaceImplementationsTestCase {
 
         val interfaces = client.getInterfaces()
         assertEquals(
-            mapOf(interfaceUri.toStringUri() to listOf(implementation1Uri, implementation2Uri)),
+            mapOf(interfaceUri to listOf(implementation1Uri, implementation2Uri)),
             interfaces
         )
 
-        val implementations = client.getImplementations(interfaceUri)
-        assertNull(implementations)
+        val implementations = client.getImplementations(interfaceUri).getOrNull()
+        assertNotNull(implementations)
         assertEquals(
             listOf(implementation1Uri, implementation2Uri),
             implementations
         )
-
-        interfaceUri.close()
-        implementation1Uri.close()
-        implementation2Uri.close()
-        interfaces?.forEach { entry -> entry.value.forEach { it.close() } }
-        implementations.forEach { it.close() }
     }
 }

@@ -3,6 +3,8 @@ package io.polywrap.wasm
 import io.polywrap.core.AbortHandler
 import io.polywrap.core.Invoker
 import io.polywrap.core.Wrapper
+import io.polywrap.core.wrap
+import uniffi.main.FfiAbortHandlerWrapping
 import uniffi.main.FfiInvoker
 import uniffi.main.FfiWasmWrapper
 
@@ -21,7 +23,7 @@ data class WasmWrapper(val wasmModule: ByteArray) : Wrapper, AutoCloseable {
         args: List<UByte>?,
         env: List<UByte>?,
         invoker: FfiInvoker,
-        abortHandler: AbortHandler?
+        abortHandler: FfiAbortHandlerWrapping?
     ): List<UByte> = ffiWrapper.invoke(method, args, env, invoker, abortHandler)
 
     override fun invoke(
@@ -35,8 +37,8 @@ data class WasmWrapper(val wasmModule: ByteArray) : Wrapper, AutoCloseable {
             method = method,
             args = args?.asUByteArray()?.toList(),
             env = env?.asUByteArray()?.toList(),
-            invoker = invoker,
-            abortHandler = abortHandler
+            invoker = invoker.ffiInvoker,
+            abortHandler = abortHandler?.wrap()
         ).toUByteArray().asByteArray()
     }
 

@@ -5,6 +5,7 @@ import io.polywrap.core.DefaultAbortHandler
 import io.polywrap.core.Invoker
 import io.polywrap.core.Wrapper
 import kotlinx.coroutines.runBlocking
+import uniffi.main.FfiAbortHandlerWrapping
 import uniffi.main.FfiInvoker
 
 /**
@@ -21,13 +22,13 @@ data class PluginWrapper<TConfig>(val module: PluginModule<TConfig>) : Wrapper {
         args: List<UByte>?,
         env: List<UByte>?,
         invoker: FfiInvoker,
-        abortHandler: AbortHandler?
+        abortHandler: FfiAbortHandlerWrapping?
     ): List<UByte> = this.invoke(
         method = method,
         args = args?.toUByteArray()?.asByteArray(),
         env = env?.toUByteArray()?.asByteArray(),
-        invoker = Invoker.fromFfi(invoker),
-        abortHandler = abortHandler
+        invoker = Invoker(invoker),
+        abortHandler = null
     ).getOrThrow().asUByteArray().toList()
 
     override fun invoke(

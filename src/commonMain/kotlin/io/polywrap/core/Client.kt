@@ -10,22 +10,6 @@ import kotlin.jvm.Throws
  */
 interface Client {
     /**
-     * Retrieves the list of implementation URIs for the specified interface URI.
-     *
-     * @param uri The URI of the interface for which implementations are being requested.
-     * @return A [Result] containing the list of implementation URIs.
-     */
-    fun getImplementations(uri: String): Result<List<String>>
-
-    /**
-     * Returns an env (a set of environmental variables) from the configuration
-     * used to instantiate the client.
-     * @param uri the URI used to register the env
-     * @return an env, or null if an env is not found at the given URI
-     */
-    fun getEnvByUri(uri: String): Result<WrapperEnv>?
-
-    /**
      * Resolves the [Wrapper] at the specified URI.
      *
      * @param uri The URI of the wrapper to resolve.

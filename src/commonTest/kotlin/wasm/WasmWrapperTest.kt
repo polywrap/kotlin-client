@@ -7,7 +7,6 @@ import io.polywrap.wasm.WasmWrapper
 import readTestResource
 import kotlin.test.*
 
-@OptIn(ExperimentalUnsignedTypes::class)
 class WasmWrapperTest {
 
     private val wrapperPath = "wrappers/numbers-type/implementations/as"
@@ -20,14 +19,14 @@ class WasmWrapperTest {
 
         val result = wrapper.invoke(
             method = "i32Method",
-            args = msgPackEncode(mapOf("first" to 1, "second" to 2)).asUByteArray().toList(),
+            args = msgPackEncode(mapOf("first" to 1, "second" to 2)),
             env = null,
             invoker = emptyMockInvoker,
             abortHandler = null
         )
-        assertNotNull(result)
+        assertNull(result.exceptionOrNull())
 
-        val data = msgPackDecode<Int>(result.toUByteArray().asByteArray()).getOrNull()
+        val data = msgPackDecode<Int>(result.getOrThrow()).getOrNull()
         assertEquals(3, data)
     }
 }

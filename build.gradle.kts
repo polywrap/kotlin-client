@@ -76,7 +76,7 @@ kotlin {
 }
 
 uniffi {
-    rustClientRepoBranch = "main"
+    rustClientRepoBranch = "namesty/invoker-abort-structs"
     clonesDir = "$projectDir/clones"
     desktopJnaPath = "$projectDir/src/jvmMain/resources"
     androidJnaPath = "$projectDir/src/androidMain/resources"

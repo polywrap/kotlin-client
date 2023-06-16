@@ -17,7 +17,6 @@ class PluginPackageTest {
     }
 }
 
-@OptIn(ExperimentalUnsignedTypes::class)
 class PluginWrapperTest {
 
     @Test
@@ -26,14 +25,14 @@ class PluginWrapperTest {
 
         val result = wrapper.invoke(
             method = "add",
-            args = msgPackEncode(mapOf("num" to 1, "ber" to 2)).asUByteArray().toList(),
+            args = msgPackEncode(mapOf("num" to 1, "ber" to 2)),
             env = null,
             invoker = emptyMockInvoker,
             abortHandler = null
         )
-        assertNotNull(result)
+        if (result.isFailure) throw result.exceptionOrNull()!!
 
-        val data = msgPackDecode<Int>(result.toUByteArray().asByteArray()).getOrNull()
+        val data = msgPackDecode<Int>(result.getOrThrow()).getOrNull()
         assertEquals(3, data)
     }
 }

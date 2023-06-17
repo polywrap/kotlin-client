@@ -71,8 +71,8 @@ class DefaultBundle {
         )
 
         val defaultExtInterfaceUris: List<String> = listOf(
-            "wrap://ens/wraps.eth:uri-resolver-ext@1.1.0",
-            "wrap://ens/wraps.eth:uri-resolver-ext@1.0.0"
+            "wrap://ens/uri-resolver.core.polywrap.eth",
+            "wrap://ens/wraps.eth:uri-resolver-ext@1.1.0"
         )
 
         /**
@@ -103,10 +103,12 @@ class DefaultBundle {
             }
 
             // Add all uri-resolver-ext interface implementations
-            builder.addInterfaceImplementations(
-                defaultExtInterfaceUris[0],
-                uriResolverExts
-            )
+            for (extInterfaceUri in defaultExtInterfaceUris) {
+                builder.addInterfaceImplementations(
+                    extInterfaceUri,
+                    uriResolverExts
+                )
+            }
             builder.addRedirect(textRecordResolverRedirect.first to textRecordResolverRedirect.second)
 
             // Configure the ipfs-uri-resolver provider endpoints & retry counts

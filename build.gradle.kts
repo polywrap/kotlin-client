@@ -76,7 +76,7 @@ kotlin {
 }
 
 uniffi {
-    rustClientRepoBranch = "namesty/invoker-abort-structs"
+    rustClientRepoBranch = "main"
     clonesDir = "$projectDir/clones"
     desktopJnaPath = "$projectDir/src/jvmMain/resources"
     androidJnaPath = "$projectDir/src/androidMain/resources"
@@ -145,7 +145,7 @@ tasks {
             setSource(
                 project.sourceSets.map { sourceSet ->
                     sourceSet.allSource.filter { file ->
-                        !file.path.contains("/generated/")
+                        !file.path.contains("/generated/") && !file.path.contains("build.gradle.kts")
                     }
                 }
             )

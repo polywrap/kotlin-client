@@ -1,7 +1,5 @@
 package io.polywrap.configBuilder
 
-import io.polywrap.configBuilder.embeds.getIpfsHttpClientWrap
-import io.polywrap.configBuilder.embeds.getIpfsResolverWrap
 import io.polywrap.core.WrapPackage
 import io.polywrap.plugins.filesystem.fileSystemPlugin
 import io.polywrap.plugins.http.httpPlugin
@@ -29,12 +27,12 @@ class DefaultBundle {
         val embeds: Map<String, IDefaultEmbed> = mapOf(
             "ipfsHttpClient" to object : IDefaultEmbed {
                 override val uri = validateUri("embed/ipfs-http-client@1.0.0")
-                override val pkg = getIpfsHttpClientWrap()
+                override val pkg = ResourceReader.readWasmPackage("ipfsHttpClient")
                 override val source = validateUri("ens/wraps.eth:ipfs-http-client@1.0.0")
             },
             "ipfsResolver" to object : IDefaultEmbed {
                 override val uri = validateUri("embed/async-ipfs-uri-resolver-ext@1.0.0")
-                override val pkg = getIpfsResolverWrap()
+                override val pkg = ResourceReader.readWasmPackage("ipfsResolver")
                 override val source = validateUri("ens/wraps.eth:async-ipfs-uri-resolver-ext@1.0.0")
             }
         )

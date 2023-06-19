@@ -104,6 +104,10 @@ android {
     compileOptions {
         targetCompatibility = JavaVersion.VERSION_17
     }
+    sourceSets["main"].resources.srcDirs(
+        "src/androidMain/resources",
+        "src/commonMain/resources"
+    )
 }
 
 // javadoc generation for Maven repository publication

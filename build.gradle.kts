@@ -42,6 +42,7 @@ kotlin {
             }
         }
         val commonTest by getting {
+            resources.srcDirs("src/commonMain/resources")
             dependencies {
                 implementation(kotlin("test"))
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
@@ -104,10 +105,6 @@ android {
     compileOptions {
         targetCompatibility = JavaVersion.VERSION_17
     }
-    sourceSets["main"].resources.srcDirs(
-        "src/androidMain/resources",
-        "src/commonMain/resources"
-    )
 }
 
 // javadoc generation for Maven repository publication

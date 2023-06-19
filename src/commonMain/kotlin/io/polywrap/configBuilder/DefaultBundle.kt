@@ -31,19 +31,19 @@ class DefaultBundle {
                 override val source = validateUri("ens/wraps.eth:ipfs-http-client@1.0.0")
             },
             "ipfsResolver" to object : IDefaultEmbed {
-                override val uri = validateUri("embed/async-ipfs-uri-resolver-ext@1.0.0")
+                override val uri = validateUri("embed/async-ipfs-uri-resolver-ext@1.0.1")
                 override val pkg = ResourceReader.readWasmPackage("ipfsResolver")
-                override val source = validateUri("ens/wraps.eth:async-ipfs-uri-resolver-ext@1.0.0")
+                override val source = validateUri("ens/wraps.eth:async-ipfs-uri-resolver-ext@1.0.1")
             }
         )
 
         val textRecordResolverRedirect: Pair<String, String> =
-            validateUri("ens/wraps.eth:ens-text-record-uri-resolver-ext@1.0.0") to validateUri("ipfs/QmaM318ABUXDhc5eZGGbmDxkb2ZgnbLxigm5TyZcCsh1Kw")
+            validateUri("ens/wraps.eth:ens-text-record-uri-resolver-ext@1.0.1") to validateUri("ipfs/QmaM318ABUXDhc5eZGGbmDxkb2ZgnbLxigm5TyZcCsh1Kw")
 
         val uriResolverExts: List<String> = listOf(
             embeds["ipfsResolver"]!!.source,
-            validateUri("wrap://ipfs/QmansMm6hUBYs7D7EW1zA7BFBnDBGGgCM2jyVTWuDmMVNx"), // validateUri("ens/wraps.eth:http-uri-resolver-ext@1.0.0"),
-            validateUri("wrap://ipfs/QmcXXykMwLkVaWQ7s74VNVHhpNzCaNnUcAvoNedXwumZaG") // validateUri("ens/wraps.eth:file-system-uri-resolver-ext@1.0.0"),
+            validateUri("wrap://ipfs/QmansMm6hUBYs7D7EW1zA7BFBnDBGGgCM2jyVTWuDmMVNx"), // validateUri("ens/wraps.eth:http-uri-resolver-ext@1.0.1"),
+            validateUri("wrap://ipfs/QmcXXykMwLkVaWQ7s74VNVHhpNzCaNnUcAvoNedXwumZaG") // validateUri("ens/wraps.eth:file-system-uri-resolver-ext@1.0.1"),
 //            validateUri("ens/wraps.eth:ens-uri-resolver-ext@1.0.0"),
 //            textRecordResolverRedirect.first,
 //            validateUri("ens/wraps.eth:ens-ipfs-contenthash-uri-resolver-ext@1.0.0"),

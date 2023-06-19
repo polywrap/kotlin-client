@@ -42,10 +42,10 @@ class DefaultBundle {
 
         val uriResolverExts: List<String> = listOf(
             embeds["ipfsResolver"]!!.source,
-//            textRecordResolverRedirect.first,
-            validateUri("wrap://ipfs/QmbsxmNDbJ3uNp9CRBTfTVQJikCYWQrFcXbC3mVpTRTLZg"), // validateUri("ens/wraps.eth:http-uri-resolver-ext@1.0.0"),
-            validateUri("wrap://ipfs/QmQLEc9G4YnMxLexgkWzQo1jHVhfmdLQWX7zXm4Kh9RPMU") // validateUri("ens/wraps.eth:file-system-uri-resolver-ext@1.0.0"),
+            validateUri("wrap://ipfs/QmansMm6hUBYs7D7EW1zA7BFBnDBGGgCM2jyVTWuDmMVNx"), // validateUri("ens/wraps.eth:http-uri-resolver-ext@1.0.0"),
+            validateUri("wrap://ipfs/QmcXXykMwLkVaWQ7s74VNVHhpNzCaNnUcAvoNedXwumZaG") // validateUri("ens/wraps.eth:file-system-uri-resolver-ext@1.0.0"),
 //            validateUri("ens/wraps.eth:ens-uri-resolver-ext@1.0.0"),
+//            textRecordResolverRedirect.first,
 //            validateUri("ens/wraps.eth:ens-ipfs-contenthash-uri-resolver-ext@1.0.0"),
 //            validateUri("ens/wraps.eth:ens-ocr-contenthash-uri-resolver-ext@1.0.0")
         )

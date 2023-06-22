@@ -8,6 +8,7 @@ import io.polywrap.core.resolution.UriResolutionContext
 import io.polywrap.core.resolution.UriResolver
 import uniffi.main.FfiInvoker
 import uniffi.main.FfiStaticUriResolver
+import uniffi.main.FfiUri
 import uniffi.main.FfiUriPackageOrWrapper
 
 /**
@@ -15,7 +16,7 @@ import uniffi.main.FfiUriPackageOrWrapper
  *
  * @property uriMap A map of URIs to their corresponding [UriPackageOrWrapper]s.
  */
-class StaticResolver(uriMap: Map<String, FfiUriPackageOrWrapper>) : UriResolver, AutoCloseable {
+class StaticResolver(uriMap: Map<Uri, FfiUriPackageOrWrapper>) : UriResolver, AutoCloseable {
 
     private val ffiResolver = FfiStaticUriResolver(uriMap)
 
@@ -29,18 +30,18 @@ class StaticResolver(uriMap: Map<String, FfiUriPackageOrWrapper>) : UriResolver,
          * @return A new [StaticResolver] instance with the specified URIs and corresponding [FfiUriPackageOrWrapper]s.
          */
         fun from(staticResolverLikes: List<Pair<Uri, Any>>): StaticResolver {
-            val uriMap = mutableMapOf<String, FfiUriPackageOrWrapper>()
+            val uriMap = mutableMapOf<Uri, FfiUriPackageOrWrapper>()
             for (staticResolverLike in staticResolverLikes) {
                 val uri = staticResolverLike.first
                 when (val item = staticResolverLike.second) {
                     is Uri -> {
-                        uriMap[uri.toStringUri()] = UriPackageOrWrapper.UriValue(item)
+                        uriMap[uri] = UriPackageOrWrapper.UriValue(item)
                     }
                     is WrapPackage -> {
-                        uriMap[uri.toStringUri()] = UriPackageOrWrapper.UriWrapPackage(uri, item)
+                        uriMap[uri] = UriPackageOrWrapper.UriWrapPackage(uri, item)
                     }
                     is Wrapper -> {
-                        uriMap[uri.toStringUri()] = UriPackageOrWrapper.UriWrapper(uri, item)
+                        uriMap[uri] = UriPackageOrWrapper.UriWrapper(uri, item)
                     }
                 }
             }

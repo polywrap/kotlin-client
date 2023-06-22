@@ -60,9 +60,9 @@ internal class FfiConfigBuilder : AutoCloseable {
         ffiBuilderConfig.removeWrapper(ffiUri)
     }
 
-    fun addPackage(uri: String, packageWrapper: WrapPackage) {
+    fun addPackage(uri: String, wrapPackage: WrapPackage) {
         val ffiUri = Uri.fromString(uri)
-        ffiBuilderConfig.addPackage(ffiUri, packageWrapper)
+        ffiBuilderConfig.addPackage(ffiUri, wrapPackage)
     }
 
     fun removePackage(uri: String) {

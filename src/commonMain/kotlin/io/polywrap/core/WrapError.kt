@@ -42,10 +42,10 @@ enum class WrapErrorCode(val value: Int) {
 
     companion object {
         private val VALUES = WrapErrorCode.values()
-        fun from(value: Int): WrapErrorCode = VALUES.firstOrNull { it.value == value } ?: throw Error("Invalid WrapErrorCode value: $value")
+        fun from(value: Int): WrapErrorCode = VALUES.firstOrNull { it.value == value } ?: throw Exception("Invalid WrapErrorCode value: $value")
         fun from(value: String): WrapErrorCode {
             val intVal = value.toInt()
-            return VALUES.firstOrNull { it.value == intVal } ?: throw Error("Invalid WrapErrorCode value: $value")
+            return VALUES.firstOrNull { it.value == intVal } ?: throw Exception("Invalid WrapErrorCode value: $value")
         }
     }
 
@@ -143,7 +143,7 @@ class WrapError(
             // iterate through args to assign `cause` and `prev`
             var curr: WrapError? = null
             for (i in errArgs.size - 1 downTo 0) {
-                val currArgs = errArgs.getOrNull(i) ?: throw Error("Failed to parse WrapError")
+                val currArgs = errArgs.getOrNull(i) ?: throw Exception("Failed to parse WrapError")
                 curr = WrapError(
                     currArgs.reason,
                     currArgs.cause,

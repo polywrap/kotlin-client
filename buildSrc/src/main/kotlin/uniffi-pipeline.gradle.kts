@@ -44,6 +44,19 @@ afterEvaluate {
         onlyIf { !File(rustClientRepoCloneDir).exists() }
     }
 
+    val addOpensslDependency = tasks.register("addOpensslDependency") {
+        group = "uniffi"
+        doFirst {
+            val cargoToml = File("$packageDir/Cargo.toml")
+            val newContents = cargoToml.readText().replace(
+                "[dependencies]",
+                "[dependencies]\nopenssl = { version = \"0.10\", features = [\"vendored\"] }"
+            )
+            cargoToml.writeText(newContents)
+        }
+        dependsOn(cloneRustClient)
+    }
+
     // add rust targets
     rustTargets.map {
         tasks.register<Exec>("rustupAddTarget_$it") {
@@ -58,8 +71,9 @@ afterEvaluate {
         tasks.register<Exec>("cargoBuild_$target") {
             group = "uniffi"
             workingDir(packageDir)
-            commandLine("cargo", "build", "--target", target, "--profile", "release")
+            commandLine("cross", "build", "--target", target, "--profile", "release")
             dependsOn(tasks.getByName("rustupAddTarget_$target"))
+            dependsOn(addOpensslDependency)
         }
     }
 

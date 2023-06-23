@@ -1,6 +1,5 @@
 package io.polywrap.configBuilder
 
-import io.polywrap.client.PolywrapClient
 import io.polywrap.core.WrapPackage
 import io.polywrap.core.Wrapper
 import io.polywrap.core.WrapperEnv
@@ -20,8 +19,6 @@ abstract class BaseConfigBuilder : IConfigBuilder {
         packages = mutableMapOf(),
         resolvers = mutableListOf()
     )
-
-    abstract override fun build(configure: (IConfigBuilder.() -> Unit)?): PolywrapClient
 
     override fun add(config: BuilderConfig): IConfigBuilder = this.apply {
         addEnvs(config.envs)

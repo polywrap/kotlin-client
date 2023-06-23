@@ -12,16 +12,13 @@ class ConfigBuilder : BaseConfigBuilder() {
         return add(DefaultBundle.getConfig())
     }
 
-    override fun build(configure: (IConfigBuilder.() -> Unit)?): PolywrapClient {
-        configure?.let { this.apply(it) }
-        return FfiConfigBuilder().use {
-            buildEnvs(it)
-            buildInterfaces(it)
-            buildRedirects(it)
-            buildWrappers(it)
-            buildPackages(it)
-            PolywrapClient(it.build())
-        }
+    override fun build(): PolywrapClient = FfiConfigBuilder().use {
+        buildEnvs(it)
+        buildInterfaces(it)
+        buildRedirects(it)
+        buildWrappers(it)
+        buildPackages(it)
+        PolywrapClient(it.build())
     }
 
     private fun buildEnvs(ffiConfigBuilder: FfiConfigBuilder) {

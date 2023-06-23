@@ -24,7 +24,7 @@ interface IConfigBuilder {
      * @param configure Additional configuration to be applied to the builder.
      * @return A [PolywrapClient] instance with the specified configuration.
      */
-    fun build(configure: (IConfigBuilder.() -> Unit)? = null): PolywrapClient
+    fun build(): PolywrapClient
 
     /**
      * Adds the given [BuilderConfig] to the current configuration.

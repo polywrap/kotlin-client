@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "io.polywrap"
-version = "1.0-SNAPSHOT"
+version = "0.10.0-SNAPSHOT"
 
 repositories {
     mavenLocal()
@@ -37,8 +37,8 @@ kotlin {
                 implementation("com.ensarsarajcic.kotlinx:serialization-msgpack:0.5.5")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
                 implementation("com.squareup.okio:okio:3.3.0") // fs plugin
-                implementation("io.ktor:ktor-client-core:2.3.0") // http plugin
-                implementation("io.ktor:ktor-client-android:2.3.0") // http plugin
+                implementation("io.ktor:ktor-client-core:2.3.1") // http plugin
+                implementation("io.ktor:ktor-client-android:2.3.1") // http plugin
             }
         }
         val commonTest by getting {
@@ -47,7 +47,7 @@ kotlin {
                 implementation(kotlin("test"))
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
                 implementation("com.goncalossilva:resources:0.3.2") // access resources in tests
-                implementation("io.ktor:ktor-client-mock:2.3.0") // http plugin test
+                implementation("io.ktor:ktor-client-mock:2.3.1") // http plugin test
                 implementation("com.ionspin.kotlin:bignum:0.3.8") // client test
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0") // client test
             }
@@ -83,10 +83,10 @@ uniffi {
     androidJnaPath = "$projectDir/src/androidMain/resources"
     rustTargets = listOf(
         "armv7-linux-androideabi",
-        "i686-linux-android",
+//        "i686-linux-android",
         "aarch64-linux-android",
-        "x86_64-linux-android",
-        "x86_64-pc-windows-gnu",
+//        "x86_64-linux-android",
+//        "x86_64-pc-windows-gnu", // TODO: this is failing
         "aarch64-unknown-linux-gnu",
         "x86_64-unknown-linux-gnu",
         "x86_64-apple-darwin",

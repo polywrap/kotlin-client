@@ -65,7 +65,7 @@ class InterfaceImplementationsTestCase {
             .addResolver(
                 StaticResolver(
                     mapOf(
-                        Uri.fromString("uri/foo") to UriPackageOrWrapper.UriValue(Uri.fromString("uri/bar"))
+                        "uri/foo" to UriPackageOrWrapper.UriValue(Uri.fromString("uri/bar"))
                     )
                 )
             )

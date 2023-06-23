@@ -48,11 +48,14 @@ afterEvaluate {
         group = "uniffi"
         doFirst {
             val cargoToml = File("$packageDir/Cargo.toml")
-            val newContents = cargoToml.readText().replace(
-                "[dependencies]",
-                "[dependencies]\nopenssl = { version = \"0.10\", features = [\"vendored\"] }"
-            )
-            cargoToml.writeText(newContents)
+            val contents = cargoToml.readText()
+            if (!contents.contains("openssl")) {
+                val newContents = contents.replace(
+                    "[dependencies]",
+                    "[dependencies]\nopenssl = { version = \"0.10\", features = [\"vendored\"] }"
+                )
+                cargoToml.writeText(newContents)
+            }
         }
         dependsOn(cloneRustClient)
     }
@@ -116,7 +119,7 @@ afterEvaluate {
     val generateKotlinUniffiBindings = tasks.register<Exec>("generateKotlinUniffiBindings") {
         group = "uniffi"
         workingDir(rustClientRepoCloneDir)
-        val bin = "${rustClientRepoCloneDir}/target/${rustTargets[0]}/release/uniffi-bindgen"
+        val bin = "${rustClientRepoCloneDir}/target/${getCurrentDesktopPlatform()}/release/uniffi-bindgen"
         val command = "$bin generate $udl --language kotlin --out-dir ${config.bindingsDir}"
         commandLine(command.split(" "))
         dependsOn(copyNativeLibraryForAndroid, copyNativeLibraryForDesktop)

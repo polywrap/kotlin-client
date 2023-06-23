@@ -44,7 +44,11 @@ afterEvaluate {
         repositories {
             maven {
                 name = "sonatype"
-                setUrl("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+                if (project.version.toString().endsWith("SNAPSHOT")) {
+                    setUrl("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+                } else {
+                    setUrl("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+                }
                 credentials {
                     username = getExtraString("ossrhUsername")
                     password = getExtraString("ossrhPassword")
@@ -77,6 +81,8 @@ afterEvaluate {
                     }
                 }
                 scm {
+                    connection.set("scm:git:github.com/polywrap/kotlin-client.git")
+                    developerConnection.set("scm:git:ssh://github.com/polywrap/kotlin-client.git")
                     url.set("https://github.com/polywrap/kotlin-client.git")
                 }
             }
@@ -86,5 +92,14 @@ afterEvaluate {
 
 // Signing artifacts. Signing.* extra properties values will be used
 signing {
+    useInMemoryPgpKeys(
+        getExtraString("signing.keyId"),
+        getExtraString("signing.key"),
+        getExtraString("signing.password"),
+    )
     sign(publishing.publications)
+}
+
+tasks.withType<PublishToMavenRepository> {
+    dependsOn("signJvmPublication", "signKotlinMultiplatformPublication")
 }

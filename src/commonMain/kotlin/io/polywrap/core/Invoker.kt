@@ -166,16 +166,17 @@ open class Invoker(val ffiInvoker: FfiInvoker) {
      * @param uri the URI used to register the env
      * @return an env, or null if an env is not found at the given URI
      */
-    fun getEnvByUri(uri: String): Result<WrapperEnv>? {
+    fun getEnvByUri(uri: String): Result<WrapperEnv?> {
         val envBytes = runCatching {
             val ffiUri = Uri.fromString(uri)
             ffiInvoker.getEnvByUri(ffiUri)
         }.getOrElse {
             return Result.failure(it)
-        }
+        } ?: return Result.success(null)
+
         return envBytes
-            ?.toUByteArray()
-            ?.asByteArray()
-            ?.let { msgPackDecode(EnvSerializer, it) }
+            .toUByteArray()
+            .asByteArray()
+            .let { msgPackDecode(EnvSerializer, it) }
     }
 }

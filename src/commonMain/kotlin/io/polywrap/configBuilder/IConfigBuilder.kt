@@ -21,7 +21,6 @@ interface IConfigBuilder {
      * Builds a [PolywrapClient] instance with the current builder configuration and
      * optional additional configuration specified through a builder DSL.
      *
-     * @param configure Additional configuration to be applied to the builder.
      * @return A [PolywrapClient] instance with the specified configuration.
      */
     fun build(): PolywrapClient
@@ -92,18 +91,18 @@ interface IConfigBuilder {
     /**
      * Adds an environment variable with a specified URI key to the current configuration.
      *
-     * @param env A [Pair] of the URI key and the [WrapperEnv] to add.
+     * @param env A [Pair] of the URI key and the [WrapEnv] to add.
      * @return This [IConfigBuilder] instance for chaining calls.
      */
-    fun addEnv(env: Pair<String, WrapperEnv>): IConfigBuilder
+    fun addEnv(env: Pair<String, WrapEnv>): IConfigBuilder
 
     /**
      * Adds a set of environment variables with specified URI keys to the current configuration.
      *
-     * @param envs A [Map] of URI keys to [WrapperEnv] instances to add.
+     * @param envs A [Map] of URI keys to [WrapEnv] instances to add.
      * @return This [IConfigBuilder] instance for chaining calls.
      */
-    fun addEnvs(envs: Map<String, WrapperEnv>): IConfigBuilder
+    fun addEnvs(envs: Map<String, WrapEnv>): IConfigBuilder
 
     /**
      * Removes an environment variable with the specified URI key from the current configuration.
@@ -116,10 +115,10 @@ interface IConfigBuilder {
     /**
      * Sets or replaces an environment variable with a specified URI key in the current configuration.
      *
-     * @param env A [Pair] of the URI key and the [WrapperEnv] to set.
+     * @param env A [Pair] of the URI key and the [WrapEnv] to set.
      * @return This [IConfigBuilder] instance for chaining calls.
      */
-    fun setEnv(env: Pair<String, WrapperEnv>): IConfigBuilder
+    fun setEnv(env: Pair<String, WrapEnv>): IConfigBuilder
 
     /**
      * Adds an interface implementation with the specified interface and implementation URIs.

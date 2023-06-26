@@ -8,7 +8,7 @@ import io.polywrap.core.AbortHandler
 import io.polywrap.core.Invoker
 import io.polywrap.core.WrapPackage
 import io.polywrap.core.Wrapper
-import io.polywrap.core.WrapperEnv
+import io.polywrap.core.WrapEnv
 import io.polywrap.core.resolution.Uri
 import io.polywrap.core.resolution.UriResolutionContext
 import io.polywrap.core.resolution.UriResolver
@@ -64,12 +64,12 @@ class ConfigBuilderTest {
         }
     }
 
-    private val testEnv1: Pair<String, WrapperEnv> = Pair(
+    private val testEnv1: Pair<String, WrapEnv> = Pair(
         "wrap://ens/test.plugin.one",
         mapOf("test" to "value")
     )
 
-    private val testEnv2: Pair<String, WrapperEnv> = Pair(
+    private val testEnv2: Pair<String, WrapEnv> = Pair(
         "wrap://ens/test.plugin.two",
         mapOf("test" to "value")
     )

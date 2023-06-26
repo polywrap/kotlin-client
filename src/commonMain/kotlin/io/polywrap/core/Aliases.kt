@@ -1,7 +1,9 @@
 package io.polywrap.core
 
+import kotlinx.serialization.Contextual
+
 /** A map of string-indexed, Msgpack-serializable environmental variables associated with a wrapper */
-typealias WrapperEnv = Map<String, Any>
+typealias WrapEnv = Map<String, @Contextual Any>
 
 /**
  * Result of a Wrapper invocation.

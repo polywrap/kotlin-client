@@ -2,8 +2,7 @@ package io.polywrap.configBuilder
 
 import io.polywrap.core.WrapPackage
 import io.polywrap.core.Wrapper
-import io.polywrap.core.WrapperEnv
-import io.polywrap.core.msgpack.EnvSerializer
+import io.polywrap.core.WrapEnv
 import io.polywrap.core.msgpack.msgPackEncode
 import io.polywrap.core.resolution.Uri
 import io.polywrap.core.resolution.UriResolver
@@ -15,9 +14,9 @@ internal class FfiConfigBuilder : AutoCloseable {
 
     private val ffiBuilderConfig: FfiBuilderConfig = FfiBuilderConfig()
 
-    fun addEnv(uri: String, env: WrapperEnv) {
+    fun addEnv(uri: String, env: WrapEnv) {
         val ffiUri = Uri.fromString(uri)
-        val serializedEnv = msgPackEncode(EnvSerializer, env).asUByteArray().toList()
+        val serializedEnv = msgPackEncode(env).asUByteArray().toList()
         ffiBuilderConfig.addEnv(ffiUri, serializedEnv)
     }
 

@@ -2,7 +2,7 @@ package io.polywrap.configBuilder
 
 import io.polywrap.core.WrapPackage
 import io.polywrap.core.Wrapper
-import io.polywrap.core.WrapperEnv
+import io.polywrap.core.WrapEnv
 import io.polywrap.core.resolution.UriResolver
 import kotlin.collections.Map
 
@@ -55,12 +55,12 @@ abstract class BaseConfigBuilder : IConfigBuilder {
         config.packages.remove(validateUri(uri))
     }
 
-    override fun addEnv(env: Pair<String, WrapperEnv>): IConfigBuilder = this.apply {
+    override fun addEnv(env: Pair<String, WrapEnv>): IConfigBuilder = this.apply {
         val sanitizedUri = validateUri(env.first)
         config.envs[sanitizedUri] = (config.envs[sanitizedUri] ?: emptyMap()) + env.second
     }
 
-    override fun addEnvs(envs: Map<String, WrapperEnv>): IConfigBuilder = this.apply {
+    override fun addEnvs(envs: Map<String, WrapEnv>): IConfigBuilder = this.apply {
         envs.forEach { env -> addEnv(env.toPair()) }
     }
 
@@ -68,7 +68,7 @@ abstract class BaseConfigBuilder : IConfigBuilder {
         config.envs.remove(validateUri(uri))
     }
 
-    override fun setEnv(env: Pair<String, WrapperEnv>): IConfigBuilder = this.apply {
+    override fun setEnv(env: Pair<String, WrapEnv>): IConfigBuilder = this.apply {
         config.envs[validateUri(env.first)] = env.second
     }
 

@@ -1,12 +1,11 @@
 package io.polywrap.core
 
-import io.polywrap.core.msgpack.EnvSerializer
-import io.polywrap.core.msgpack.MapArgsSerializer
 import io.polywrap.core.msgpack.NullableKVSerializer
 import io.polywrap.core.msgpack.msgPackDecode
 import io.polywrap.core.msgpack.msgPackEncode
 import io.polywrap.core.resolution.Uri
 import io.polywrap.core.resolution.UriResolutionContext
+import kotlinx.serialization.Contextual
 import kotlinx.serialization.serializer
 import uniffi.main.FfiException
 import uniffi.main.FfiInvoker
@@ -43,7 +42,7 @@ open class Invoker(val ffiInvoker: FfiInvoker) {
     )
 
     /**
-     * Invoke a wrapper. Unlike [invokeWrapperRaw], this method automatically retrieves and caches the wrapper.
+     * Invoke a wrapper. This method automatically retrieves and caches the wrapper.
      *
      * @param uri The URI of the wrapper to be invoked.
      * @param method The method to be called on the wrapper.
@@ -71,26 +70,26 @@ open class Invoker(val ffiInvoker: FfiInvoker) {
     }
 
     /**
-     * Invokes the wrapper at the specified URI with the provided method, arguments, and environment.
+     * Invokes the wrapper at the specified URI with the provided method and arguments of type [T], and environment.
      *
      * @param uri The URI of the wrapper to be invoked.
      * @param method The method to be called on the wrapper.
-     * @param args A map of arguments to be passed to the method.
+     * @param args An instance of type [T] representing the arguments to be passed to the method.
      * @param env A map representing the environment to be used during the invocation.
      * @param resolutionContext The [UriResolutionContext] to be used during URI resolution, or null for a default context.
-     * @return A [InvokeResult] containing the invocation result of type [R], or an error if the invocation fails.
+     * @return An [InvokeResult] containing the invocation result of type [R], or an error if the invocation fails.
      */
-    inline fun <reified R> invoke(
+    inline fun <reified T, reified R> invoke(
         uri: Uri,
         method: String,
-        args: Map<String, Any?>? = null,
-        env: Map<String, Any>? = null,
+        args: T? = null,
+        env: WrapEnv? = null,
         resolutionContext: UriResolutionContext? = null
     ): InvokeResult<R> = invokeRaw(
         uri = uri,
         method = method,
-        args = args?.let { msgPackEncode(MapArgsSerializer, it) },
-        env = env?.let { msgPackEncode(EnvSerializer, it) },
+        args = args?.let { msgPackEncode(serializer<T>(), it) },
+        env = env?.let { msgPackEncode(serializer(), it) },
         resolutionContext = resolutionContext
     ).mapCatching {
         if (R::class == Map::class) {
@@ -101,34 +100,22 @@ open class Invoker(val ffiInvoker: FfiInvoker) {
     }
 
     /**
-     * Invokes the wrapper at the specified URI with the provided method and arguments of type [T], and environment.
+     * Invokes the wrapper at the specified URI with the provided method, arguments, and environment.
      *
      * @param uri The URI of the wrapper to be invoked.
      * @param method The method to be called on the wrapper.
-     * @param args An instance of type [T] representing the arguments to be passed to the method.
+     * @param args A map of arguments to be passed to the method.
      * @param env A map representing the environment to be used during the invocation.
      * @param resolutionContext The [UriResolutionContext] to be used during URI resolution, or null for a default context.
-     * @return A [InvokeResult] containing the invocation result of type [R], or an error if the invocation fails.
+     * @return An [InvokeResult] containing the invocation result of type [R], or an error if the invocation fails.
      */
-    inline fun <reified T, reified R> invoke(
+    inline fun <reified R> invoke(
         uri: Uri,
         method: String,
-        args: T? = null,
-        env: Map<String, Any>? = null,
+        args: Map<String, @Contextual Any?>? = null,
+        env: WrapEnv? = null,
         resolutionContext: UriResolutionContext? = null
-    ): InvokeResult<R> = invokeRaw(
-        uri = uri,
-        method = method,
-        args = args?.let { msgPackEncode(serializer<T>(), it) },
-        env = env?.let { msgPackEncode(EnvSerializer, it) },
-        resolutionContext = resolutionContext
-    ).mapCatching {
-        if (R::class == Map::class) {
-            msgPackDecode(NullableKVSerializer, it).getOrThrow() as R
-        } else {
-            msgPackDecode(serializer<R>(), it).getOrThrow()
-        }
-    }
+    ): InvokeResult<R> = invoke<Map<String, @Contextual Any?>?, R>(uri, method, args, env, resolutionContext)
 
     /**
      * Returns the interface implementations stored in the configuration.
@@ -166,7 +153,7 @@ open class Invoker(val ffiInvoker: FfiInvoker) {
      * @param uri the URI used to register the env
      * @return an env, or null if an env is not found at the given URI
      */
-    fun getEnvByUri(uri: String): Result<WrapperEnv?> {
+    fun getEnvByUri(uri: String): Result<WrapEnv?> {
         val envBytes = runCatching {
             val ffiUri = Uri.fromString(uri)
             ffiInvoker.getEnvByUri(ffiUri)
@@ -177,6 +164,6 @@ open class Invoker(val ffiInvoker: FfiInvoker) {
         return envBytes
             .toUByteArray()
             .asByteArray()
-            .let { msgPackDecode(EnvSerializer, it) }
+            .let { msgPackDecode(it) }
     }
 }

@@ -1,11 +1,12 @@
 package io.polywrap.core
 
+import io.polywrap.core.msgpack.EnvSerializer
+import io.polywrap.core.msgpack.MapArgsSerializer
 import io.polywrap.core.msgpack.NullableKVSerializer
 import io.polywrap.core.msgpack.msgPackDecode
 import io.polywrap.core.msgpack.msgPackEncode
 import io.polywrap.core.resolution.Uri
 import io.polywrap.core.resolution.UriResolutionContext
-import kotlinx.serialization.Contextual
 import kotlinx.serialization.serializer
 import uniffi.main.FfiException
 import uniffi.main.FfiInvoker
@@ -89,7 +90,7 @@ open class Invoker(val ffiInvoker: FfiInvoker) {
         uri = uri,
         method = method,
         args = args?.let { msgPackEncode(serializer<T>(), it) },
-        env = env?.let { msgPackEncode(serializer(), it) },
+        env = env?.let { msgPackEncode(EnvSerializer, it) },
         resolutionContext = resolutionContext
     ).mapCatching {
         if (R::class == Map::class) {
@@ -112,10 +113,22 @@ open class Invoker(val ffiInvoker: FfiInvoker) {
     inline fun <reified R> invoke(
         uri: Uri,
         method: String,
-        args: Map<String, @Contextual Any?>? = null,
+        args: Map<String, Any?>? = null,
         env: WrapEnv? = null,
         resolutionContext: UriResolutionContext? = null
-    ): InvokeResult<R> = invoke<Map<String, @Contextual Any?>?, R>(uri, method, args, env, resolutionContext)
+    ): InvokeResult<R> = invokeRaw(
+        uri = uri,
+        method = method,
+        args = args?.let { msgPackEncode(MapArgsSerializer, it) },
+        env = env?.let { msgPackEncode(EnvSerializer, it) },
+        resolutionContext = resolutionContext
+    ).mapCatching {
+        if (R::class == Map::class) {
+            msgPackDecode(NullableKVSerializer, it).getOrThrow() as R
+        } else {
+            msgPackDecode(serializer<R>(), it).getOrThrow()
+        }
+    }
 
     /**
      * Returns the interface implementations stored in the configuration.

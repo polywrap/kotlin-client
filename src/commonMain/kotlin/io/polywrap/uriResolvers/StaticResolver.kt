@@ -2,6 +2,7 @@ package io.polywrap.uriResolvers
 
 import io.polywrap.core.WrapPackage
 import io.polywrap.core.Wrapper
+import io.polywrap.core.resolution.Uri
 import io.polywrap.core.resolution.UriPackageOrWrapper
 import io.polywrap.core.resolution.UriResolver
 import uniffi.main.FfiInvoker
@@ -22,26 +23,28 @@ class StaticResolver(uriMap: Map<String, FfiUriPackageOrWrapper>) : UriResolver,
     companion object {
 
         /**
-         * Creates a new [StaticResolver] instance from a list of Pair<Uri, Any> objects.
+         * Creates a new [StaticResolver] instance from a list of Pair<[Uri], Any> objects.
          *
          * @param staticResolverLikes A list of Pair<Uri, Any> objects to build the [StaticResolver].
-         * The [FfiUri] is the URI to resolve, and the [Any] is either a [FfiUri], [WrapPackage], or [Wrapper].
+         * The [Uri] is the URI to resolve, and the [Any] is either a [Uri], [WrapPackage], or [Wrapper].
          * @return A new [StaticResolver] instance with the specified URIs and corresponding [FfiUriPackageOrWrapper]s.
+         * @throws IllegalArgumentException If any of the [Any] objects are not a [Uri], [WrapPackage], or [Wrapper].
          */
-        fun from(staticResolverLikes: List<Pair<FfiUri, Any>>): StaticResolver {
+        fun from(staticResolverLikes: List<Pair<Uri, Any>>): StaticResolver {
             val uriMap = mutableMapOf<String, FfiUriPackageOrWrapper>()
             for (staticResolverLike in staticResolverLikes) {
                 val uri = staticResolverLike.first
                 when (val item = staticResolverLike.second) {
-                    is FfiUri -> {
-                        uriMap[uri.toStringUri()] = UriPackageOrWrapper.UriValue(item)
+                    is Uri -> {
+                        uriMap[uri.toString()] = UriPackageOrWrapper.UriValue(item.toFfi())
                     }
                     is WrapPackage -> {
-                        uriMap[uri.toStringUri()] = UriPackageOrWrapper.UriWrapPackage(uri, item)
+                        uriMap[uri.toString()] = UriPackageOrWrapper.UriWrapPackage(uri.toFfi(), item)
                     }
                     is Wrapper -> {
-                        uriMap[uri.toStringUri()] = UriPackageOrWrapper.UriWrapper(uri, item)
+                        uriMap[uri.toString()] = UriPackageOrWrapper.UriWrapper(uri.toFfi(), item)
                     }
+                    else -> throw IllegalArgumentException("Invalid staticResolverLike: $item")
                 }
             }
             return StaticResolver(uriMap)

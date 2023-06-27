@@ -1,7 +1,6 @@
 package io.polywrap.core
 
 import io.polywrap.core.msgpack.EnvSerializer
-import io.polywrap.core.msgpack.MapArgsSerializer
 import io.polywrap.core.msgpack.NullableKVSerializer
 import io.polywrap.core.msgpack.msgPackDecode
 import io.polywrap.core.msgpack.msgPackEncode
@@ -119,7 +118,7 @@ open class Invoker(val ffiInvoker: FfiInvoker) {
     ): InvokeResult<R> = invokeRaw(
         uri = uri,
         method = method,
-        args = args?.let { msgPackEncode(MapArgsSerializer, it) },
+        args = args?.let { msgPackEncode(NullableKVSerializer, it) },
         env = env?.let { msgPackEncode(EnvSerializer, it) },
         resolutionContext = resolutionContext
     ).mapCatching {

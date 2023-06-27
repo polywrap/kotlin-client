@@ -1,12 +1,12 @@
 package msgpack
 
 import io.polywrap.core.WrapEnv
+import io.polywrap.core.msgpack.EnvSerializer
 import io.polywrap.core.msgpack.MsgPackMap
 import io.polywrap.core.msgpack.msgPackDecode
 import io.polywrap.core.msgpack.msgPackEncode
 import io.polywrap.core.msgpack.toMsgPackMap
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.serializer
 import kotlin.test.*
 
 class MsgPackTest {
@@ -125,10 +125,10 @@ class MsgPackTest {
             108, 117, 101
         ).map(Int::toByte).toByteArray()
 
-        val encoded = msgPackEncode(serializer(), env)
+        val encoded = msgPackEncode(EnvSerializer, env)
         assertTrue(encoded.contentEquals(expectedBytes))
 
-        val decoded: Result<WrapEnv> = msgPackDecode(serializer(), encoded)
+        val decoded: Result<WrapEnv> = msgPackDecode(EnvSerializer, encoded)
         assertEquals(env, decoded.getOrThrow())
     }
 

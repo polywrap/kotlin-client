@@ -25,8 +25,10 @@ val msgPack: MsgPack by lazy {
     )
 }
 
+/** MessagePack Serializer for Map<String, Any> */
 val EnvSerializer = MapSerializer(String.serializer(), MsgPackDynamicSerializer)
-val MapArgsSerializer = MapSerializer(String.serializer(), MsgPackNullableDynamicSerializer)
+
+/** MessagePack Serializer for Map<String, Any?>? */
 val NullableKVSerializer = MapSerializer(String.serializer(), MsgPackNullableDynamicSerializer)::nullable.get()
 
 /**

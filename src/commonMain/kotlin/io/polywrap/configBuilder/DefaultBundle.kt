@@ -1,21 +1,22 @@
 package io.polywrap.configBuilder
 
 import io.polywrap.core.WrapPackage
+import io.polywrap.core.resolution.Uri
 import io.polywrap.plugins.filesystem.fileSystemPlugin
 import io.polywrap.plugins.http.httpPlugin
 
 class DefaultBundle {
 
     interface IDefaultEmbed {
-        val uri: String
+        val uri: Uri
         val pkg: WrapPackage
-        val source: String
+        val source: Uri
     }
 
     interface IDefaultPlugin {
-        val uri: String
+        val uri: Uri
         val plugin: WrapPackage
-        val implements: List<String>
+        val implements: List<Uri>
     }
 
     companion object {
@@ -26,44 +27,44 @@ class DefaultBundle {
 
         val embeds: Map<String, IDefaultEmbed> = mapOf(
             "ipfsHttpClient" to object : IDefaultEmbed {
-                override val uri = validateUri("embed/ipfs-http-client@1.0.0")
+                override val uri = Uri("embed/ipfs-http-client@1.0.0")
                 override val pkg = ResourceReader.readWasmPackage("ipfsHttpClient")
-                override val source = validateUri("ens/wraps.eth:ipfs-http-client@1.0.0")
+                override val source = Uri("ens/wraps.eth:ipfs-http-client@1.0.0")
             },
             "ipfsResolver" to object : IDefaultEmbed {
-                override val uri = validateUri("embed/async-ipfs-uri-resolver-ext@1.0.1")
+                override val uri = Uri("embed/async-ipfs-uri-resolver-ext@1.0.1")
                 override val pkg = ResourceReader.readWasmPackage("ipfsResolver")
-                override val source = validateUri("ens/wraps.eth:async-ipfs-uri-resolver-ext@1.0.1")
+                override val source = Uri("ens/wraps.eth:async-ipfs-uri-resolver-ext@1.0.1")
             }
         )
 
-        val textRecordResolverRedirect: Pair<String, String> =
-            validateUri("ens/wraps.eth:ens-text-record-uri-resolver-ext@1.0.1") to validateUri("ipfs/QmaM318ABUXDhc5eZGGbmDxkb2ZgnbLxigm5TyZcCsh1Kw")
+        val textRecordResolverRedirect: Pair<Uri, Uri> =
+            Uri("ens/wraps.eth:ens-text-record-uri-resolver-ext@1.0.1") to Uri("ipfs/QmaM318ABUXDhc5eZGGbmDxkb2ZgnbLxigm5TyZcCsh1Kw")
 
-        val uriResolverExts: List<String> = listOf(
+        val uriResolverExts: List<Uri> = listOf(
             embeds["ipfsResolver"]!!.source,
-            validateUri("wrap://ipfs/QmansMm6hUBYs7D7EW1zA7BFBnDBGGgCM2jyVTWuDmMVNx"), // validateUri("ens/wraps.eth:http-uri-resolver-ext@1.0.1"),
-            validateUri("wrap://ipfs/QmcXXykMwLkVaWQ7s74VNVHhpNzCaNnUcAvoNedXwumZaG") // validateUri("ens/wraps.eth:file-system-uri-resolver-ext@1.0.1"),
-//            validateUri("ens/wraps.eth:ens-uri-resolver-ext@1.0.0"),
+            Uri("wrap://ipfs/QmansMm6hUBYs7D7EW1zA7BFBnDBGGgCM2jyVTWuDmMVNx"), // Uri("ens/wraps.eth:http-uri-resolver-ext@1.0.1"),
+            Uri("wrap://ipfs/QmcXXykMwLkVaWQ7s74VNVHhpNzCaNnUcAvoNedXwumZaG") // Uri("ens/wraps.eth:file-system-uri-resolver-ext@1.0.1"),
+//            Uri("ens/wraps.eth:ens-uri-resolver-ext@1.0.0"),
 //            textRecordResolverRedirect.first,
-//            validateUri("ens/wraps.eth:ens-ipfs-contenthash-uri-resolver-ext@1.0.0"),
-//            validateUri("ens/wraps.eth:ens-ocr-contenthash-uri-resolver-ext@1.0.0")
+//            Uri("ens/wraps.eth:ens-ipfs-contenthash-uri-resolver-ext@1.0.0"),
+//            Uri("ens/wraps.eth:ens-ocr-contenthash-uri-resolver-ext@1.0.0")
         )
 
         val plugins: Map<String, IDefaultPlugin> = mapOf(
             "http" to object : IDefaultPlugin {
-                override val uri = validateUri("plugin/http@1.1.0")
+                override val uri = Uri("plugin/http@1.1.0")
                 override val plugin = httpPlugin(null)
                 override val implements = listOf(
-                    validateUri("ens/wraps.eth:http@1.1.0"),
-                    validateUri("ens/wraps.eth:http@1.0.0")
+                    Uri("ens/wraps.eth:http@1.1.0"),
+                    Uri("ens/wraps.eth:http@1.0.0")
                 )
             },
             "fileSystem" to object : IDefaultPlugin {
-                override val uri = validateUri("plugin/file-system@1.0.0")
+                override val uri = Uri("plugin/file-system@1.0.0")
                 override val plugin = fileSystemPlugin(null)
                 override val implements = listOf(
-                    validateUri("ens/wraps.eth:file-system@1.0.0")
+                    Uri("ens/wraps.eth:file-system@1.0.0")
                 )
             }
         )
@@ -81,22 +82,22 @@ class DefaultBundle {
 
             // Add all embedded packages
             for (embed in embeds.values) {
-                builder.addPackage(embed.uri to embed.pkg)
+                builder.addPackage(embed.uri.uri to embed.pkg)
 
                 // Add source redirect
-                builder.addRedirect(embed.source to embed.uri)
+                builder.addRedirect(embed.source.uri to embed.uri.uri)
 
                 // Add source implementation
-                builder.addInterfaceImplementation(embed.source, embed.uri)
+                builder.addInterfaceImplementation(embed.source.uri, embed.uri.uri)
             }
 
             for (plugin in plugins.values) {
-                builder.addPackage(plugin.uri to plugin.plugin)
+                builder.addPackage(plugin.uri.uri to plugin.plugin)
 
                 // Add all interface implementations & redirects
                 for (interfaceUri in plugin.implements) {
-                    builder.addInterfaceImplementation(interfaceUri, plugin.uri)
-                    builder.addRedirect(interfaceUri to plugin.uri)
+                    builder.addInterfaceImplementation(interfaceUri.uri, plugin.uri.uri)
+                    builder.addRedirect(interfaceUri.uri to plugin.uri.uri)
                 }
             }
 
@@ -104,14 +105,14 @@ class DefaultBundle {
             for (extInterfaceUri in defaultExtInterfaceUris) {
                 builder.addInterfaceImplementations(
                     extInterfaceUri,
-                    uriResolverExts
+                    uriResolverExts.map { it.uri }
                 )
             }
-            builder.addRedirect(textRecordResolverRedirect.first to textRecordResolverRedirect.second)
+            builder.addRedirect(textRecordResolverRedirect.first.uri to textRecordResolverRedirect.second.uri)
 
             // Configure the ipfs-uri-resolver provider endpoints & retry counts
             builder.addEnv(
-                embeds["ipfsResolver"]!!.source to
+                embeds["ipfsResolver"]!!.source.uri to
                     mapOf(
                         "provider" to ipfsProviders[0],
                         "fallbackProviders" to ipfsProviders.slice(1 until ipfsProviders.size),

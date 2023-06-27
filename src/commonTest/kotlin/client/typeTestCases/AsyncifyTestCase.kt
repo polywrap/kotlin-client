@@ -13,7 +13,7 @@ import kotlin.test.assertTrue
 @OptIn(ExperimentalCoroutinesApi::class)
 class AsyncifyTestCase {
 
-    private val uri = Uri.fromString("fs/$pathToTestWrappers/asyncify/implementations/rs")
+    private val uri = Uri("fs/$pathToTestWrappers/asyncify/implementations/rs")
     private val client = ConfigBuilder()
         .addDefaults()
         .addPackage(

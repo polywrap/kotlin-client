@@ -11,7 +11,7 @@ import kotlin.test.assertContentEquals
 @OptIn(ExperimentalCoroutinesApi::class)
 class BytesTestCase {
 
-    private val uri = Uri.fromString("fs/$pathToTestWrappers/bytes-type/implementations/rs")
+    private val uri = Uri("fs/$pathToTestWrappers/bytes-type/implementations/rs")
     private val client = ConfigBuilder().addDefaults().build()
 
     @Test

@@ -9,12 +9,12 @@ import io.polywrap.core.Invoker
 import io.polywrap.core.WrapPackage
 import io.polywrap.core.Wrapper
 import io.polywrap.core.WrapEnv
-import io.polywrap.core.resolution.Uri
-import io.polywrap.core.resolution.UriResolutionContext
 import io.polywrap.core.resolution.UriResolver
 import uniffi.main.FfiAbortHandlerWrapping
 import uniffi.main.FfiInvoker
+import uniffi.main.FfiUri
 import uniffi.main.FfiUriPackageOrWrapper
+import uniffi.main.FfiUriResolutionContext
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -26,9 +26,9 @@ class ConfigBuilderTest {
 
     class MockUriResolver(val from: String, val to: String) : UriResolver {
         override fun tryResolveUri(
-            uri: Uri,
+            uri: FfiUri,
             invoker: FfiInvoker,
-            resolutionContext: UriResolutionContext
+            resolutionContext: FfiUriResolutionContext
         ): FfiUriPackageOrWrapper {
             throw NotImplementedError()
         }

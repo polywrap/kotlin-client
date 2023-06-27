@@ -10,7 +10,7 @@ import kotlin.test.assertNull
 
 class SanityClientTest {
 
-    private val sha3Uri = Uri.fromString("ipfs/QmThRxFfr7Hj9Mq6WmcGXjkRrgqMG3oD93SLX27tinQWy5")
+    private val sha3Uri = Uri("ipfs/QmThRxFfr7Hj9Mq6WmcGXjkRrgqMG3oD93SLX27tinQWy5")
 
     @Test
     fun invokeRaw() {

@@ -5,10 +5,10 @@ import io.polywrap.core.Wrapper
 import io.polywrap.core.WrapEnv
 import io.polywrap.core.msgpack.EnvSerializer
 import io.polywrap.core.msgpack.msgPackEncode
-import io.polywrap.core.resolution.Uri
 import io.polywrap.core.resolution.UriResolver
 import uniffi.main.FfiBuilderConfig
 import uniffi.main.FfiClient
+import uniffi.main.FfiUri
 
 @OptIn(ExperimentalUnsignedTypes::class)
 internal class FfiConfigBuilder : AutoCloseable {
@@ -16,25 +16,25 @@ internal class FfiConfigBuilder : AutoCloseable {
     private val ffiBuilderConfig: FfiBuilderConfig = FfiBuilderConfig()
 
     fun addEnv(uri: String, env: WrapEnv) {
-        val ffiUri = Uri.fromString(uri)
+        val ffiUri = FfiUri.fromString(uri)
         val serializedEnv = msgPackEncode(EnvSerializer, env).asUByteArray().toList()
         ffiBuilderConfig.addEnv(ffiUri, serializedEnv)
     }
 
     fun removeEnv(uri: String) {
-        val ffiUri = Uri.fromString(uri)
+        val ffiUri = FfiUri.fromString(uri)
         ffiBuilderConfig.removeEnv(ffiUri)
     }
 
     fun addInterfaceImplementation(interfaceUri: String, implementationUri: String) {
-        val ffiInterfaceUri = Uri.fromString(interfaceUri)
-        val ffiImplementationUri = Uri.fromString(implementationUri)
+        val ffiInterfaceUri = FfiUri.fromString(interfaceUri)
+        val ffiImplementationUri = FfiUri.fromString(implementationUri)
         ffiBuilderConfig.addInterfaceImplementation(ffiInterfaceUri, ffiImplementationUri)
     }
 
     fun removeInterfaceImplementation(interfaceUri: String, implementationUri: String) {
-        val ffiInterfaceUri = Uri.fromString(interfaceUri)
-        val ffiImplementationUri = Uri.fromString(implementationUri)
+        val ffiInterfaceUri = FfiUri.fromString(interfaceUri)
+        val ffiImplementationUri = FfiUri.fromString(implementationUri)
         ffiBuilderConfig.removeInterfaceImplementation(ffiInterfaceUri, ffiImplementationUri)
     }
 
@@ -45,7 +45,7 @@ internal class FfiConfigBuilder : AutoCloseable {
      * @return This [BaseConfigBuilder] instance for chaining calls.
      */
     fun addWrapper(uri: String, wrapper: Wrapper) {
-        val ffiUri = Uri.fromString(uri)
+        val ffiUri = FfiUri.fromString(uri)
         ffiBuilderConfig.addWrapper(ffiUri, wrapper)
     }
 
@@ -56,28 +56,28 @@ internal class FfiConfigBuilder : AutoCloseable {
      * @return This [BaseConfigBuilder] instance for chaining calls.
      */
     fun removeWrapper(uri: String) {
-        val ffiUri = Uri.fromString(uri)
+        val ffiUri = FfiUri.fromString(uri)
         ffiBuilderConfig.removeWrapper(ffiUri)
     }
 
     fun addPackage(uri: String, wrapPackage: WrapPackage) {
-        val ffiUri = Uri.fromString(uri)
+        val ffiUri = FfiUri.fromString(uri)
         ffiBuilderConfig.addPackage(ffiUri, wrapPackage)
     }
 
     fun removePackage(uri: String) {
-        val ffiUri = Uri.fromString(uri)
+        val ffiUri = FfiUri.fromString(uri)
         ffiBuilderConfig.removePackage(ffiUri)
     }
 
     fun addRedirect(from: String, to: String) {
-        val fromUri = Uri.fromString(from)
-        val toUri = Uri.fromString(to)
+        val fromUri = FfiUri.fromString(from)
+        val toUri = FfiUri.fromString(to)
         ffiBuilderConfig.addRedirect(fromUri, toUri)
     }
 
     fun removeRedirect(from: String) {
-        val fromUri = Uri.fromString(from)
+        val fromUri = FfiUri.fromString(from)
         ffiBuilderConfig.removeRedirect(fromUri)
     }
 

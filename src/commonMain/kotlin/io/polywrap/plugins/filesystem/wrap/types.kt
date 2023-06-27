@@ -3,10 +3,6 @@
 
 package io.polywrap.plugins.filesystem.wrap
 
-import io.polywrap.core.Invoker
-import io.polywrap.core.InvokeResult
-import io.polywrap.core.resolution.Uri
-import io.polywrap.core.msgpack.MsgPackMap
 import kotlinx.serialization.Serializable
 
 typealias BigInt = String

@@ -78,7 +78,7 @@ class HttpPluginIntegrationTest {
     fun invokeByClient() {
         val client = ConfigBuilder().addDefaults().build()
         val result = client.invoke<Response?>(
-            uri = Uri.fromString(DefaultBundle.plugins["http"]!!.uri),
+            uri = Uri(DefaultBundle.plugins["http"]!!.uri),
             method = "get",
             args = mapOf("url" to "https://httpbin.org/get")
         )

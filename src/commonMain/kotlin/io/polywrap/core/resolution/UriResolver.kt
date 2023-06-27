@@ -16,7 +16,7 @@ interface UriResolver : FfiUriResolver {
      *
      * @param uri The [Uri] to resolve.
      * @param invoker The [Invoker] instance.
-     * @param resolutionContext The [UriResolutionContext] for keeping track of the resolution history.
+     * @param resolutionContext The [FfiUriResolutionContext] for keeping track of the resolution history.
      * @return A [UriPackageOrWrapper]
      * @throws [FfiException]
      */

@@ -14,7 +14,7 @@ import kotlin.test.assertEquals
 @OptIn(ExperimentalCoroutinesApi::class)
 class MapTestCase {
 
-    private val uri = Uri.fromString("fs/$pathToTestWrappers/map-type/implementations/rs")
+    private val uri = Uri("fs/$pathToTestWrappers/map-type/implementations/rs")
     private val client = ConfigBuilder().addDefaults().build()
 
     @Serializable

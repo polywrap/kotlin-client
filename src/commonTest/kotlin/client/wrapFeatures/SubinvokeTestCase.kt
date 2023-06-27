@@ -18,7 +18,7 @@ class SubinvokeTestCase {
             .build()
 
         val result = client.invoke<Int>(
-            uri = Uri.fromString(wrapperUri),
+            uri = Uri(wrapperUri),
             method = "addAndIncrement",
             args = mapOf("a" to 1, "b" to 1)
         )

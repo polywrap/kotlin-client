@@ -12,7 +12,7 @@ import kotlin.test.assertFalse
 @OptIn(ExperimentalCoroutinesApi::class)
 class NumbersTestCase {
 
-    private val uri = Uri.fromString("fs/$pathToTestWrappers/numbers-type/implementations/rs")
+    private val uri = Uri("fs/$pathToTestWrappers/numbers-type/implementations/rs")
     private val client = ConfigBuilder().addDefaults().build()
 
     @Test

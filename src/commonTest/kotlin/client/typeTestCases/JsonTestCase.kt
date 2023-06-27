@@ -13,7 +13,7 @@ import kotlin.test.assertEquals
 @OptIn(ExperimentalCoroutinesApi::class)
 class JsonTestCase {
 
-    private val uri = Uri.fromString("fs/$pathToTestWrappers/json-type/implementations/rs")
+    private val uri = Uri("fs/$pathToTestWrappers/json-type/implementations/rs")
     private val client = ConfigBuilder().addDefaults().build()
 
     @Test

@@ -12,7 +12,7 @@ import kotlin.test.assertFalse
 @OptIn(ExperimentalCoroutinesApi::class)
 class InvalidTypesTestCase {
 
-    private val uri = Uri.fromString("fs/$pathToTestWrappers/invalid-type/implementations/rs")
+    private val uri = Uri("fs/$pathToTestWrappers/invalid-type/implementations/rs")
     private val client = ConfigBuilder().addDefaults().build()
 
     @Test

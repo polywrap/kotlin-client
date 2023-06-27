@@ -13,7 +13,7 @@ import kotlin.test.assertFalse
 @OptIn(ExperimentalCoroutinesApi::class)
 class EnumTestCase {
 
-    private val uri = Uri.fromString("fs/$pathToTestWrappers/enum-type/implementations/rs")
+    private val uri = Uri("fs/$pathToTestWrappers/enum-type/implementations/rs")
     private val client = ConfigBuilder().addDefaults().build()
 
     @Test

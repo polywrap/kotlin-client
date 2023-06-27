@@ -12,7 +12,7 @@ import kotlin.test.assertEquals
 @OptIn(ExperimentalCoroutinesApi::class)
 class ObjectTestCase {
 
-    private val uri = Uri.fromString("fs/$pathToTestWrappers/object-type/implementations/rs")
+    private val uri = Uri("fs/$pathToTestWrappers/object-type/implementations/rs")
     private val client = ConfigBuilder().addDefaults().build()
 
     @Serializable

@@ -1,8 +1,8 @@
 package io.polywrap.core
 
 import io.polywrap.core.resolution.Uri
-import io.polywrap.core.resolution.UriResolutionContext
 import uniffi.main.FfiException
+import uniffi.main.FfiUriResolutionContext
 import kotlin.jvm.Throws
 
 /**
@@ -13,7 +13,7 @@ interface Client {
      * Resolves the [Wrapper] at the specified URI.
      *
      * @param uri The URI of the wrapper to resolve.
-     * @param resolutionContext The [UriResolutionContext] to be used during URI resolution, or null for a default context.
+     * @param resolutionContext The [FfiUriResolutionContext] to be used during URI resolution, or null for a default context.
      * @return A [Result] containing the [Wrapper], or an error if the resolution fails.
      *
      * @throws FfiException
@@ -23,7 +23,7 @@ interface Client {
     @Throws(FfiException::class)
     fun loadWrapper(
         uri: Uri,
-        resolutionContext: UriResolutionContext? = null
+        resolutionContext: FfiUriResolutionContext? = null
     ): Result<Wrapper>
 
     /**
@@ -34,7 +34,7 @@ interface Client {
      * @param method The method to be called on the wrapper.
      * @param args Arguments for the method, encoded in the MessagePack byte format
      * @param env Env variables for the wrapper invocation, encoded in the MessagePack byte format
-     * @param resolutionContext The [UriResolutionContext] to be used during URI resolution, or null for a default context.
+     * @param resolutionContext The [FfiUriResolutionContext] to be used during URI resolution, or null for a default context.
      * @return A [Result] containing a MsgPack encoded byte array or an error.
      */
     fun invokeWrapperRaw(
@@ -43,6 +43,6 @@ interface Client {
         method: String,
         args: ByteArray?,
         env: ByteArray?,
-        resolutionContext: UriResolutionContext?
+        resolutionContext: FfiUriResolutionContext?
     ): Result<ByteArray>
 }

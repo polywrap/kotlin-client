@@ -53,7 +53,7 @@ class FileSystemPluginIntegrationTest {
         val client = ConfigBuilder().addDefaults().build()
 
         val result = client.invoke<ByteArray>(
-            uri = Uri.fromString(DefaultBundle.plugins["fileSystem"]!!.uri),
+            uri = Uri(DefaultBundle.plugins["fileSystem"]!!.uri),
             method = "readFile",
             args = mapOf("path" to testFile)
         )

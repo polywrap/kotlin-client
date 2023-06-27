@@ -12,7 +12,7 @@ import kotlin.test.assertEquals
 @OptIn(ExperimentalCoroutinesApi::class)
 class BigIntTestCase {
 
-    private val uri = Uri.fromString("fs/$pathToTestWrappers/bigint-type/implementations/rs")
+    private val uri = Uri("fs/$pathToTestWrappers/bigint-type/implementations/rs")
     private val client = ConfigBuilder().addDefaults().build()
 
     @Test

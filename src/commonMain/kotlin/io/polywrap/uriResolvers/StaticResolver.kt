@@ -2,18 +2,18 @@ package io.polywrap.uriResolvers
 
 import io.polywrap.core.WrapPackage
 import io.polywrap.core.Wrapper
-import io.polywrap.core.resolution.Uri
 import io.polywrap.core.resolution.UriPackageOrWrapper
-import io.polywrap.core.resolution.UriResolutionContext
 import io.polywrap.core.resolution.UriResolver
 import uniffi.main.FfiInvoker
 import uniffi.main.FfiStaticUriResolver
+import uniffi.main.FfiUri
 import uniffi.main.FfiUriPackageOrWrapper
+import uniffi.main.FfiUriResolutionContext
 
 /**
  * A class that implements [UriResolver] using a map of URI to [FfiUriPackageOrWrapper].
  *
- * @property uriMap A map of URIs to their corresponding [UriPackageOrWrapper]s.
+ * @param uriMap A map of URIs to their corresponding [UriPackageOrWrapper]s.
  */
 class StaticResolver(uriMap: Map<String, FfiUriPackageOrWrapper>) : UriResolver, AutoCloseable {
 
@@ -25,15 +25,15 @@ class StaticResolver(uriMap: Map<String, FfiUriPackageOrWrapper>) : UriResolver,
          * Creates a new [StaticResolver] instance from a list of Pair<Uri, Any> objects.
          *
          * @param staticResolverLikes A list of Pair<Uri, Any> objects to build the [StaticResolver].
-         * The [Uri] is the URI to resolve, and the [Any] is either a [Uri], [WrapPackage], or [Wrapper].
+         * The [FfiUri] is the URI to resolve, and the [Any] is either a [FfiUri], [WrapPackage], or [Wrapper].
          * @return A new [StaticResolver] instance with the specified URIs and corresponding [FfiUriPackageOrWrapper]s.
          */
-        fun from(staticResolverLikes: List<Pair<Uri, Any>>): StaticResolver {
+        fun from(staticResolverLikes: List<Pair<FfiUri, Any>>): StaticResolver {
             val uriMap = mutableMapOf<String, FfiUriPackageOrWrapper>()
             for (staticResolverLike in staticResolverLikes) {
                 val uri = staticResolverLike.first
                 when (val item = staticResolverLike.second) {
-                    is Uri -> {
+                    is FfiUri -> {
                         uriMap[uri.toStringUri()] = UriPackageOrWrapper.UriValue(item)
                     }
                     is WrapPackage -> {
@@ -49,9 +49,9 @@ class StaticResolver(uriMap: Map<String, FfiUriPackageOrWrapper>) : UriResolver,
     }
 
     override fun tryResolveUri(
-        uri: Uri,
+        uri: FfiUri,
         invoker: FfiInvoker,
-        resolutionContext: UriResolutionContext
+        resolutionContext: FfiUriResolutionContext
     ): FfiUriPackageOrWrapper = ffiResolver.tryResolveUri(uri, invoker, resolutionContext)
 
     override fun close() = ffiResolver.close()

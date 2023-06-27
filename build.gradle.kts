@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.tasks.factory.dependsOn
+
 plugins {
     kotlin("multiplatform") version "1.8.20"
     kotlin("plugin.serialization") version "1.8.20"
@@ -113,6 +115,15 @@ tasks.register<Jar>("dokkaJavadocJar") {
     from(tasks.dokkaJavadoc.flatMap { it.outputDirectory })
     archiveClassifier.set("javadoc")
 }
+
+// generate dokka html site and copy it to docs folder
+tasks.register<Copy>("copyDokkaHtml") {
+    dependsOn(tasks.dokkaHtml)
+    from("$buildDir/dokka/html")
+    into("$projectDir/docs")
+}
+// automatically generate docs site when publishing
+tasks.publish.dependsOn("copyDokkaHtml")
 
 // print stdout during tests
 tasks.withType<Test> {

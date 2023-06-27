@@ -6,7 +6,6 @@ import io.polywrap.core.msgpack.MsgPackMap
 import io.polywrap.core.msgpack.msgPackDecode
 import io.polywrap.core.msgpack.msgPackEncode
 import io.polywrap.core.msgpack.toMsgPackMap
-import io.polywrap.core.resolution.Uri
 import io.polywrap.plugins.http.wrap.*
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
@@ -78,7 +77,7 @@ class HttpPluginIntegrationTest {
     fun invokeByClient() {
         val client = ConfigBuilder().addDefaults().build()
         val result = client.invoke<Response?>(
-            uri = Uri(DefaultBundle.plugins["http"]!!.uri),
+            uri = DefaultBundle.plugins["http"]!!.uri,
             method = "get",
             args = mapOf("url" to "https://httpbin.org/get")
         )

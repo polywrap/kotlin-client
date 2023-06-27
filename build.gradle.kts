@@ -51,7 +51,7 @@ kotlin {
                 implementation("com.goncalossilva:resources:0.3.2") // access resources in tests
                 implementation("io.ktor:ktor-client-mock:2.3.1") // http plugin test
                 implementation("com.ionspin.kotlin:bignum:0.3.8") // client test
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0") // client test
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1") // client test
             }
         }
         val jvmMain by getting {
@@ -123,7 +123,9 @@ tasks.register<Copy>("copyDokkaHtml") {
     into("$projectDir/docs")
 }
 // automatically generate docs site when publishing
-tasks.publish.dependsOn("copyDokkaHtml")
+if (!version.toString().endsWith("-SNAPSHOT")) {
+    tasks.publish.dependsOn("copyDokkaHtml")
+}
 
 // print stdout during tests
 tasks.withType<Test> {

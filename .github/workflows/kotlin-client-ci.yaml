@@ -12,5 +12,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Build and Test
-        run: ./gradlew build
+      - name: Generate Uniffi Bindings
+        run: ./gradlew uniffi
+
+      - name: Build
+        run: ./gradlew assemble
+
+      - name: Test
+        run: ./gradlew check

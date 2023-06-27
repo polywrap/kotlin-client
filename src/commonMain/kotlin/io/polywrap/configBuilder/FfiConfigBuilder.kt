@@ -16,26 +16,32 @@ internal class FfiConfigBuilder : AutoCloseable {
     private val ffiBuilderConfig: FfiBuilderConfig = FfiBuilderConfig()
 
     fun addEnv(uri: String, env: WrapEnv) {
-        val ffiUri = FfiUri.fromString(uri)
-        val serializedEnv = msgPackEncode(EnvSerializer, env).asUByteArray().toList()
-        ffiBuilderConfig.addEnv(ffiUri, serializedEnv)
+        FfiUri.fromString(uri).use { ffiUri ->
+            val serializedEnv = msgPackEncode(EnvSerializer, env).asUByteArray().toList()
+            ffiBuilderConfig.addEnv(ffiUri, serializedEnv)
+        }
     }
 
     fun removeEnv(uri: String) {
-        val ffiUri = FfiUri.fromString(uri)
-        ffiBuilderConfig.removeEnv(ffiUri)
+        FfiUri.fromString(uri).use { ffiUri ->
+            ffiBuilderConfig.removeEnv(ffiUri)
+        }
     }
 
     fun addInterfaceImplementation(interfaceUri: String, implementationUri: String) {
-        val ffiInterfaceUri = FfiUri.fromString(interfaceUri)
-        val ffiImplementationUri = FfiUri.fromString(implementationUri)
-        ffiBuilderConfig.addInterfaceImplementation(ffiInterfaceUri, ffiImplementationUri)
+        FfiUri.fromString(interfaceUri).use {ffiInterfaceUri ->
+            FfiUri.fromString(implementationUri).use { ffiImplementationUri ->
+                ffiBuilderConfig.addInterfaceImplementation(ffiInterfaceUri, ffiImplementationUri)
+            }
+        }
     }
 
     fun removeInterfaceImplementation(interfaceUri: String, implementationUri: String) {
-        val ffiInterfaceUri = FfiUri.fromString(interfaceUri)
-        val ffiImplementationUri = FfiUri.fromString(implementationUri)
-        ffiBuilderConfig.removeInterfaceImplementation(ffiInterfaceUri, ffiImplementationUri)
+        FfiUri.fromString(interfaceUri).use { ffiInterfaceUri ->
+            FfiUri.fromString(implementationUri).use { ffiImplementationUri ->
+                ffiBuilderConfig.removeInterfaceImplementation(ffiInterfaceUri, ffiImplementationUri)
+            }
+        }
     }
 
     /**
@@ -45,8 +51,14 @@ internal class FfiConfigBuilder : AutoCloseable {
      * @return This [BaseConfigBuilder] instance for chaining calls.
      */
     fun addWrapper(uri: String, wrapper: Wrapper) {
-        val ffiUri = FfiUri.fromString(uri)
-        ffiBuilderConfig.addWrapper(ffiUri, wrapper)
+        FfiUri.fromString(uri).use { ffiUri ->
+            when (wrapper is AutoCloseable) {
+                true -> wrapper.use {
+                    ffiBuilderConfig.addWrapper(ffiUri, wrapper)
+                }
+                false -> ffiBuilderConfig.addWrapper(ffiUri, wrapper)
+            }
+        }
     }
 
     /**
@@ -56,33 +68,41 @@ internal class FfiConfigBuilder : AutoCloseable {
      * @return This [BaseConfigBuilder] instance for chaining calls.
      */
     fun removeWrapper(uri: String) {
-        val ffiUri = FfiUri.fromString(uri)
-        ffiBuilderConfig.removeWrapper(ffiUri)
+        FfiUri.fromString(uri).use { ffiUri ->
+            ffiBuilderConfig.removeWrapper(ffiUri)
+        }
     }
 
     fun addPackage(uri: String, wrapPackage: WrapPackage) {
-        val ffiUri = FfiUri.fromString(uri)
-        ffiBuilderConfig.addPackage(ffiUri, wrapPackage)
+        FfiUri.fromString(uri).use { ffiUri ->
+            ffiBuilderConfig.addPackage(ffiUri, wrapPackage)
+        }
     }
 
     fun removePackage(uri: String) {
-        val ffiUri = FfiUri.fromString(uri)
-        ffiBuilderConfig.removePackage(ffiUri)
+        FfiUri.fromString(uri).use { ffiUri ->
+            ffiBuilderConfig.removePackage(ffiUri)
+        }
     }
 
     fun addRedirect(from: String, to: String) {
-        val fromUri = FfiUri.fromString(from)
-        val toUri = FfiUri.fromString(to)
-        ffiBuilderConfig.addRedirect(fromUri, toUri)
+        FfiUri.fromString(from).use { fromUri ->
+            FfiUri.fromString(to).use { toUri ->
+                ffiBuilderConfig.addRedirect(fromUri, toUri)
+            }
+        }
     }
 
     fun removeRedirect(from: String) {
-        val fromUri = FfiUri.fromString(from)
-        ffiBuilderConfig.removeRedirect(fromUri)
+        FfiUri.fromString(from).use { ffiUri ->
+            ffiBuilderConfig.removeRedirect(ffiUri)
+        }
     }
 
     fun addResolver(resolver: UriResolver) {
-        ffiBuilderConfig.addResolver(resolver)
+        resolver.use {
+            ffiBuilderConfig.addResolver(it)
+        }
     }
 
     /**

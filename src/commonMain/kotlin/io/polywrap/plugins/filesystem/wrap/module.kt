@@ -6,7 +6,6 @@ package io.polywrap.plugins.filesystem.wrap
 import io.polywrap.core.Invoker
 import io.polywrap.core.msgpack.msgPackDecode
 import io.polywrap.core.msgpack.msgPackEncode
-import io.polywrap.core.msgpack.MsgPackMap
 import io.polywrap.plugin.PluginMethod
 import io.polywrap.plugin.PluginModule
 import kotlinx.serialization.Serializable

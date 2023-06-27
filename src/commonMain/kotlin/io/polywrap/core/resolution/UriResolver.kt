@@ -9,7 +9,7 @@ import uniffi.main.FfiUriResolutionContext
 import uniffi.main.FfiUriResolver
 import kotlin.jvm.Throws
 
-interface UriResolver : FfiUriResolver {
+interface UriResolver : FfiUriResolver, AutoCloseable {
 
     /**
      * Tries to resolve the given [Uri] to a Uri, WrapPackage, or Wrapper.

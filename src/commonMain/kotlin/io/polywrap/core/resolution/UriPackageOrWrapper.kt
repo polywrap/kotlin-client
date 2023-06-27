@@ -11,7 +11,7 @@ import uniffi.main.FfiWrapPackage
 /**
  * Indicates that a URI resolved to either a wrap package, a wrapper, or a URI
  */
-sealed class UriPackageOrWrapper : FfiUriPackageOrWrapper {
+sealed class UriPackageOrWrapper : FfiUriPackageOrWrapper, AutoCloseable {
     abstract val uriValue: FfiUri
 
     override fun getKind(): FfiUriPackageOrWrapperKind {
@@ -50,7 +50,9 @@ sealed class UriPackageOrWrapper : FfiUriPackageOrWrapper {
      * Indicates that a URI resolved to a Uri
      * @property uriValue The resolved URI value
      */
-    data class UriValue(override val uriValue: FfiUri) : UriPackageOrWrapper()
+    data class UriValue(override val uriValue: FfiUri) : UriPackageOrWrapper() {
+        override fun close() = this.uriValue.close()
+    }
 
     /**
      * Indicates that a URI resolved to a wrap package
@@ -61,6 +63,8 @@ sealed class UriPackageOrWrapper : FfiUriPackageOrWrapper {
         override fun getUri(): FfiUri = uriValue
 
         override fun getPackage(): FfiWrapPackage = pkg
+
+        override fun close() = this.uriValue.close()
     }
 
     /**
@@ -72,5 +76,12 @@ sealed class UriPackageOrWrapper : FfiUriPackageOrWrapper {
         override fun getUri(): FfiUri = uriValue
 
         override fun getWrapper(): Wrapper = wrap
+
+        override fun close() {
+            this.uriValue.close()
+            if (this.wrap is AutoCloseable) {
+                this.wrap.close()
+            }
+        }
     }
 }

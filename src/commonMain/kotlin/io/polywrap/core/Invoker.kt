@@ -13,58 +13,41 @@ import uniffi.main.FfiUriResolutionContext
 import kotlin.jvm.Throws
 
 @OptIn(ExperimentalUnsignedTypes::class)
-open class Invoker(val ffiInvoker: FfiInvoker) {
+open class Invoker(val ffiInvoker: FfiInvoker) : WrapInvoker, AutoCloseable {
 
-    /**
-     * Invokes the wrapper at the specified URI with the provided options.
-     *
-     * @param uri The URI of the wrapper to be invoked.
-     * @param method The method to be called on the wrapper.
-     * @param args Arguments for the method, encoded in the MessagePack byte format
-     * @param env Env variables for the wrapper invocation, encoded in the MessagePack byte format
-     * @param resolutionContext The [FfiUriResolutionContext] to be used during URI resolution, or null for a default context.
-     * @return A list of MessagePack-encoded bytes representing the invocation result
-     * @throws FfiException
-     */
     @Throws(FfiException::class)
-    fun invokeRaw(
+    override fun invokeRaw(
         uri: FfiUri,
         method: String,
-        args: List<UByte>? = null,
-        env: List<UByte>? = null,
-        resolutionContext: FfiUriResolutionContext? = null
-    ): List<UByte> = ffiInvoker.invokeRaw(
-        uri = uri,
-        method = method,
-        args = args,
-        env = env,
-        resolutionContext = resolutionContext
-    )
+        args: List<UByte>?,
+        env: List<UByte>?,
+        resolutionContext: FfiUriResolutionContext?
+    ): List<UByte> = uri.use {
+        ffiInvoker.invokeRaw(
+            uri = uri,
+            method = method,
+            args = args,
+            env = env,
+            resolutionContext = resolutionContext
+        )
+    }
 
-    /**
-     * Invoke a wrapper. This method automatically retrieves and caches the wrapper.
-     *
-     * @param uri The URI of the wrapper to be invoked.
-     * @param method The method to be called on the wrapper.
-     * @param args Arguments for the method, encoded in the MessagePack byte format
-     * @param env Env variables for the wrapper invocation, encoded in the MessagePack byte format
-     * @param resolutionContext The [FfiUriResolutionContext] to be used during URI resolution, or null for a default context.
-     * @return A [Result] containing the invocation result as a [ByteArray], or an error if the invocation fails.
-     */
-    fun invokeRaw(
+    override fun invokeRaw(
         uri: Uri,
         method: String,
         args: ByteArray?,
-        env: ByteArray? = null,
-        resolutionContext: FfiUriResolutionContext? = null
+        env: ByteArray?,
+        resolutionContext: FfiUriResolutionContext?
     ): Result<ByteArray> = runCatching {
-        ffiInvoker.invokeRaw(
-            uri = uri.toFfi(),
-            method = method,
-            args = args?.asUByteArray()?.toList(),
-            env = env?.asUByteArray()?.toList(),
-            resolutionContext = resolutionContext
-        )
+        uri.toFfi().use {
+            ffiInvoker.invokeRaw(
+                uri = it,
+                method = method,
+                args = args?.asUByteArray()?.toList(),
+                env = env?.asUByteArray()?.toList(),
+                resolutionContext = resolutionContext
+            )
+        }
     }.map {
         it.toUByteArray().asByteArray()
     }
@@ -77,6 +60,7 @@ open class Invoker(val ffiInvoker: FfiInvoker) {
      * @param args An instance of type [T] representing the arguments to be passed to the method.
      * @param env A map representing the environment to be used during the invocation.
      * @param resolutionContext The [FfiUriResolutionContext] to be used during URI resolution, or null for a default context.
+     * The caller owns resolutionContext and is responsible for closing it to prevent a memory leak.
      * @return An [InvokeResult] containing the invocation result of type [R], or an error if the invocation fails.
      */
     inline fun <reified T, reified R> invoke(
@@ -107,6 +91,7 @@ open class Invoker(val ffiInvoker: FfiInvoker) {
      * @param args A map of arguments to be passed to the method.
      * @param env A map representing the environment to be used during the invocation.
      * @param resolutionContext The [FfiUriResolutionContext] to be used during URI resolution, or null for a default context.
+     * The caller owns resolutionContext and is responsible for closing it to prevent a memory leak.
      * @return An [InvokeResult] containing the invocation result of type [R], or an error if the invocation fails.
      */
     inline fun <reified R> invoke(
@@ -129,45 +114,27 @@ open class Invoker(val ffiInvoker: FfiInvoker) {
         }
     }
 
-    /**
-     * Returns the interface implementations stored in the configuration.
-     *
-     * @return A map of interface URIs to a list of their respective implementation URIs.
-     */
-    fun getInterfaces(): Map<String, List<String>>? {
-        val interfaces = ffiInvoker.getInterfaces()
-        val result = interfaces?.mapValues { (_, implementations) ->
-            implementations.map { it.toStringUri() }
+    override fun getInterfaces(): Map<Uri, List<Uri>>? {
+        return ffiInvoker.getInterfaces()?.let { ffiInterfaces ->
+            val result: MutableMap<Uri, List<Uri>> = mutableMapOf()
+            ffiInterfaces.forEach { (interfaceUri, implementations) ->
+                val key = Uri(interfaceUri)
+                val value = implementations.map { Uri(it) }
+                result[key] = value
+            }
+            result
         }
-        interfaces?.values?.forEach { implementations ->
-            implementations.forEach { it.close() }
-        }
-        return result
     }
 
-    /**
-     * Retrieves the list of implementation URIs for the specified interface URI.
-     *
-     * @param uri The URI of the interface for which implementations are being requested.
-     * @return A [Result] containing the list of implementation URIs.
-     */
-    fun getImplementations(uri: Uri): Result<List<Uri>> = runCatching {
-        val ffiUri = uri.toFfi()
-        val implementations = ffiInvoker.getImplementations(ffiUri)
+    override fun getImplementations(uri: Uri): Result<List<Uri>> = runCatching {
+        val implementations = uri.toFfi().use { ffiInvoker.getImplementations(it) }
         val result = implementations.map { Uri(it) }
         result
     }
 
-    /**
-     * Returns an env (a set of environmental variables) from the configuration
-     * used to instantiate the client.
-     * @param uri the URI used to register the env
-     * @return an env, or null if an env is not found at the given URI
-     */
-    fun getEnvByUri(uri: Uri): Result<WrapEnv?> {
+    override fun getEnvByUri(uri: Uri): Result<WrapEnv?> {
         val envBytes = runCatching {
-            val ffiUri = uri.toFfi()
-            ffiInvoker.getEnvByUri(ffiUri)
+            uri.toFfi().use { ffiInvoker.getEnvByUri(it) }
         }.getOrElse {
             return Result.failure(it)
         } ?: return Result.success(null)
@@ -177,4 +144,6 @@ open class Invoker(val ffiInvoker: FfiInvoker) {
             .asByteArray()
             .let { msgPackDecode(it) }
     }
+
+    override fun close() = ffiInvoker.close()
 }

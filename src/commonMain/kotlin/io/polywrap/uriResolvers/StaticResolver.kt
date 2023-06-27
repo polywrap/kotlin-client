@@ -12,13 +12,17 @@ import uniffi.main.FfiUriPackageOrWrapper
 import uniffi.main.FfiUriResolutionContext
 
 /**
- * A class that implements [UriResolver] using a map of URI to [FfiUriPackageOrWrapper].
+ * A class that implements [UriResolver] using a map of URI to [UriPackageOrWrapper].
+ *
+ * The constructors take ownership of the [UriPackageOrWrapper]s and will close them during construction.
  *
  * @param uriMap A map of URIs to their corresponding [UriPackageOrWrapper]s.
  */
-class StaticResolver(uriMap: Map<String, FfiUriPackageOrWrapper>) : UriResolver, AutoCloseable {
+class StaticResolver(uriMap: Map<String, UriPackageOrWrapper>) : UriResolver, AutoCloseable {
 
     private val ffiResolver = FfiStaticUriResolver(uriMap)
+
+    init { uriMap.values.forEach { it.close() } }
 
     companion object {
 
@@ -31,7 +35,7 @@ class StaticResolver(uriMap: Map<String, FfiUriPackageOrWrapper>) : UriResolver,
          * @throws IllegalArgumentException If any of the [Any] objects are not a [Uri], [WrapPackage], or [Wrapper].
          */
         fun from(staticResolverLikes: List<Pair<Uri, Any>>): StaticResolver {
-            val uriMap = mutableMapOf<String, FfiUriPackageOrWrapper>()
+            val uriMap = mutableMapOf<String, UriPackageOrWrapper>()
             for (staticResolverLike in staticResolverLikes) {
                 val uri = staticResolverLike.first
                 when (val item = staticResolverLike.second) {

@@ -9,8 +9,6 @@ import kotlinx.coroutines.runBlocking
 import uniffi.main.FfiAbortHandlerWrapping
 import uniffi.main.FfiInvoker
 
-// TODO: do i need to free the FfiAbortHandlerWrapping in invoke?
-
 /**
  * Represents a plugin wrapper, allowing the plugin module to be invoked as a [Wrapper].
  *
@@ -26,13 +24,15 @@ data class PluginWrapper<TConfig>(val module: PluginModule<TConfig>) : Wrapper {
         env: List<UByte>?,
         invoker: FfiInvoker,
         abortHandler: FfiAbortHandlerWrapping?
-    ): List<UByte> = this.invoke(
-        method = method,
-        args = args?.toUByteArray()?.asByteArray(),
-        env = env?.toUByteArray()?.asByteArray(),
-        invoker = Invoker(invoker),
-        abortHandler = abortHandler?.wrap()
-    ).getOrThrow().asUByteArray().toList()
+    ): List<UByte> = abortHandler.use {
+        this.invoke(
+            method = method,
+            args = args?.toUByteArray()?.asByteArray(),
+            env = env?.toUByteArray()?.asByteArray(),
+            invoker = Invoker(invoker),
+            abortHandler = abortHandler?.wrap()
+        ).getOrThrow().asUByteArray().toList()
+    }
 
     override fun invoke(
         method: String,

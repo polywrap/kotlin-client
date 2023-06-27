@@ -80,7 +80,7 @@ abstract class UriResolverAggregator : UriResolver {
 
         for (resolver in resolvers) {
             val result = resolver.tryResolveUri(uri, invoker, subContext)
-            val isUri = result.getKind() == FfiUriPackageOrWrapperKind.URI && result.asUri() == uri
+            val isUri = result.getKind() == FfiUriPackageOrWrapperKind.URI
             if (!isUri) {
                 resolutionContext.trackStep(
                     FfiUriResolutionStep(

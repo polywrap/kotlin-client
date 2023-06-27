@@ -14,11 +14,10 @@ interface Client {
      *
      * @param uri The URI of the wrapper to resolve.
      * @param resolutionContext The [FfiUriResolutionContext] to be used during URI resolution, or null for a default context.
+     * The caller owns resolutionContext and is responsible for closing it to prevent a memory leak.
      * @return A [Result] containing the [Wrapper], or an error if the resolution fails.
      *
      * @throws FfiException
-     *
-     * @note The returned result may cause a memory leak if it is not consumed by a call to invokeWrapper
      */
     @Throws(FfiException::class)
     fun loadWrapper(
@@ -35,6 +34,7 @@ interface Client {
      * @param args Arguments for the method, encoded in the MessagePack byte format
      * @param env Env variables for the wrapper invocation, encoded in the MessagePack byte format
      * @param resolutionContext The [FfiUriResolutionContext] to be used during URI resolution, or null for a default context.
+     * The caller owns resolutionContext and is responsible for closing it to prevent a memory leak.
      * @return A [Result] containing a MsgPack encoded byte array or an error.
      */
     fun invokeWrapperRaw(

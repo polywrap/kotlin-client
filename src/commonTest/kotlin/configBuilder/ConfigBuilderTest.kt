@@ -32,6 +32,8 @@ class ConfigBuilderTest {
         ): FfiUriPackageOrWrapper {
             throw NotImplementedError()
         }
+
+        override fun close() {}
     }
 
     private val mockWrapPackage: WrapPackage = object : WrapPackage {

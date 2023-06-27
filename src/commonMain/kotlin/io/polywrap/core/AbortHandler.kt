@@ -24,7 +24,12 @@ internal class WrappedAbortHandler(
     override fun close() = ffiAbortHandlerWrapping.close()
 }
 
-internal fun AbortHandler.wrap(): FfiAbortHandlerWrapping = FfiAbortHandlerWrapping(this)
+internal fun AbortHandler.wrap(): FfiAbortHandlerWrapping {
+    if (this is WrappedAbortHandler) {
+        throw IllegalStateException("AbortHandler already wraps a FfiAbortHandlerWrapping")
+    }
+    return FfiAbortHandlerWrapping(this)
+}
 
 internal fun FfiAbortHandlerWrapping.wrap(): AbortHandler = WrappedAbortHandler(this)
 

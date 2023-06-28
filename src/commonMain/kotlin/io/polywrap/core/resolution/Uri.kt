@@ -53,7 +53,7 @@ class Uri(ffiUri: FfiUri) {
      * The caller owns the returned FfiUri and is responsible for deallocating its memory.
      *
      * @returns FfiUri representation of this Uri */
-    fun toFfi(): FfiUri = FfiUri.fromString(this.uri)
+    internal fun toFfi(): FfiUri = FfiUri.fromString(this.uri)
 
     override fun equals(other: Any?): Boolean = when (other) {
         is Uri -> this.uri == other.uri

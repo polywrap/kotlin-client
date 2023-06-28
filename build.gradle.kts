@@ -119,8 +119,10 @@ tasks.register<Jar>("dokkaJavadocJar") {
 // generate dokka html site and copy it to docs folder
 tasks.register<Copy>("copyDokkaHtml") {
     dependsOn(tasks.dokkaHtml)
+    val docsDir = "$projectDir/docs"
+    doFirst { delete(docsDir) }
     from("$buildDir/dokka/html")
-    into("$projectDir/docs")
+    into(docsDir)
 }
 // automatically generate docs site when publishing
 if (!version.toString().endsWith("-SNAPSHOT")) {

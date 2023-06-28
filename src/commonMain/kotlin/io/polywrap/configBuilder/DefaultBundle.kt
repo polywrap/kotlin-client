@@ -45,10 +45,10 @@ class DefaultBundle {
             embeds["ipfsResolver"]!!.source,
             Uri("wrap://ipfs/QmansMm6hUBYs7D7EW1zA7BFBnDBGGgCM2jyVTWuDmMVNx"), // Uri("ens/wraps.eth:http-uri-resolver-ext@1.0.1"),
             Uri("wrap://ipfs/QmcXXykMwLkVaWQ7s74VNVHhpNzCaNnUcAvoNedXwumZaG") // Uri("ens/wraps.eth:file-system-uri-resolver-ext@1.0.1"),
-//            Uri("ens/wraps.eth:ens-uri-resolver-ext@1.0.0"),
+//            Uri("ens/wraps.eth:ens-uri-resolver-ext@1.0.1"),
 //            textRecordResolverRedirect.first,
-//            Uri("ens/wraps.eth:ens-ipfs-contenthash-uri-resolver-ext@1.0.0"),
-//            Uri("ens/wraps.eth:ens-ocr-contenthash-uri-resolver-ext@1.0.0")
+//            Uri("ens/wraps.eth:ens-ipfs-contenthash-uri-resolver-ext@1.0.1"),
+//            Uri("ens/wraps.eth:ens-ocr-contenthash-uri-resolver-ext@1.0.1")
         )
 
         val plugins: Map<String, IDefaultPlugin> = mapOf(

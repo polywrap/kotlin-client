@@ -6,9 +6,9 @@ import io.polywrap.core.WrapEnv
 import io.polywrap.core.msgpack.EnvSerializer
 import io.polywrap.core.msgpack.msgPackEncode
 import io.polywrap.core.resolution.UriResolver
-import uniffi.main.FfiBuilderConfig
-import uniffi.main.FfiClient
-import uniffi.main.FfiUri
+import uniffi.polywrap_native.FfiBuilderConfig
+import uniffi.polywrap_native.FfiClient
+import uniffi.polywrap_native.FfiUri
 
 @OptIn(ExperimentalUnsignedTypes::class)
 internal class FfiConfigBuilder : AutoCloseable {

@@ -1,7 +1,7 @@
 package io.polywrap.core
 
 import io.polywrap.core.wrap.WrapManifest
-import uniffi.main.FfiWrapPackage
+import uniffi.polywrap_native.FfiWrapPackage
 
 /**
  * A wrap package, capable of producing instances of a wrapper and its manifest

@@ -4,7 +4,6 @@ import io.polywrap.core.wrap.formats.wrap01.abi.Abi01
 import io.polywrap.core.msgpack.msgPackDecode
 import io.polywrap.core.msgpack.msgPackEncode
 import kotlinx.serialization.Serializable
-import uniffi.main.FfiException
 import kotlin.jvm.Throws
 
 /**

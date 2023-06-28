@@ -27,8 +27,7 @@ class PluginWrapperTest {
             method = "add",
             args = msgPackEncode(mapOf("num" to 1, "ber" to 2)),
             env = null,
-            invoker = emptyMockInvoker,
-            abortHandler = null
+            invoker = emptyMockInvoker
         )
         if (result.isFailure) throw result.exceptionOrNull()!!
 

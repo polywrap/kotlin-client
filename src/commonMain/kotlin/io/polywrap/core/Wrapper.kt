@@ -1,10 +1,8 @@
 package io.polywrap.core
 
-import uniffi.main.FfiAbortHandlerWrapping
-import uniffi.main.FfiException
-import uniffi.main.FfiInvoker
-import uniffi.main.FfiWrapper
-import kotlin.jvm.Throws
+import uniffi.polywrap_native.FfiException
+import uniffi.polywrap_native.FfiInvoker
+import uniffi.polywrap_native.FfiWrapper
 
 /**
  * The Wrapper definition, which can be used to invoke this particular Wrapper.
@@ -17,17 +15,14 @@ interface Wrapper : FfiWrapper {
      * @param args Arguments for the method, encoded in the MessagePack byte format
      * @param env Env variables for the wrapper invocation, encoded in the MessagePack byte format
      * @param invoker The invoker will be used for any sub-invocations that occur.
-     * @param abortHandler An [AbortHandler] to be called when the invocation is aborted.
      * @return A list of MessagePack-encoded bytes representing the invocation result
      * @throws FfiException
      */
-    @Throws(FfiException::class)
     override fun invoke(
         method: String,
         args: List<UByte>?,
         env: List<UByte>?,
-        invoker: FfiInvoker,
-        abortHandler: FfiAbortHandlerWrapping?
+        invoker: FfiInvoker
     ): List<UByte>
 
     /**
@@ -37,15 +32,13 @@ interface Wrapper : FfiWrapper {
      * @param args Arguments for the method, encoded in the MessagePack byte format
      * @param env Env variables for the wrapper invocation, encoded in the MessagePack byte format
      * @param invoker The [Invoker] will be used for any sub-invocations that occur.
-     * @param abortHandler An [AbortHandler] to be called when the invocation is aborted.
      * @return A [Result] containing a MsgPack encoded byte array or an error.
      */
     fun invoke(
         method: String,
         args: ByteArray? = null,
         env: ByteArray? = null,
-        invoker: Invoker,
-        abortHandler: AbortHandler? = null
+        invoker: Invoker
     ): Result<ByteArray>
 
 
@@ -56,23 +49,20 @@ interface Wrapper : FfiWrapper {
                 method: String,
                 args: List<UByte>?,
                 env: List<UByte>?,
-                invoker: FfiInvoker,
-                abortHandler: FfiAbortHandlerWrapping?
-            ): List<UByte> = ffiWrapper.invoke(method, args, env, invoker, abortHandler)
+                invoker: FfiInvoker
+            ): List<UByte> = ffiWrapper.invoke(method, args, env, invoker)
 
             override fun invoke(
                 method: String,
                 args: ByteArray?,
                 env: ByteArray?,
-                invoker: Invoker,
-                abortHandler: AbortHandler?
+                invoker: Invoker
             ): Result<ByteArray> = runCatching {
                 ffiWrapper.invoke(
                     method = method,
                     args = args?.asUByteArray()?.toList(),
                     env = env?.asUByteArray()?.toList(),
-                    invoker = invoker.ffiInvoker,
-                    abortHandler = abortHandler?.let { FfiAbortHandlerWrapping(it) }
+                    invoker = invoker.ffiInvoker
                 ).toUByteArray().asByteArray()
             }
         }

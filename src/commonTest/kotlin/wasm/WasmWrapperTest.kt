@@ -21,8 +21,7 @@ class WasmWrapperTest {
             method = "i32Method",
             args = msgPackEncode(mapOf("first" to 1, "second" to 2)),
             env = null,
-            invoker = emptyMockInvoker,
-            abortHandler = null
+            invoker = emptyMockInvoker
         )
         assertNull(result.exceptionOrNull())
 

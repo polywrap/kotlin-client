@@ -5,11 +5,11 @@ import io.polywrap.core.Wrapper
 import io.polywrap.core.resolution.Uri
 import io.polywrap.core.resolution.UriPackageOrWrapper
 import io.polywrap.core.resolution.UriResolver
-import uniffi.main.FfiInvoker
-import uniffi.main.FfiStaticUriResolver
-import uniffi.main.FfiUri
-import uniffi.main.FfiUriPackageOrWrapper
-import uniffi.main.FfiUriResolutionContext
+import uniffi.polywrap_native.FfiInvoker
+import uniffi.polywrap_native.FfiStaticUriResolver
+import uniffi.polywrap_native.FfiUri
+import uniffi.polywrap_native.FfiUriPackageOrWrapper
+import uniffi.polywrap_native.FfiUriResolutionContext
 
 /**
  * A class that implements [UriResolver] using a map of URI to [UriPackageOrWrapper].

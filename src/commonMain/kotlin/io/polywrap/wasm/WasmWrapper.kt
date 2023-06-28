@@ -1,13 +1,9 @@
 package io.polywrap.wasm
 
-import io.polywrap.core.AbortHandler
-import io.polywrap.core.DefaultAbortHandler
 import io.polywrap.core.Invoker
 import io.polywrap.core.Wrapper
-import io.polywrap.core.wrap
-import uniffi.main.FfiAbortHandlerWrapping
-import uniffi.main.FfiInvoker
-import uniffi.main.FfiWasmWrapper
+import uniffi.polywrap_native.FfiInvoker
+import uniffi.polywrap_native.FfiWasmWrapper
 
 /**
  * Represents a WebAssembly (Wasm) wrapper for executing Wasm code.
@@ -23,25 +19,20 @@ data class WasmWrapper(val wasmModule: ByteArray) : Wrapper, AutoCloseable {
         method: String,
         args: List<UByte>?,
         env: List<UByte>?,
-        invoker: FfiInvoker,
-        abortHandler: FfiAbortHandlerWrapping?
-    ): List<UByte> = abortHandler.use {
-        ffiWrapper.invoke(method, args, env, invoker, abortHandler)
-    }
+        invoker: FfiInvoker
+    ): List<UByte> = ffiWrapper.invoke(method, args, env, invoker)
 
     override fun invoke(
         method: String,
         args: ByteArray?,
         env: ByteArray?,
-        invoker: Invoker,
-        abortHandler: AbortHandler?
+        invoker: Invoker
     ): Result<ByteArray> = runCatching {
         ffiWrapper.invoke(
             method = method,
             args = args?.asUByteArray()?.toList(),
             env = env?.asUByteArray()?.toList(),
-            invoker = invoker.ffiInvoker,
-            abortHandler = abortHandler?.wrap() ?: DefaultAbortHandler().wrap()
+            invoker = invoker.ffiInvoker
         ).toUByteArray().asByteArray()
     }
 

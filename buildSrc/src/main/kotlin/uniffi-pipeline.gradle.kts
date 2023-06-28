@@ -19,7 +19,8 @@ fun getCurrentDesktopPlatform(): String {
 afterEvaluate {
     val rustClientRepoCloneDir = "${config.clonesDir}/rust-client"
     val packageDir = "${rustClientRepoCloneDir}/packages/native"
-    val udl = "$packageDir/src/main.udl"
+    val udl = "$packageDir/src/polywrap_native.udl"
+    val libname = if (config.libname == "") "uniffi_${config.packageName}" else config.libname
 
     // Adjust parameters if not release build
     val rustTargets = if (config.isRelease) {
@@ -85,11 +86,13 @@ afterEvaluate {
         .filter { it.contains("android") }
         .map { target ->
             tasks.register<Copy>("copyNativeLibrary_$target") {
+                val destDir = "${config.androidJnaPath}/${rustTargetToAndroidAbiOrDesktopValue(target)}"
+                doFirst { delete(destDir) }
                 from("${rustClientRepoCloneDir}/target/$target/release")
-                into("${config.androidJnaPath}/${rustTargetToAndroidAbiOrDesktopValue(target)}")
+                into(destDir)
                 val packageName = config.packageName
                 include("lib$packageName.so", "lib$packageName.dylib", "$packageName.dll")
-                rename(packageName, config.libname)
+                rename(packageName, libname)
                 dependsOn(tasks.getByName("cargoBuild_$target"))
             }
         }
@@ -103,11 +106,13 @@ afterEvaluate {
         .filter { !it.contains("android") }
         .map { target ->
             tasks.register<Copy>("copyNativeLibrary_$target") {
+                val destDir = "${config.desktopJnaPath}/${rustTargetToAndroidAbiOrDesktopValue(target)}"
+                doFirst { delete(destDir) }
                 from("${rustClientRepoCloneDir}/target/$target/release")
-                into("${config.desktopJnaPath}/${rustTargetToAndroidAbiOrDesktopValue(target)}")
+                into(destDir)
                 val packageName = config.packageName
                 include("lib$packageName.so", "lib$packageName.dylib", "$packageName.dll")
-                rename(packageName, config.libname)
+                rename(packageName, libname)
                 dependsOn(tasks.getByName("cargoBuild_$target"))
             }
         }

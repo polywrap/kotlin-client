@@ -4,8 +4,8 @@ import io.polywrap.core.Client
 import io.polywrap.core.Invoker
 import io.polywrap.core.Wrapper
 import io.polywrap.core.resolution.Uri
-import uniffi.main.FfiClient
-import uniffi.main.FfiUriResolutionContext
+import uniffi.polywrap_native.FfiClient
+import uniffi.polywrap_native.FfiUriResolutionContext
 
 @OptIn(ExperimentalUnsignedTypes::class)
 class PolywrapClient(private val ffiClient: FfiClient) : Invoker(ffiClient.asInvoker()), Client, AutoCloseable {

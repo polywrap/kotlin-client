@@ -1,12 +1,12 @@
 package io.polywrap.core.resolution
 
 import io.polywrap.core.Wrapper
-import uniffi.main.FfiUri
-import uniffi.main.FfiUriPackageOrWrapper
-import uniffi.main.FfiUriPackageOrWrapperKind
-import uniffi.main.FfiUriWrapPackage
-import uniffi.main.FfiUriWrapper
-import uniffi.main.FfiWrapPackage
+import uniffi.polywrap_native.FfiUri
+import uniffi.polywrap_native.FfiUriPackageOrWrapper
+import uniffi.polywrap_native.FfiUriPackageOrWrapperKind
+import uniffi.polywrap_native.FfiUriWrapPackage
+import uniffi.polywrap_native.FfiUriWrapper
+import uniffi.polywrap_native.FfiWrapPackage
 
 /**
  * Indicates that a URI resolved to either a wrap package, a wrapper, or a URI

@@ -1,13 +1,9 @@
 package io.polywrap.plugin
 
-import io.polywrap.core.AbortHandler
-import io.polywrap.core.DefaultAbortHandler
 import io.polywrap.core.Invoker
 import io.polywrap.core.Wrapper
-import io.polywrap.core.wrap
 import kotlinx.coroutines.runBlocking
-import uniffi.main.FfiAbortHandlerWrapping
-import uniffi.main.FfiInvoker
+import uniffi.polywrap_native.FfiInvoker
 
 /**
  * Represents a plugin wrapper, allowing the plugin module to be invoked as a [Wrapper].
@@ -22,33 +18,20 @@ data class PluginWrapper<TConfig>(val module: PluginModule<TConfig>) : Wrapper {
         method: String,
         args: List<UByte>?,
         env: List<UByte>?,
-        invoker: FfiInvoker,
-        abortHandler: FfiAbortHandlerWrapping?
-    ): List<UByte> = abortHandler.use {
-        this.invoke(
-            method = method,
-            args = args?.toUByteArray()?.asByteArray(),
-            env = env?.toUByteArray()?.asByteArray(),
-            invoker = Invoker(invoker),
-            abortHandler = abortHandler?.wrap()
-        ).getOrThrow().asUByteArray().toList()
-    }
+        invoker: FfiInvoker
+    ): List<UByte> = this.invoke(
+        method = method,
+        args = args?.toUByteArray()?.asByteArray(),
+        env = env?.toUByteArray()?.asByteArray(),
+        invoker = Invoker(invoker)
+    ).getOrThrow().asUByteArray().toList()
 
     override fun invoke(
         method: String,
         args: ByteArray?,
         env: ByteArray?,
-        invoker: Invoker,
-        abortHandler: AbortHandler?
+        invoker: Invoker
     ): Result<ByteArray> = runCatching {
-        val result = runBlocking { module.wrapInvoke(method, args, env, invoker) }
-
-        if (result.isFailure) {
-            val exception = result.exceptionOrNull()!!
-            val handler = abortHandler ?: DefaultAbortHandler()
-            handler.abort(exception.message ?: "Failed to invoke method \"$method\"")
-        }
-
-        return result
+        return runBlocking { module.wrapInvoke(method, args, env, invoker) }
     }
 }

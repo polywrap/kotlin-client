@@ -1,12 +1,12 @@
 package io.polywrap.core.resolution
 
 import io.polywrap.core.Invoker
-import uniffi.main.FfiException
-import uniffi.main.FfiInvoker
-import uniffi.main.FfiUri
-import uniffi.main.FfiUriPackageOrWrapper
-import uniffi.main.FfiUriResolutionContext
-import uniffi.main.FfiUriResolver
+import uniffi.polywrap_native.FfiException
+import uniffi.polywrap_native.FfiInvoker
+import uniffi.polywrap_native.FfiUri
+import uniffi.polywrap_native.FfiUriPackageOrWrapper
+import uniffi.polywrap_native.FfiUriResolutionContext
+import uniffi.polywrap_native.FfiUriResolver
 import kotlin.jvm.Throws
 
 interface UriResolver : FfiUriResolver, AutoCloseable {

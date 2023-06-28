@@ -2,12 +2,12 @@ package io.polywrap.uriResolvers
 
 import io.polywrap.core.Invoker
 import io.polywrap.core.resolution.*
-import uniffi.main.FfiException
-import uniffi.main.FfiInvoker
-import uniffi.main.FfiUri
-import uniffi.main.FfiUriPackageOrWrapper
-import uniffi.main.FfiUriResolutionContext
-import uniffi.main.FfiUriResolutionStep
+import uniffi.polywrap_native.FfiException
+import uniffi.polywrap_native.FfiInvoker
+import uniffi.polywrap_native.FfiUri
+import uniffi.polywrap_native.FfiUriPackageOrWrapper
+import uniffi.polywrap_native.FfiUriResolutionContext
+import uniffi.polywrap_native.FfiUriResolutionStep
 import kotlin.jvm.Throws
 
 /**

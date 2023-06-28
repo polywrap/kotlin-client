@@ -1,7 +1,7 @@
 package io.polywrap.core.resolution
 
-import uniffi.main.FfiUri
-import uniffi.main.FfiException
+import uniffi.polywrap_native.FfiUri
+import uniffi.polywrap_native.FfiException
 
 /**
  * Uri class for working with wrap URIs.

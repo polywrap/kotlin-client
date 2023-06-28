@@ -4,17 +4,15 @@ import io.polywrap.configBuilder.BaseConfigBuilder
 import io.polywrap.configBuilder.BuilderConfig
 import io.polywrap.configBuilder.ConfigBuilder
 import io.polywrap.configBuilder.DefaultBundle
-import io.polywrap.core.AbortHandler
 import io.polywrap.core.Invoker
 import io.polywrap.core.WrapPackage
 import io.polywrap.core.Wrapper
 import io.polywrap.core.WrapEnv
 import io.polywrap.core.resolution.UriResolver
-import uniffi.main.FfiAbortHandlerWrapping
-import uniffi.main.FfiInvoker
-import uniffi.main.FfiUri
-import uniffi.main.FfiUriPackageOrWrapper
-import uniffi.main.FfiUriResolutionContext
+import uniffi.polywrap_native.FfiInvoker
+import uniffi.polywrap_native.FfiUri
+import uniffi.polywrap_native.FfiUriPackageOrWrapper
+import uniffi.polywrap_native.FfiUriResolutionContext
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -49,8 +47,7 @@ class ConfigBuilderTest {
             method: String,
             args: List<UByte>?,
             env: List<UByte>?,
-            invoker: FfiInvoker,
-            abortHandler: FfiAbortHandlerWrapping?
+            invoker: FfiInvoker
         ): List<UByte> {
             throw NotImplementedError()
         }
@@ -59,8 +56,7 @@ class ConfigBuilderTest {
             method: String,
             args: ByteArray?,
             env: ByteArray?,
-            invoker: Invoker,
-            abortHandler: AbortHandler?
+            invoker: Invoker
         ): Result<ByteArray> {
             throw NotImplementedError()
         }

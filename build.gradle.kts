@@ -95,7 +95,7 @@ uniffi {
         "aarch64-apple-darwin"
     )
     packageName = "polywrap_native"
-    libname = "uniffi_main"
+    libname = "uniffi_polywrap_native"
     bindingsDir = uniffiBindingsDir
     // when false, only builds for current desktop platform even if it's not in the list
     isRelease = false

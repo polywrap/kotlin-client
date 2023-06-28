@@ -1,9 +1,9 @@
 package io.polywrap.core
 
 import io.polywrap.core.resolution.Uri
-import uniffi.main.FfiException
-import uniffi.main.FfiUri
-import uniffi.main.FfiUriResolutionContext
+import uniffi.polywrap_native.FfiException
+import uniffi.polywrap_native.FfiUri
+import uniffi.polywrap_native.FfiUriResolutionContext
 import kotlin.jvm.Throws
 
 interface WrapInvoker {

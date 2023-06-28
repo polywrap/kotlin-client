@@ -6,10 +6,10 @@ import io.polywrap.core.msgpack.msgPackDecode
 import io.polywrap.core.msgpack.msgPackEncode
 import io.polywrap.core.resolution.Uri
 import kotlinx.serialization.serializer
-import uniffi.main.FfiException
-import uniffi.main.FfiInvoker
-import uniffi.main.FfiUri
-import uniffi.main.FfiUriResolutionContext
+import uniffi.polywrap_native.FfiException
+import uniffi.polywrap_native.FfiInvoker
+import uniffi.polywrap_native.FfiUri
+import uniffi.polywrap_native.FfiUriResolutionContext
 import kotlin.jvm.Throws
 
 @OptIn(ExperimentalUnsignedTypes::class)

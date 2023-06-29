@@ -1,7 +1,7 @@
 package plugins
 
-import io.polywrap.configBuilder.ConfigBuilder
 import io.polywrap.configBuilder.DefaultBundle
+import io.polywrap.configBuilder.polywrapClient
 import io.polywrap.core.msgpack.MsgPackMap
 import io.polywrap.core.msgpack.msgPackDecode
 import io.polywrap.core.msgpack.msgPackEncode
@@ -75,9 +75,14 @@ class HttpPluginIntegrationTest {
 
     @Test
     fun invokeByClient() {
-        val client = ConfigBuilder().addDefaults().build()
+        val bundlePlugin = DefaultBundle.plugins["http"]!!
+
+        val client = polywrapClient {
+            addPackage(bundlePlugin.uri.toString() to bundlePlugin.plugin)
+        }
+
         val result = client.invoke<Response?>(
-            uri = DefaultBundle.plugins["http"]!!.uri,
+            uri = bundlePlugin.uri,
             method = "get",
             args = mapOf("url" to "https://httpbin.org/get")
         )

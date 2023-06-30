@@ -13,9 +13,6 @@ import io.polywrap.plugin.PluginPackage
 import io.polywrap.plugins.http.wrap.*
 import io.ktor.client.statement.HttpResponse as KtorHttpResponse
 
-// TODO: I would like to re-use the same HttpClient instance for all requests,
-//  but I need to somehow close it when the plugin is unloaded.
-
 /**
  * A plugin for making HTTP requests.
  *

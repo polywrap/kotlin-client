@@ -41,6 +41,7 @@ kotlin {
                 implementation("com.squareup.okio:okio:3.3.0") // fs plugin
                 implementation("io.ktor:ktor-client-core:2.3.1") // http plugin
                 implementation("io.ktor:ktor-client-android:2.3.1") // http plugin
+                implementation("org.slf4j:slf4j-nop:1.7.36") // suppress SLF4J logger warnings
             }
         }
         val commonTest by getting {
@@ -85,9 +86,9 @@ uniffi {
     androidJnaPath = "$projectDir/src/androidMain/resources"
     rustTargets = listOf(
         "armv7-linux-androideabi",
-//        "i686-linux-android",
+//        "i686-linux-android", // This arch is not used anymore
         "aarch64-linux-android",
-//        "x86_64-linux-android",
+//        "x86_64-linux-android", // This arch is not used anymore
 //        "x86_64-pc-windows-gnu", // TODO: this is failing
         "aarch64-unknown-linux-gnu",
         "x86_64-unknown-linux-gnu",

@@ -80,7 +80,7 @@ class HttpPluginIntegrationTest {
         val plugin = httpPlugin(null)
 
         val client = polywrapClient {
-            addPackage(uri.toString() to plugin)
+            setPackage(uri.toString() to plugin)
         }
 
         val result = client.invoke<Response?>(

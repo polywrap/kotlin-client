@@ -32,7 +32,7 @@ class EnvTestCase {
     private val client = ConfigBuilder()
         .addDefaults()
         .addEnvs(envs)
-        .addRedirect("ens/external-env.polywrap.eth" to externalWrapperUri.toString())
+        .setRedirect("ens/external-env.polywrap.eth" to externalWrapperUri.toString())
         .build()
 
     @Test

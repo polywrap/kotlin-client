@@ -27,42 +27,42 @@ abstract class BaseConfigBuilder : IConfigBuilder {
 
     override fun addBundle(bundle: Bundle): IConfigBuilder = this.apply {
         bundle.items.forEach { (uri, item) ->
-            item.pkg?.let { addPackage(uri to it) }
+            item.pkg?.let { setPackage(uri to it) }
             item.implements?.forEach { addInterfaceImplementation(it.toString(), uri) }
-            item.redirectFrom?.forEach { addRedirect(it.toString() to uri) }
+            item.redirectFrom?.forEach { setRedirect(it.toString() to uri) }
             item.env?.let { addEnv(uri to it) }
         }
     }
 
     override fun add(config: BuilderConfig): IConfigBuilder = this.apply {
         addEnvs(config.envs)
-        config.redirects.forEach { addRedirect(it.toPair()) }
-        config.wrappers.forEach { addWrapper(it.toPair()) }
-        config.packages.forEach { addPackage(it.toPair()) }
+        config.redirects.forEach { setRedirect(it.toPair()) }
+        config.wrappers.forEach { setWrapper(it.toPair()) }
+        config.packages.forEach { setPackage(it.toPair()) }
         config.interfaces.forEach { (interfaceUri, implementations) ->
             addInterfaceImplementations(interfaceUri, implementations.toList())
         }
         addResolvers(config.resolvers)
     }
 
-    override fun addWrapper(wrapper: Pair<String, Wrapper>): IConfigBuilder = this.apply {
+    override fun setWrapper(wrapper: Pair<String, Wrapper>): IConfigBuilder = this.apply {
         config.wrappers[validateUri(wrapper.first)] = wrapper.second
     }
 
-    override fun addWrappers(wrappers: Map<String, Wrapper>): IConfigBuilder = this.apply {
-        wrappers.forEach { addWrapper(it.toPair()) }
+    override fun setWrappers(wrappers: Map<String, Wrapper>): IConfigBuilder = this.apply {
+        wrappers.forEach { setWrapper(it.toPair()) }
     }
 
     override fun removeWrapper(uri: String): IConfigBuilder = this.apply {
         config.wrappers.remove(validateUri(uri))
     }
 
-    override fun addPackage(wrapPackage: Pair<String, WrapPackage>): IConfigBuilder = this.apply {
+    override fun setPackage(wrapPackage: Pair<String, WrapPackage>): IConfigBuilder = this.apply {
         config.packages[validateUri(wrapPackage.first)] = wrapPackage.second
     }
 
-    override fun addPackages(packages: Map<String, WrapPackage>): IConfigBuilder = this.apply {
-        packages.forEach { addPackage(it.toPair()) }
+    override fun setPackages(packages: Map<String, WrapPackage>): IConfigBuilder = this.apply {
+        packages.forEach { setPackage(it.toPair()) }
     }
 
     override fun removePackage(uri: String): IConfigBuilder = this.apply {
@@ -129,12 +129,12 @@ abstract class BaseConfigBuilder : IConfigBuilder {
         }
     }
 
-    override fun addRedirect(redirect: Pair<String, String>): IConfigBuilder = this.apply {
+    override fun setRedirect(redirect: Pair<String, String>): IConfigBuilder = this.apply {
         this.config.redirects[validateUri(redirect.first)] = validateUri(redirect.second)
     }
 
-    override fun addRedirects(redirects: Map<String, String>): IConfigBuilder = this.apply {
-        redirects.forEach { addRedirect(it.toPair()) }
+    override fun setRedirects(redirects: Map<String, String>): IConfigBuilder = this.apply {
+        redirects.forEach { setRedirect(it.toPair()) }
     }
 
     override fun removeRedirect(from: String): IConfigBuilder = this.apply {

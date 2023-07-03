@@ -16,7 +16,7 @@ class AsyncifyTestCase {
     private val uri = Uri("fs/$pathToTestWrappers/asyncify/implementations/rs")
     private val client = ConfigBuilder()
         .addDefaults()
-        .addPackage(
+        .setPackage(
             "wrap://ens/memory-storage.polywrap.eth"
                 to memoryStoragePlugin(null)
         )

@@ -54,7 +54,7 @@ class FileSystemPluginIntegrationTest {
         val plugin = fileSystemPlugin(null)
 
         val client = polywrapClient {
-            addPackage(uri.toString() to plugin)
+            setPackage(uri.toString() to plugin)
         }
 
         val result = client.invoke<ByteArray>(

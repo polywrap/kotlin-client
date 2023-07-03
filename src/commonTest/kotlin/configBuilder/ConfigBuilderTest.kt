@@ -438,7 +438,7 @@ class ConfigBuilderTest {
         val from = "wrap://ens/from.this.ens"
         val to = "wrap://ens/to.that.ens"
 
-        val builder = ConfigBuilder().addRedirect(from to to)
+        val builder = ConfigBuilder().setRedirect(from to to)
 
         val config = builder.build()
         val builderConfig = builder.config
@@ -458,8 +458,8 @@ class ConfigBuilderTest {
         val to2 = "wrap://ens/to.that2.ens"
 
         val builder = ConfigBuilder()
-            .addRedirect(from1 to to1)
-            .addRedirect(from2 to to2)
+            .setRedirect(from1 to to1)
+            .setRedirect(from2 to to2)
 
         val config = builder.build()
         val builderConfig = builder.config
@@ -479,9 +479,9 @@ class ConfigBuilderTest {
         val to2 = "wrap://ens/to.that2.ens"
 
         val builder = ConfigBuilder()
-            .addRedirect(from1 to to1)
-            .addRedirect(from2 to to1)
-            .addRedirect(from1 to to2)
+            .setRedirect(from1 to to1)
+            .setRedirect(from2 to to1)
+            .setRedirect(from1 to to2)
 
         val config = builder.build()
         val builderConfig = builder.config
@@ -500,8 +500,8 @@ class ConfigBuilderTest {
         val from2 = "wrap://ens/from.this2.ens"
         val to2 = "wrap://ens/to.that2.ens"
         val builder = ConfigBuilder()
-            .addRedirect(from1 to to1)
-            .addRedirect(from2 to to2)
+            .setRedirect(from1 to to1)
+            .setRedirect(from2 to to2)
             .removeRedirect(from1)
 
         val config = builder.build()
@@ -557,7 +557,7 @@ class ConfigBuilderTest {
         val uri = "wrap://ens/some.package.eth"
 
         val builder = ConfigBuilder()
-            .addPackage(uri to mockWrapPackage)
+            .setPackage(uri to mockWrapPackage)
         val config = builder.config
 
         assertEquals(
@@ -573,7 +573,7 @@ class ConfigBuilderTest {
         val uri1 = "wrap://ens/some1.package.eth"
         val uri2 = "wrap://ens/some2.package.eth"
 
-        val builder = ConfigBuilder().addPackages(
+        val builder = ConfigBuilder().setPackages(
             mapOf(
                 uri1 to mockWrapPackage,
                 uri2 to mockWrapPackage
@@ -596,7 +596,7 @@ class ConfigBuilderTest {
         val uri2 = "wrap://ens/some2.package.eth"
 
         val builder = ConfigBuilder()
-            .addPackages(
+            .setPackages(
                 mapOf(
                     uri1 to mockWrapPackage,
                     uri2 to mockWrapPackage
@@ -617,7 +617,7 @@ class ConfigBuilderTest {
     fun shouldAddAWrapper() {
         val uri = "wrap://ens/some.wrapper.eth"
 
-        val builder = ConfigBuilder().addWrapper(uri to mockWrapper)
+        val builder = ConfigBuilder().setWrapper(uri to mockWrapper)
         val config = builder.config
 
         assertEquals(
@@ -631,7 +631,7 @@ class ConfigBuilderTest {
         val uri1 = "wrap://ens/some1.wrapper.eth"
         val uri2 = "wrap://ens/some2.wrapper.eth"
 
-        val builder = ConfigBuilder().addWrappers(
+        val builder = ConfigBuilder().setWrappers(
             mapOf(
                 uri1 to mockWrapper,
                 uri2 to mockWrapper
@@ -654,7 +654,7 @@ class ConfigBuilderTest {
         val uri2 = "wrap://ens/some2.wrapper.eth"
 
         val builder = ConfigBuilder()
-            .addWrappers(
+            .setWrappers(
                 mapOf(
                     uri1 to mockWrapper,
                     uri2 to mockWrapper
@@ -738,8 +738,8 @@ class ConfigBuilderTest {
         val longUri = "wrap://ens/some2.wrapper.eth"
 
         val builder1 = ConfigBuilder()
-            .addRedirect(shortUri to longUri)
-            .addRedirect(longUri to shortUri)
+            .setRedirect(shortUri to longUri)
+            .setRedirect(longUri to shortUri)
         val config1 = builder1.config
 
         assertEquals(
@@ -767,7 +767,7 @@ class ConfigBuilderTest {
         val shortUriSanitized = "wrap://$shortUri"
         val longUri = "wrap://ens/some2.package.eth"
 
-        val builder1 = ConfigBuilder().addPackages(
+        val builder1 = ConfigBuilder().setPackages(
             mapOf(
                 shortUri to mockWrapPackage,
                 longUri to mockWrapPackage
@@ -800,7 +800,7 @@ class ConfigBuilderTest {
         val shortUriSanitized = "wrap://$shortUri"
         val longUri = "wrap://ens/some2.wrapper.eth"
 
-        val builder1 = ConfigBuilder().addWrappers(
+        val builder1 = ConfigBuilder().setWrappers(
             mapOf(
                 shortUri to mockWrapper,
                 longUri to mockWrapper

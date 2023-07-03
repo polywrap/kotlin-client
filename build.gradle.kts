@@ -66,16 +66,12 @@ kotlin {
                 implementation("net.java.dev.jna:jna:5.13.0@aar")
             }
         }
-        val androidUnitTest by getting {
-            dependencies {
-                implementation("junit:junit:4.13.2")
-            }
-        }
-        val androidInstrumentedTest by getting {
-            dependencies {
-                implementation("junit:junit:4.13.2")
-            }
-        }
+        // TODO: test on android device
+//        val androidInstrumentedTest by getting {
+//            dependencies {
+//                implementation("junit:junit:4.13.2")
+//            }
+//        }
     }
 }
 
@@ -147,7 +143,6 @@ configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
         exclude("**/resources/**")
         exclude("**/commonTest/**")
         exclude("**/jvmTest/**")
-        exclude("**/androidUnitTest/**")
         exclude("**/androidInstrumentedTest/**")
         exclude("**/wrap/**")
     }

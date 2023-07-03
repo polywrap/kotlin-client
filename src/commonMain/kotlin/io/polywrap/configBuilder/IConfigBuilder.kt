@@ -61,7 +61,7 @@ interface IConfigBuilder {
      * @param wrapper A [Pair] of the URI key and the [Wrapper] to add.
      * @return This [IConfigBuilder] instance for chaining calls.
      */
-    fun addWrapper(wrapper: Pair<String, Wrapper>): IConfigBuilder
+    fun setWrapper(wrapper: Pair<String, Wrapper>): IConfigBuilder
 
     /**
      * Adds a set of wrappers with specified URI keys to the current configuration.
@@ -69,7 +69,7 @@ interface IConfigBuilder {
      * @param wrappers A [Map] of URI keys to [Wrapper] instances to add.
      * @return This [IConfigBuilder] instance for chaining calls.
      */
-    fun addWrappers(wrappers: Map<String, Wrapper>): IConfigBuilder
+    fun setWrappers(wrappers: Map<String, Wrapper>): IConfigBuilder
 
     /**
      * Removes a wrapper with the specified URI key from the current configuration.
@@ -85,7 +85,7 @@ interface IConfigBuilder {
      * @param wrapPackage A [Pair] of the URI key and the [WrapPackage] to add.
      * @return This [IConfigBuilder] instance for chaining calls.
      */
-    fun addPackage(wrapPackage: Pair<String, WrapPackage>): IConfigBuilder
+    fun setPackage(wrapPackage: Pair<String, WrapPackage>): IConfigBuilder
 
     /**
      * Adds a set of packages with specified URI keys to the current configuration.
@@ -93,7 +93,7 @@ interface IConfigBuilder {
      * @param packages A [Map] of URI keys to [WrapPackage] instances to add.
      * @return This [IConfigBuilder] instance for chaining calls.
      */
-    fun addPackages(packages: Map<String, WrapPackage>): IConfigBuilder
+    fun setPackages(packages: Map<String, WrapPackage>): IConfigBuilder
 
     /**
      * Removes a package with the specified URI key from the current configuration.
@@ -168,7 +168,7 @@ interface IConfigBuilder {
      * @param redirect A [Pair] of the source URI and the destination URI.
      * @return This [IConfigBuilder] instance for chaining calls.
      */
-    fun addRedirect(redirect: Pair<String, String>): IConfigBuilder
+    fun setRedirect(redirect: Pair<String, String>): IConfigBuilder
 
     /**
      * Adds a set of redirects with specified source and destination URIs.
@@ -176,7 +176,7 @@ interface IConfigBuilder {
      * @param redirects A [Map] of source URIs to destination URIs.
      * @return This [IConfigBuilder] instance for chaining calls.
      */
-    fun addRedirects(redirects: Map<String, String>): IConfigBuilder
+    fun setRedirects(redirects: Map<String, String>): IConfigBuilder
 
     /**
      * Removes a redirect with the specified source URI.

@@ -14,7 +14,7 @@ class SubinvokeTestCase {
 
         val client = ConfigBuilder()
             .addDefaults()
-            .addRedirect("ens/imported-subinvoke.eth" to subinvokeUri)
+            .setRedirect("ens/imported-subinvoke.eth" to subinvokeUri)
             .build()
 
         val result = client.invoke<Int>(

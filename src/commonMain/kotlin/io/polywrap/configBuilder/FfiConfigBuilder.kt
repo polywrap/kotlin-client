@@ -105,6 +105,13 @@ internal class FfiConfigBuilder : AutoCloseable {
         }
     }
 
+    fun addBundle(bundle: DefaultBundle) {
+        when (bundle) {
+            DefaultBundle.System -> ffiBuilderConfig.addSystemDefaults()
+            DefaultBundle.Web3 -> ffiBuilderConfig.addWeb3Defaults()
+        }
+    }
+
     /**
      * Returns a configured [FfiClient] instance.
      */

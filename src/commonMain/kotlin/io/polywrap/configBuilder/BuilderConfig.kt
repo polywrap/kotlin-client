@@ -25,5 +25,6 @@ data class BuilderConfig(
     val redirects: MutableMap<String, String>,
     val wrappers: MutableMap<String, Wrapper>,
     val packages: MutableMap<String, WrapPackage>,
-    val resolvers: MutableList<UriResolver>
+    val resolvers: MutableList<UriResolver>,
+    val ffiBundles: MutableList<DefaultBundle>
 )

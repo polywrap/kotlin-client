@@ -116,12 +116,13 @@ class ConfigBuilderTest {
     @Test
     fun shouldSuccessfullyAddConfigObjectAndBuild() {
         val configObject = BuilderConfig(
-            testEnvs,
-            testInterfaces,
-            testUriRedirects,
-            mutableMapOf(),
-            mutableMapOf(),
-            mutableListOf(testUriResolver)
+            envs = testEnvs,
+            interfaces = testInterfaces,
+            redirects = testUriRedirects,
+            wrappers = mutableMapOf(),
+            packages = mutableMapOf(),
+            resolvers = mutableListOf(testUriResolver),
+            ffiBundles = mutableListOf()
         )
 
         val builder = ConfigBuilder().add(configObject)
@@ -138,7 +139,15 @@ class ConfigBuilderTest {
 
         assertNotNull(clientConfig)
 
-        val expectedBuilderConfig = DefaultBundle.getConfig()
+        val expectedBuilderConfig = BuilderConfig(
+            envs = mutableMapOf(),
+            interfaces = mutableMapOf(),
+            redirects = mutableMapOf(),
+            wrappers = mutableMapOf(),
+            packages = mutableMapOf(),
+            resolvers = mutableListOf(),
+            ffiBundles = mutableListOf(DefaultBundle.System, DefaultBundle.Web3)
+        )
         assertEquals(expectedBuilderConfig, builderConfig)
     }
 

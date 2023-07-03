@@ -1,11 +1,12 @@
 package plugins
 
-import io.polywrap.configBuilder.DefaultBundle
 import io.polywrap.configBuilder.polywrapClient
 import io.polywrap.core.msgpack.MsgPackMap
 import io.polywrap.core.msgpack.msgPackDecode
 import io.polywrap.core.msgpack.msgPackEncode
 import io.polywrap.core.msgpack.toMsgPackMap
+import io.polywrap.core.resolution.Uri
+import io.polywrap.plugins.http.httpPlugin
 import io.polywrap.plugins.http.wrap.*
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
@@ -75,14 +76,15 @@ class HttpPluginIntegrationTest {
 
     @Test
     fun invokeByClient() {
-        val bundlePlugin = DefaultBundle.plugins["http"]!!
+        val uri = Uri("plugin/http@1.1.0")
+        val plugin = httpPlugin(null)
 
         val client = polywrapClient {
-            addPackage(bundlePlugin.uri.toString() to bundlePlugin.plugin)
+            addPackage(uri.toString() to plugin)
         }
 
         val result = client.invoke<Response?>(
-            uri = bundlePlugin.uri,
+            uri = uri,
             method = "get",
             args = mapOf("url" to "https://httpbin.org/get")
         )

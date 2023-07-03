@@ -34,11 +34,26 @@ interface IConfigBuilder {
     fun add(config: BuilderConfig): IConfigBuilder
 
     /**
-     * Adds default configuration bundle to the current configuration.
+     * Adds all default configuration [Bundle]s to the current configuration.
      *
      * @return This [IConfigBuilder] instance for chaining calls.
      */
     fun addDefaults(): IConfigBuilder
+
+    /**
+     * Adds a [DefaultBundle] from the FFI.
+     * Bundles defined in the FFI are always added to the final configuration before all other items.
+     *
+     * @return This [IConfigBuilder] instance for chaining calls.
+     */
+    fun addBundle(bundle: DefaultBundle): IConfigBuilder
+
+    /**
+     * Adds a [Bundle] to the current configuration.
+     *
+     * @return This [IConfigBuilder] instance for chaining calls.
+     */
+    fun addBundle(bundle: Bundle): IConfigBuilder
 
     /**
      * Adds a wrapper with a specified URI key to the current configuration.

@@ -80,7 +80,7 @@ kotlin {
 }
 
 uniffi {
-    rustClientRepoBranch = "main"
+    rustClientRepoBranch = "namesty/ffi-default-config"
     clonesDir = "$projectDir/clones"
     desktopJnaPath = "$projectDir/src/jvmMain/resources"
     androidJnaPath = "$projectDir/src/androidMain/resources"

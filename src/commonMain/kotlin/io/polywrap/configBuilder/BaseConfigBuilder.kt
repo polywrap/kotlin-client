@@ -17,8 +17,22 @@ abstract class BaseConfigBuilder : IConfigBuilder {
         redirects = mutableMapOf(),
         wrappers = mutableMapOf(),
         packages = mutableMapOf(),
-        resolvers = mutableListOf()
+        resolvers = mutableListOf(),
+        ffiBundles = mutableListOf()
     )
+
+    override fun addBundle(bundle: DefaultBundle): IConfigBuilder = this.apply {
+        config.ffiBundles.add(bundle)
+    }
+
+    override fun addBundle(bundle: Bundle): IConfigBuilder = this.apply {
+        bundle.items.forEach { (uri, item) ->
+            item.pkg?.let { addPackage(uri to it) }
+            item.implements?.forEach { addInterfaceImplementation(it.toString(), uri) }
+            item.redirectFrom?.forEach { addRedirect(it.toString() to uri) }
+            item.env?.let { addEnv(uri to it) }
+        }
+    }
 
     override fun add(config: BuilderConfig): IConfigBuilder = this.apply {
         addEnvs(config.envs)

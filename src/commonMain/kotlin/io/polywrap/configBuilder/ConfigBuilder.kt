@@ -8,17 +8,23 @@ import io.polywrap.client.PolywrapClient
  */
 class ConfigBuilder : BaseConfigBuilder() {
 
-    override fun addDefaults(): IConfigBuilder {
-        return add(DefaultBundle.getConfig())
+    override fun addDefaults(): IConfigBuilder = this.apply {
+        addBundle(DefaultBundle.System)
+        addBundle(DefaultBundle.Web3)
     }
 
     override fun build(): PolywrapClient = FfiConfigBuilder().use {
+        buildFfiBundles(it)
         buildEnvs(it)
         buildInterfaces(it)
         buildRedirects(it)
         buildWrappers(it)
         buildPackages(it)
         PolywrapClient(it.build())
+    }
+
+    private fun buildFfiBundles(ffiConfigBuilder: FfiConfigBuilder) {
+        config.ffiBundles.forEach { ffiConfigBuilder.addBundle(it) }
     }
 
     private fun buildEnvs(ffiConfigBuilder: FfiConfigBuilder) {

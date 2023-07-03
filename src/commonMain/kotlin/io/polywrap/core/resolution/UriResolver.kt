@@ -4,12 +4,11 @@ import io.polywrap.core.Invoker
 import uniffi.polywrap_native.FfiException
 import uniffi.polywrap_native.FfiInvoker
 import uniffi.polywrap_native.FfiUri
-import uniffi.polywrap_native.FfiUriPackageOrWrapper
 import uniffi.polywrap_native.FfiUriResolutionContext
-import uniffi.polywrap_native.FfiUriResolver
+import uniffi.polywrap_native.IffiUriResolver
 import kotlin.jvm.Throws
 
-interface UriResolver : FfiUriResolver, AutoCloseable {
+interface UriResolver : IffiUriResolver, AutoCloseable {
 
     /**
      * Tries to resolve the given [Uri] to a Uri, WrapPackage, or Wrapper.
@@ -21,9 +20,9 @@ interface UriResolver : FfiUriResolver, AutoCloseable {
      * @throws [FfiException]
      */
     @Throws(FfiException::class)
-    override fun tryResolveUri(
+    override fun ffiTryResolveUri(
         uri: FfiUri,
         invoker: FfiInvoker,
         resolutionContext: FfiUriResolutionContext
-    ): FfiUriPackageOrWrapper
+    ): UriPackageOrWrapper
 }

@@ -6,6 +6,7 @@ import io.polywrap.core.Wrapper
 import io.polywrap.core.resolution.Uri
 import uniffi.polywrap_native.FfiClient
 import uniffi.polywrap_native.FfiUriResolutionContext
+import uniffi.polywrap_native.FfiWrapper
 
 @OptIn(ExperimentalUnsignedTypes::class)
 class PolywrapClient(private val ffiClient: FfiClient) : Invoker(ffiClient.asInvoker()), Client, AutoCloseable {
@@ -18,15 +19,17 @@ class PolywrapClient(private val ffiClient: FfiClient) : Invoker(ffiClient.asInv
         env: ByteArray?,
         resolutionContext: FfiUriResolutionContext?
     ): Result<ByteArray> = runCatching {
-        uri.toFfi().use {
-            ffiClient.invokeWrapperRaw(
-                wrapper = wrapper,
-                uri = it,
-                method = method,
-                args = args?.asUByteArray()?.toList(),
-                env = env?.asUByteArray()?.toList(),
-                resolutionContext = resolutionContext
-            )
+        uri.toFfi().use { ffiUri ->
+            FfiWrapper(wrapper).use { ffiWrapper ->
+                ffiClient.invokeWrapperRaw(
+                    wrapper = ffiWrapper,
+                    uri = ffiUri,
+                    method = method,
+                    args = args?.asUByteArray()?.toList(),
+                    env = env?.asUByteArray()?.toList(),
+                    resolutionContext = resolutionContext
+                )
+            }
         }
     }.map {
         it.toUByteArray().asByteArray()
@@ -35,9 +38,8 @@ class PolywrapClient(private val ffiClient: FfiClient) : Invoker(ffiClient.asInv
     override fun loadWrapper(
         uri: Uri,
         resolutionContext: FfiUriResolutionContext?
-    ): Result<Wrapper> = runCatching {
-        val ffiWrapper = uri.toFfi().use { ffiClient.loadWrapper(it, resolutionContext) }
-        Wrapper.fromFfi(ffiWrapper)
+    ): Result<FfiWrapper> = runCatching {
+        uri.toFfi().use { ffiClient.loadWrapper(it, resolutionContext) }
     }
 
     override fun close() {

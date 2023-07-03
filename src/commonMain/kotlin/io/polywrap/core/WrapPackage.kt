@@ -1,12 +1,13 @@
 package io.polywrap.core
 
 import io.polywrap.core.wrap.WrapManifest
-import uniffi.polywrap_native.FfiWrapPackage
+import io.polywrap.plugin.PluginWrapper
+import uniffi.polywrap_native.IffiWrapPackage
 
 /**
  * A wrap package, capable of producing instances of a wrapper and its manifest
  */
-interface WrapPackage : FfiWrapPackage {
+interface WrapPackage : IffiWrapPackage {
     /**
      * Get a file from the Wrapper package.
      *
@@ -21,4 +22,11 @@ interface WrapPackage : FfiWrapPackage {
      * @return A Result containing the wrap manifest or an error
      */
     fun getManifest(): Result<WrapManifest>
+
+    /**
+     * Produce an instance of the package's Wrapper
+     *
+     * @return A [Wrapper] instance
+     */
+    fun createWrapper(): Wrapper
 }

@@ -14,7 +14,7 @@ import uniffi.polywrap_native.FfiInvoker
 @OptIn(ExperimentalUnsignedTypes::class)
 data class PluginWrapper<TConfig>(val module: PluginModule<TConfig>) : Wrapper {
 
-    override fun invoke(
+    override fun ffiInvoke(
         method: String,
         args: List<UByte>?,
         env: List<UByte>?,

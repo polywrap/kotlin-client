@@ -3,6 +3,7 @@ package io.polywrap.core
 import io.polywrap.core.resolution.Uri
 import uniffi.polywrap_native.FfiException
 import uniffi.polywrap_native.FfiUriResolutionContext
+import uniffi.polywrap_native.FfiWrapper
 import kotlin.jvm.Throws
 
 /**
@@ -15,7 +16,7 @@ interface Client {
      * @param uri The URI of the wrapper to resolve.
      * @param resolutionContext The [FfiUriResolutionContext] to be used during URI resolution, or null for a default context.
      * The caller owns resolutionContext and is responsible for closing it to prevent a memory leak.
-     * @return A [Result] containing the [Wrapper], or an error if the resolution fails.
+     * @return A [Result] containing the [FfiWrapper], or an error if the resolution fails.
      *
      * @throws FfiException
      */
@@ -23,7 +24,7 @@ interface Client {
     fun loadWrapper(
         uri: Uri,
         resolutionContext: FfiUriResolutionContext? = null
-    ): Result<Wrapper>
+    ): Result<FfiWrapper>
 
     /**
      * Invoke a wrapper using an instance of the wrapper.

@@ -39,7 +39,7 @@ abstract class UriResolverAggregator : UriResolver {
      */
     protected abstract fun getStepDescription(
         uri: FfiUri,
-        result: FfiUriPackageOrWrapper
+        result: UriPackageOrWrapper
     ): String
 
     /**
@@ -47,15 +47,15 @@ abstract class UriResolverAggregator : UriResolver {
      * @param uri The [FfiUri] to resolve.
      * @param invoker The [Invoker] instance.
      * @param resolutionContext The [FfiUriResolutionContext] for keeping track of the resolution history.
-     * @return An [FfiUriPackageOrWrapper] if the resolution is successful
+     * @return An [UriPackageOrWrapper] if the resolution is successful
      * @throws [FfiException] if resolution fails
      */
     @Throws(FfiException::class)
-    override fun tryResolveUri(
+    override fun ffiTryResolveUri(
         uri: FfiUri,
         invoker: FfiInvoker,
         resolutionContext: FfiUriResolutionContext
-    ): FfiUriPackageOrWrapper {
+    ): UriPackageOrWrapper {
         val resolvers = getUriResolvers(uri, invoker, resolutionContext).getOrThrow()
         return tryResolveUriWithResolvers(uri, invoker, resolutionContext, resolvers)
     }
@@ -66,7 +66,7 @@ abstract class UriResolverAggregator : UriResolver {
      * @param uri The [FfiUri] to resolve.
      * @param invoker The [Invoker] instance.
      * @param resolutionContext The [FfiUriResolutionContext] for keeping track of the resolution history.
-     * @return An [FfiUriPackageOrWrapper] if the resolution is successful
+     * @return An [UriPackageOrWrapper] if the resolution is successful
      * @throws [FfiException] if resolution fails
      */
     @Throws(FfiException::class)
@@ -75,35 +75,38 @@ abstract class UriResolverAggregator : UriResolver {
         invoker: FfiInvoker,
         resolutionContext: FfiUriResolutionContext,
         resolvers: List<UriResolver>
-    ): FfiUriPackageOrWrapper {
+    ): UriPackageOrWrapper {
         val subContext = resolutionContext.createSubHistoryContext()
 
         for (resolver in resolvers) {
-            val result = resolver.tryResolveUri(uri, invoker, subContext)
-            val isUri = result.getKind() == FfiUriPackageOrWrapperKind.URI
+            val result = resolver.ffiTryResolveUri(uri, invoker, subContext)
+            val isUri = result.ffiGetKind() == FfiUriPackageOrWrapperKind.URI
             if (!isUri) {
-                resolutionContext.trackStep(
-                    FfiUriResolutionStep(
-                        sourceUri = uri,
-                        result = result,
-                        subHistory = subContext.getHistory(),
-                        description = getStepDescription(uri, result)
+                FfiUriPackageOrWrapper(result).use {
+                    resolutionContext.trackStep(
+                        FfiUriResolutionStep(
+                            sourceUri = uri,
+                            result = it,
+                            subHistory = subContext.getHistory(),
+                            description = getStepDescription(uri, result)
+                        )
                     )
-                )
-
+                }
                 return result
             }
         }
 
-        return UriPackageOrWrapper.UriValue(uri).also {
-            resolutionContext.trackStep(
-                FfiUriResolutionStep(
-                    sourceUri = uri,
-                    result = it,
-                    subHistory = subContext.getHistory(),
-                    description = getStepDescription(uri, it)
+        return UriPackageOrWrapper.UriValue(uri).also { uriValue ->
+            FfiUriPackageOrWrapper(uriValue).use {
+                resolutionContext.trackStep(
+                    FfiUriResolutionStep(
+                        sourceUri = uri,
+                        result = it,
+                        subHistory = subContext.getHistory(),
+                        description = getStepDescription(uri, uriValue)
+                    )
                 )
-            )
+            }
         }
     }
 }

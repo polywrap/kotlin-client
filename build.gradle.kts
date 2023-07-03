@@ -80,7 +80,7 @@ kotlin {
 }
 
 uniffi {
-    rustClientRepoBranch = "main"
+    rustClientRepoBranch = "debug/ffi-interfaces-wrappers"
     clonesDir = "$projectDir/clones"
     desktopJnaPath = "$projectDir/src/jvmMain/resources"
     androidJnaPath = "$projectDir/src/androidMain/resources"

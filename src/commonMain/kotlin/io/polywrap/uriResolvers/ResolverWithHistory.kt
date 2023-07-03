@@ -8,6 +8,7 @@ import uniffi.polywrap_native.FfiUri
 import uniffi.polywrap_native.FfiUriPackageOrWrapper
 import uniffi.polywrap_native.FfiUriResolutionContext
 import uniffi.polywrap_native.FfiUriResolutionStep
+import uniffi.polywrap_native.IffiUriPackageOrWrapper
 import kotlin.jvm.Throws
 
 /**
@@ -23,25 +24,27 @@ abstract class ResolverWithHistory : UriResolver {
      * @param uri The [FfiUri] to resolve.
      * @param invoker The [Invoker] instance.
      * @param resolutionContext The [FfiUriResolutionContext] for keeping track of the resolution history.
-     * @return An [FfiUriPackageOrWrapper] if the resolution is successful
+     * @return An [UriPackageOrWrapper] if the resolution is successful
      * @throws [FfiException] if resolution fails
      */
     @Throws(FfiException::class)
-    override fun tryResolveUri(
+    override fun ffiTryResolveUri(
         uri: FfiUri,
         invoker: FfiInvoker,
         resolutionContext: FfiUriResolutionContext
-    ): FfiUriPackageOrWrapper {
-        val result = this._tryResolveUri(uri, invoker, resolutionContext, false)
+    ): UriPackageOrWrapper {
+        val result = this._tryResolveUri(uri, invoker, resolutionContext)
 
-        resolutionContext.trackStep(
-            FfiUriResolutionStep(
-                sourceUri = uri,
-                result = result,
-                description = this.getStepDescription(uri, result),
-                subHistory = null
+        FfiUriPackageOrWrapper(result).use {
+            resolutionContext.trackStep(
+                FfiUriResolutionStep(
+                    sourceUri = uri,
+                    result = it,
+                    description = this.getStepDescription(uri, result),
+                    subHistory = null
+                )
             )
-        )
+        }
 
         return result
     }
@@ -53,14 +56,13 @@ abstract class ResolverWithHistory : UriResolver {
      * @param result The [Result] containing a wrap package, a wrapper, or a URI if successful.
      * @return A [String] description of the resolution step.
      */
-    protected abstract fun getStepDescription(uri: FfiUri, result: FfiUriPackageOrWrapper): String
+    protected abstract fun getStepDescription(uri: FfiUri, result: UriPackageOrWrapper): String
 
     /**
      * The actual URI resolution implementation. Must be implemented by subclasses.
      * @param uri The URI to resolve.
      * @param invoker The [Invoker] instance used to invoke a wrapper implementing the [UriResolver] interface.
      * @param resolutionContext The current URI resolution context.
-     * @param resolveToPackage If true, the resolver will attempt to resolve the URI to a wrap package. If false, the resolver will attempt to resolve the URI to a wrapper.
      * @return A [UriPackageOrWrapper] if successful.
      * @throws [Exception] if resolution fails
      */
@@ -68,7 +70,6 @@ abstract class ResolverWithHistory : UriResolver {
     protected abstract fun _tryResolveUri(
         uri: FfiUri,
         invoker: FfiInvoker,
-        resolutionContext: FfiUriResolutionContext,
-        resolveToPackage: Boolean
-    ): FfiUriPackageOrWrapper
+        resolutionContext: FfiUriResolutionContext
+    ): UriPackageOrWrapper
 }

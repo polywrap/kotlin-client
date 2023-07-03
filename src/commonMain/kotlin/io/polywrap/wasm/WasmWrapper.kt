@@ -15,7 +15,7 @@ data class WasmWrapper(val wasmModule: ByteArray) : Wrapper, AutoCloseable {
 
     private val ffiWrapper = FfiWasmWrapper(wasmModule.asUByteArray().toList())
 
-    override fun invoke(
+    override fun ffiInvoke(
         method: String,
         args: List<UByte>?,
         env: List<UByte>?,

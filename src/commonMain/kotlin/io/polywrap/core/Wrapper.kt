@@ -2,12 +2,12 @@ package io.polywrap.core
 
 import uniffi.polywrap_native.FfiException
 import uniffi.polywrap_native.FfiInvoker
-import uniffi.polywrap_native.FfiWrapper
+import uniffi.polywrap_native.IffiWrapper
 
 /**
  * The Wrapper definition, which can be used to invoke this particular Wrapper.
  */
-interface Wrapper : FfiWrapper {
+interface Wrapper : IffiWrapper {
     /**
      * Invokes a method in the Wrapper with the specified options and invoker.
      *
@@ -18,7 +18,7 @@ interface Wrapper : FfiWrapper {
      * @return A list of MessagePack-encoded bytes representing the invocation result
      * @throws FfiException
      */
-    override fun invoke(
+    override fun ffiInvoke(
         method: String,
         args: List<UByte>?,
         env: List<UByte>?,
@@ -40,31 +40,4 @@ interface Wrapper : FfiWrapper {
         env: ByteArray? = null,
         invoker: Invoker
     ): Result<ByteArray>
-
-
-    companion object {
-        @OptIn(ExperimentalUnsignedTypes::class)
-        fun fromFfi(ffiWrapper: FfiWrapper): Wrapper = object : Wrapper {
-            override fun invoke(
-                method: String,
-                args: List<UByte>?,
-                env: List<UByte>?,
-                invoker: FfiInvoker
-            ): List<UByte> = ffiWrapper.invoke(method, args, env, invoker)
-
-            override fun invoke(
-                method: String,
-                args: ByteArray?,
-                env: ByteArray?,
-                invoker: Invoker
-            ): Result<ByteArray> = runCatching {
-                ffiWrapper.invoke(
-                    method = method,
-                    args = args?.asUByteArray()?.toList(),
-                    env = env?.asUByteArray()?.toList(),
-                    invoker = invoker.ffiInvoker
-                ).toUByteArray().asByteArray()
-            }
-        }
-    }
 }

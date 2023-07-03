@@ -8,10 +8,10 @@ import io.polywrap.core.Invoker
 import io.polywrap.core.WrapPackage
 import io.polywrap.core.Wrapper
 import io.polywrap.core.WrapEnv
+import io.polywrap.core.resolution.UriPackageOrWrapper
 import io.polywrap.core.resolution.UriResolver
 import uniffi.polywrap_native.FfiInvoker
 import uniffi.polywrap_native.FfiUri
-import uniffi.polywrap_native.FfiUriPackageOrWrapper
 import uniffi.polywrap_native.FfiUriResolutionContext
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -23,11 +23,11 @@ class ConfigBuilderTest {
     private val emptyBuilderConfig = ConfigBuilder().config
 
     class MockUriResolver(val from: String, val to: String) : UriResolver {
-        override fun tryResolveUri(
+        override fun ffiTryResolveUri(
             uri: FfiUri,
             invoker: FfiInvoker,
             resolutionContext: FfiUriResolutionContext
-        ): FfiUriPackageOrWrapper {
+        ): UriPackageOrWrapper {
             throw NotImplementedError()
         }
 
@@ -35,6 +35,7 @@ class ConfigBuilderTest {
     }
 
     private val mockWrapPackage: WrapPackage = object : WrapPackage {
+        override fun ffiCreateWrapper() = throw NotImplementedError()
         override fun createWrapper() = throw NotImplementedError()
         override fun getManifest() = throw NotImplementedError()
         override fun getFile(path: String): Result<ByteArray> {
@@ -43,7 +44,7 @@ class ConfigBuilderTest {
     }
 
     private val mockWrapper: Wrapper = object : Wrapper {
-        override fun invoke(
+        override fun ffiInvoke(
             method: String,
             args: List<UByte>?,
             env: List<UByte>?,

@@ -38,8 +38,8 @@ class DefaultBundle {
             }
         )
 
-        val textRecordResolverRedirect: Pair<Uri, Uri> =
-            Uri("ens/wraps.eth:ens-text-record-uri-resolver-ext@1.0.1") to Uri("ipfs/QmaM318ABUXDhc5eZGGbmDxkb2ZgnbLxigm5TyZcCsh1Kw")
+//        val textRecordResolverRedirect: Pair<Uri, Uri> =
+//            Uri("ens/wraps.eth:ens-text-record-uri-resolver-ext@1.0.1") to Uri("ipfs/QmaM318ABUXDhc5eZGGbmDxkb2ZgnbLxigm5TyZcCsh1Kw")
 
         val uriResolverExts: List<Uri> = listOf(
             embeds["ipfsResolver"]!!.source,
@@ -108,7 +108,7 @@ class DefaultBundle {
                     uriResolverExts.map { it.uri }
                 )
             }
-            builder.addRedirect(textRecordResolverRedirect.first.uri to textRecordResolverRedirect.second.uri)
+//            builder.addRedirect(textRecordResolverRedirect.first.uri to textRecordResolverRedirect.second.uri)
 
             // Configure the ipfs-uri-resolver provider endpoints & retry counts
             builder.addEnv(

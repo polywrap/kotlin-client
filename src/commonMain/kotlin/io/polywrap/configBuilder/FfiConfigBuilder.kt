@@ -9,6 +9,9 @@ import io.polywrap.core.resolution.UriResolver
 import uniffi.polywrap_native.FfiBuilderConfig
 import uniffi.polywrap_native.FfiClient
 import uniffi.polywrap_native.FfiUri
+import uniffi.polywrap_native.FfiUriResolver
+import uniffi.polywrap_native.FfiWrapPackage
+import uniffi.polywrap_native.FfiWrapper
 
 @OptIn(ExperimentalUnsignedTypes::class)
 internal class FfiConfigBuilder : AutoCloseable {
@@ -53,10 +56,14 @@ internal class FfiConfigBuilder : AutoCloseable {
     fun addWrapper(uri: String, wrapper: Wrapper) {
         FfiUri.fromString(uri).use { ffiUri ->
             when (wrapper is AutoCloseable) {
-                true -> wrapper.use {
-                    ffiBuilderConfig.addWrapper(ffiUri, wrapper)
+                true -> wrapper.use { wrapper ->
+                    FfiWrapper(wrapper).use {
+                        ffiBuilderConfig.addWrapper(ffiUri, it)
+                    }
                 }
-                false -> ffiBuilderConfig.addWrapper(ffiUri, wrapper)
+                false -> FfiWrapper(wrapper).use {
+                    ffiBuilderConfig.addWrapper(ffiUri, it)
+                }
             }
         }
     }
@@ -75,7 +82,9 @@ internal class FfiConfigBuilder : AutoCloseable {
 
     fun addPackage(uri: String, wrapPackage: WrapPackage) {
         FfiUri.fromString(uri).use { ffiUri ->
-            ffiBuilderConfig.addPackage(ffiUri, wrapPackage)
+            FfiWrapPackage(wrapPackage).use { ffiWrapPackage ->
+                ffiBuilderConfig.addPackage(ffiUri, ffiWrapPackage)
+            }
         }
     }
 
@@ -100,8 +109,10 @@ internal class FfiConfigBuilder : AutoCloseable {
     }
 
     fun addResolver(resolver: UriResolver) {
-        resolver.use {
-            ffiBuilderConfig.addResolver(it)
+        resolver.use { iResolver ->
+            FfiUriResolver(iResolver).use {
+                ffiBuilderConfig.addResolver(it)
+            }
         }
     }
 

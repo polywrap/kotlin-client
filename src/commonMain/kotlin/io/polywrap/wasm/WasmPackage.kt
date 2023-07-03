@@ -4,6 +4,7 @@ import io.polywrap.core.FileReader
 import io.polywrap.core.WrapPackage
 import io.polywrap.core.Wrapper
 import io.polywrap.core.wrap.WrapManifest
+import uniffi.polywrap_native.IffiWrapper
 import kotlin.jvm.Throws
 
 /**
@@ -61,6 +62,8 @@ data class WasmPackage(private val fileReader: FileReader) : WrapPackage {
      */
     @Throws(Exception::class)
     override fun createWrapper(): Wrapper = WasmWrapper(getWasmModule().getOrThrow())
+
+    override fun ffiCreateWrapper(): IffiWrapper = createWrapper()
 
     /**
      * Retrieves the file at the specified path within the Wrap package.

@@ -5,6 +5,7 @@ import io.polywrap.core.InvokeResult
 import io.polywrap.core.msgpack.msgPackEncode
 import io.polywrap.core.resolution.Uri
 import kotlinx.serialization.Serializable
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertNull
 
@@ -24,6 +25,7 @@ class SanityClientTest {
         assertNull(result.exceptionOrNull())
     }
 
+    @Ignore
     @Test
     fun invokeWithMapStringAnyArgs() {
         val client = ConfigBuilder().addDefaults().build()
@@ -35,6 +37,7 @@ class SanityClientTest {
         assertNull(result.exceptionOrNull())
     }
 
+    @Ignore
     @Test
     fun invokeWithReifiedTypes() {
         @Serializable

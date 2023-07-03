@@ -3,6 +3,8 @@ package io.polywrap.plugin
 import io.polywrap.core.WrapPackage
 import io.polywrap.core.Wrapper
 import io.polywrap.core.wrap.WrapManifest
+import uniffi.polywrap_native.FfiWrapper
+import uniffi.polywrap_native.IffiWrapper
 
 /**
  * Implementation of the [WrapPackage] interface for Plugin Wrap packages.
@@ -16,11 +18,6 @@ data class PluginPackage<TConfig>(
     private val manifest: WrapManifest
 ) : WrapPackage {
 
-    /**
-     * Produce an instance of the WrapPackage's WRAP manifest
-     *
-     * @return A [WrapManifest] instance
-     */
     override fun getManifest(): Result<WrapManifest> = Result.success(manifest)
 
     /**
@@ -28,7 +25,9 @@ data class PluginPackage<TConfig>(
      *
      * @return A [PluginWrapper] instance
      */
-    override fun createWrapper(): Wrapper = PluginWrapper(pluginModule)
+    override fun createWrapper(): PluginWrapper<TConfig> = PluginWrapper(pluginModule)
+
+    override fun ffiCreateWrapper(): IffiWrapper = createWrapper()
 
     /**
      * Not Implemented. Throws a NotImplementedError.

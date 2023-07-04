@@ -21,16 +21,16 @@ jobs:
         run: |
           version=$(./gradlew properties --no-daemon --console=plain -q | grep "version:" | awk '{print $2}')
           if [[ $version == *"-SNAPSHOT" ]]; then
-            echo "::set-output name=snapshot::true"
+            echo "snapshot=true" >> $GITHUB_ENV
           fi
 
   publishing-pipeline:
     needs: check-snapshot
-    if: needs.check-snapshot.outputs.snapshot == 'true'
+    if: env.snapshot == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     env:
-      IS_RELEASE: true
+      IS_RELEASE: "true"
     steps:
       - name: Checkout
         uses: actions/checkout@v2

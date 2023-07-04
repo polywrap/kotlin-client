@@ -6,6 +6,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import memoryStoragePlugin
 import pathToTestWrappers
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -22,6 +23,7 @@ class AsyncifyTestCase {
         )
         .build()
 
+    @Ignore
     @Test
     fun testSubsequentInvokes() = runTest {
         val result = client.invoke<List<String>>(

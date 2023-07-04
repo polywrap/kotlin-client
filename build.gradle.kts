@@ -1,5 +1,3 @@
-import com.android.build.gradle.internal.tasks.factory.dependsOn
-
 plugins {
     kotlin("multiplatform") version "1.8.22"
     kotlin("plugin.serialization") version "1.8.22"
@@ -42,8 +40,7 @@ kotlin {
                 implementation("com.squareup.okio:okio:3.3.0") // fs plugin
                 implementation("io.ktor:ktor-client-core:2.3.1") // http plugin
                 implementation("io.ktor:ktor-client-android:2.3.1") // http plugin
-                implementation("org.slf4j:slf4j-nop:1.7.36") // suppress SLF4J logger warnings
-            }
+           }
         }
         val commonTest by getting {
             resources.srcDirs("src/commonMain/resources")
@@ -130,7 +127,7 @@ tasks.register<Copy>("copyDokkaHtml") {
 }
 // automatically generate docs site when publishing
 if (!version.toString().endsWith("-SNAPSHOT")) {
-    tasks.publish.dependsOn("copyDokkaHtml")
+    tasks.getByName("publish").dependsOn("copyDokkaHtml")
 }
 
 // print stdout during tests

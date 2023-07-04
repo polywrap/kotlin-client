@@ -142,7 +142,7 @@ open class Invoker(val ffiInvoker: FfiInvoker) : WrapInvoker, AutoCloseable {
         return envBytes
             .toUByteArray()
             .asByteArray()
-            .let { msgPackDecode(it) }
+            .let { msgPackDecode(EnvSerializer, it) }
     }
 
     override fun close() = ffiInvoker.close()

@@ -1,7 +1,6 @@
 package client.typeTestCases
 
-import io.polywrap.client.PolywrapClient
-import io.polywrap.configBuilder.ClientConfigBuilder
+import io.polywrap.configBuilder.ConfigBuilder
 import io.polywrap.core.resolution.Uri
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -14,8 +13,7 @@ import kotlin.test.assertEquals
 class ObjectTestCase {
 
     private val uri = Uri("fs/$pathToTestWrappers/object-type/implementations/rs")
-    private val config = ClientConfigBuilder().addDefaults().build()
-    private val client = PolywrapClient(config)
+    private val client = ConfigBuilder().addDefaults().build()
 
     @Serializable
     private data class Nested(val prop: String)

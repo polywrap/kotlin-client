@@ -1,6 +1,6 @@
-import io.polywrap.core.types.Invoker
-import io.polywrap.msgpack.msgPackDecode
-import io.polywrap.msgpack.msgPackEncode
+import io.polywrap.core.Invoker
+import io.polywrap.core.msgpack.msgPackDecode
+import io.polywrap.core.msgpack.msgPackEncode
 import io.polywrap.plugin.PluginFactory
 import io.polywrap.plugin.PluginMethod
 import io.polywrap.plugin.PluginModule
@@ -59,8 +59,8 @@ abstract class Module<TConfig>(config: TConfig) : PluginModule<TConfig>(config) 
 
     private suspend fun __add(
         encodedArgs: ByteArray?,
-        invoker: Invoker,
-        encodedEnv: ByteArray?
+        encodedEnv: ByteArray?,
+        invoker: Invoker
     ): ByteArray {
         val args: ArgsAdd = encodedArgs?.let { msgPackDecode(serializer<ArgsAdd>(), it).getOrNull() }
             ?: throw Error("Missing args in invocation to plugin method 'get'")
@@ -70,8 +70,8 @@ abstract class Module<TConfig>(config: TConfig) : PluginModule<TConfig>(config) 
 
     private suspend fun __concat(
         encodedArgs: ByteArray?,
-        invoker: Invoker,
-        encodedEnv: ByteArray?
+        encodedEnv: ByteArray?,
+        invoker: Invoker
     ): ByteArray {
         val args: ArgsConcat = encodedArgs?.let { msgPackDecode(serializer<ArgsConcat>(), it).getOrNull() }
             ?: throw Error("Missing args in invocation to plugin method 'post'")

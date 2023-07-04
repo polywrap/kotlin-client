@@ -1,26 +1,29 @@
 package io.polywrap.core.resolution
 
-import io.polywrap.core.types.Client
+import io.polywrap.core.Invoker
+import uniffi.polywrap_native.FfiException
+import uniffi.polywrap_native.FfiInvoker
+import uniffi.polywrap_native.FfiUri
+import uniffi.polywrap_native.FfiUriPackageOrWrapper
+import uniffi.polywrap_native.FfiUriResolutionContext
+import uniffi.polywrap_native.FfiUriResolver
+import kotlin.jvm.Throws
 
-/**
- * Defines an entity capable of resolving a wrap URI
- */
-interface UriResolver {
+interface UriResolver : FfiUriResolver, AutoCloseable {
+
     /**
-     * Resolve a URI to a wrap package, a wrapper, or a uri
+     * Tries to resolve the given [Uri] to a Uri, WrapPackage, or Wrapper.
      *
-     * @param uri - The URI to resolve
-     * @param client - An Invoker instance that may be used to invoke a wrapper that implements the UriResolver interface
-     * @param resolutionContext - The current URI resolution context
-     * @param resolveToPackage - If true, the resolver will attempt to resolve the URI to a wrap package.
-     * If false, the resolver will attempt to resolve the URI to a wrapper. There is no guarantee that the result will
-     * contain a package or wrapper, even if this parameter is true.
-     * @return A Result containing either a wrap package, a wrapper, or a URI if successful
+     * @param uri The [Uri] to resolve.
+     * @param invoker The [Invoker] instance.
+     * @param resolutionContext The [FfiUriResolutionContext] for keeping track of the resolution history.
+     * @return A [UriPackageOrWrapper]
+     * @throws [FfiException]
      */
-    fun tryResolveUri(
-        uri: Uri,
-        client: Client,
-        resolutionContext: UriResolutionContext,
-        resolveToPackage: Boolean = false
-    ): Result<UriPackageOrWrapper>
+    @Throws(FfiException::class)
+    override fun tryResolveUri(
+        uri: FfiUri,
+        invoker: FfiInvoker,
+        resolutionContext: FfiUriResolutionContext
+    ): FfiUriPackageOrWrapper
 }

@@ -1,9 +1,10 @@
 package io.polywrap.core.wrap.formats.wrap01
 
 import io.polywrap.core.wrap.formats.wrap01.abi.Abi01
-import io.polywrap.msgpack.msgPackDecode
-import io.polywrap.msgpack.msgPackEncode
+import io.polywrap.core.msgpack.msgPackDecode
+import io.polywrap.core.msgpack.msgPackEncode
 import kotlinx.serialization.Serializable
+import kotlin.jvm.Throws
 
 /**
  * A data class representing a Wrap Manifest, which describes a WRAP package.
@@ -44,8 +45,9 @@ data class WrapManifest01(
          * Deserializes a given [manifest] represented as a [ByteArray] to a [WrapManifest01] object.
          * @param manifest the serialized manifest to deserialize.
          * @return the deserialized [WrapManifest01] object.
-         * @throws Error if the given manifest is not a valid WrapManifest or if it's unable to be parsed.
+         * @throws IllegalArgumentException if the given manifest is not a valid WrapManifest or if it's unable to be parsed.
          */
+        @Throws(IllegalArgumentException::class)
         fun deserialize(manifest: ByteArray): Result<WrapManifest01> {
             val result: Result<WrapManifest01> = msgPackDecode(serializer(), manifest)
             if (result.isFailure) {

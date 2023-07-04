@@ -1,9 +1,9 @@
 package io.polywrap.plugins.filesystem
 
-import io.polywrap.core.types.Invoker
+import io.polywrap.core.Invoker
 import io.polywrap.plugin.PluginFactory
 import io.polywrap.plugin.PluginPackage
-import io.polywrap.plugins.filesystem.wrapHardCoded.*
+import io.polywrap.plugins.filesystem.wrap.*
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import okio.FileSystem
@@ -24,7 +24,7 @@ class FileSystemPlugin(config: Config? = null) : Module<FileSystemPlugin.Config?
      */
     class Config()
 
-    override suspend fun readFile(args: ArgsReadFile, invoker: Invoker): Bytes = coroutineScope {
+    override suspend fun readFile(args: ArgsReadFile, invoker: Invoker): ByteArray = coroutineScope {
         async {
             val absPath = args.path.toPath(true).absolute()
             FileSystem.SYSTEM.read(absPath) { readByteArray() }

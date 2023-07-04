@@ -1,11 +1,11 @@
 package plugins
 
 import emptyMockInvoker
-import io.polywrap.client.PolywrapClient
-import io.polywrap.configBuilder.ClientConfigBuilder
-import io.polywrap.configBuilder.DefaultBundle
+import io.polywrap.configBuilder.polywrapClient
+import io.polywrap.core.resolution.Uri
 import io.polywrap.plugins.filesystem.FileSystemPlugin
-import io.polywrap.plugins.filesystem.wrapHardCoded.*
+import io.polywrap.plugins.filesystem.fileSystemPlugin
+import io.polywrap.plugins.filesystem.wrap.*
 import kotlinx.coroutines.runBlocking
 import kotlin.test.AfterTest
 import kotlin.test.Test
@@ -50,11 +50,15 @@ class FileSystemPluginIntegrationTest {
     fun invokeByClient() {
         prepareTestFile()
 
-        val config = ClientConfigBuilder().addDefaults().build()
-        val client = PolywrapClient(config)
+        val uri = Uri("plugin/file-system@1.0.0")
+        val plugin = fileSystemPlugin(null)
 
-        val result = client.invoke<Bytes>(
-            uri = DefaultBundle.plugins["fileSystem"]!!.uri,
+        val client = polywrapClient {
+            setPackage(uri.toString() to plugin)
+        }
+
+        val result = client.invoke<ByteArray>(
+            uri = uri,
             method = "readFile",
             args = mapOf("path" to testFile)
         )

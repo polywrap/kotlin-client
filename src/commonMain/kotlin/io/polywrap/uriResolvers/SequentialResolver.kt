@@ -1,7 +1,11 @@
 package io.polywrap.uriResolvers
 
-import io.polywrap.core.resolution.*
-import io.polywrap.core.types.Client
+import io.polywrap.core.Invoker
+import io.polywrap.core.resolution.UriResolver
+import uniffi.polywrap_native.FfiInvoker
+import uniffi.polywrap_native.FfiUri
+import uniffi.polywrap_native.FfiUriPackageOrWrapper
+import uniffi.polywrap_native.FfiUriResolutionContext
 
 /**
  * A class that represents a sequential resolver for URIs.
@@ -10,28 +14,24 @@ import io.polywrap.core.types.Client
  */
 class SequentialResolver(private val resolvers: List<UriResolver>) : UriResolverAggregator() {
 
-    /**
-     * Returns the description of the current resolution step.
-     * @param uri The URI being resolved.
-     * @param result The result of the URI resolution as a [Result] of [UriPackageOrWrapper].
-     * @return A string representing the step description.
-     */
-    override fun getStepDescription(uri: Uri, result: Result<UriPackageOrWrapper>): String {
+    override fun getStepDescription(uri: FfiUri, result: FfiUriPackageOrWrapper): String {
         return "SequentialResolver"
     }
 
     /**
      * Returns a list of URI resolvers to be used sequentially.
      * @param uri The URI being resolved.
-     * @param client The [Client] instance for the current request.
-     * @param resolutionContext The [UriResolutionContext] for the current URI resolution process.
+     * @param invoker The [Invoker] instance for the current request.
+     * @param resolutionContext The [FfiUriResolutionContext] for the current URI resolution process.
      * @return A [Result] containing a list of [UriResolver] instances.
      */
     override fun getUriResolvers(
-        uri: Uri,
-        client: Client,
-        resolutionContext: UriResolutionContext
+        uri: FfiUri,
+        invoker: FfiInvoker,
+        resolutionContext: FfiUriResolutionContext
     ): Result<List<UriResolver>> {
         return Result.success(resolvers)
     }
+
+    override fun close() = resolvers.forEach { it.close() }
 }

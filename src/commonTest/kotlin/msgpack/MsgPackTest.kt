@@ -1,10 +1,11 @@
 package msgpack
 
-import io.polywrap.msgpack.EnvSerializer
-import io.polywrap.msgpack.MsgPackMap
-import io.polywrap.msgpack.msgPackDecode
-import io.polywrap.msgpack.msgPackEncode
-import io.polywrap.msgpack.toMsgPackMap
+import io.polywrap.core.WrapEnv
+import io.polywrap.core.msgpack.EnvSerializer
+import io.polywrap.core.msgpack.MsgPackMap
+import io.polywrap.core.msgpack.msgPackDecode
+import io.polywrap.core.msgpack.msgPackEncode
+import io.polywrap.core.msgpack.toMsgPackMap
 import kotlinx.serialization.Serializable
 import kotlin.test.*
 
@@ -110,7 +111,7 @@ class MsgPackTest {
 
     @Test
     fun shouldEncodeAndDecodeMapOfStringAny() {
-        val env: Map<String, Any> = mapOf(
+        val env: WrapEnv = mapOf(
             "firstKey" to "firstValue",
             "secondKey" to "secondValue"
         )
@@ -127,7 +128,7 @@ class MsgPackTest {
         val encoded = msgPackEncode(EnvSerializer, env)
         assertTrue(encoded.contentEquals(expectedBytes))
 
-        val decoded: Result<Map<String, Any?>> = msgPackDecode(EnvSerializer, encoded)
+        val decoded: Result<WrapEnv> = msgPackDecode(EnvSerializer, encoded)
         assertEquals(env, decoded.getOrThrow())
     }
 

@@ -5,9 +5,9 @@ import io.ktor.client.*
 import io.ktor.client.engine.mock.*
 import io.ktor.client.plugins.*
 import io.ktor.http.*
-import io.polywrap.msgpack.toMsgPackMap
+import io.polywrap.core.msgpack.toMsgPackMap
 import io.polywrap.plugins.http.HttpPlugin
-import io.polywrap.plugins.http.wrapHardCoded.*
+import io.polywrap.plugins.http.wrap.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
@@ -67,7 +67,7 @@ class HttpPluginTest {
     fun successfulGetRequestWithResponseTypeText() = runTest {
         val args = ArgsGet(
             url = "https://example.com/success-text",
-            request = HttpRequest(responseType = HttpResponseType.TEXT)
+            request = Request(responseType = ResponseType.TEXT)
         )
         val response = httpPlugin.get(args, emptyMockInvoker)
 
@@ -81,7 +81,7 @@ class HttpPluginTest {
     fun successfulGetRequestWithResponseTypeBinary() = runTest {
         val args = ArgsGet(
             url = "https://example.com/success-binary",
-            request = HttpRequest(responseType = HttpResponseType.BINARY)
+            request = Request(responseType = ResponseType.BINARY)
         )
         val response = httpPlugin.get(args, emptyMockInvoker)
 
@@ -95,10 +95,10 @@ class HttpPluginTest {
     fun successfulGetRequestWithQueryParamsAndRequestHeaders() = runTest {
         val args = ArgsGet(
             url = "https://example.com/success-text",
-            request = HttpRequest(
+            request = Request(
                 headers = mapOf("X-Test-Header" to "test-value").toMsgPackMap(),
                 urlParams = mapOf("param1" to "value1", "param2" to "value2").toMsgPackMap(),
-                responseType = HttpResponseType.TEXT
+                responseType = ResponseType.TEXT
             )
         )
         val response = httpPlugin.get(args, emptyMockInvoker)
@@ -113,7 +113,7 @@ class HttpPluginTest {
     fun failedGetRequest() = runTest {
         val args = ArgsGet(
             url = "https://example.com/failure",
-            request = HttpRequest(responseType = HttpResponseType.TEXT)
+            request = Request(responseType = ResponseType.TEXT)
         )
         val response = httpPlugin.get(args, emptyMockInvoker)
 
@@ -126,9 +126,9 @@ class HttpPluginTest {
     fun successfulPostRequestWithContentTypeApplicationJson() = runTest {
         val args = ArgsPost(
             url = "https://example.com/success-text",
-            request = HttpRequest(
+            request = Request(
                 headers = mapOf("Content-Type" to "application/json").toMsgPackMap(),
-                responseType = HttpResponseType.TEXT,
+                responseType = ResponseType.TEXT,
                 body = """{"key": "value"}"""
             )
         )
@@ -144,8 +144,8 @@ class HttpPluginTest {
     fun successfulPostRequestWithResponseTypeText() = runTest {
         val args = ArgsPost(
             url = "https://example.com/success-text",
-            request = HttpRequest(
-                responseType = HttpResponseType.TEXT,
+            request = Request(
+                responseType = ResponseType.TEXT,
                 body = "Hello World"
             )
         )
@@ -161,8 +161,8 @@ class HttpPluginTest {
     fun successfulPostRequestWithResponseTypeBinary() = runTest {
         val args = ArgsPost(
             url = "https://example.com/success-binary",
-            request = HttpRequest(
-                responseType = HttpResponseType.BINARY,
+            request = Request(
+                responseType = ResponseType.BINARY,
                 body = "Hello World"
             )
         )
@@ -178,10 +178,10 @@ class HttpPluginTest {
     fun successfulPostRequestWithQueryParamsAndRequestHeaders() = runTest {
         val args = ArgsPost(
             url = "https://example.com/success-text",
-            request = HttpRequest(
+            request = Request(
                 headers = mapOf("X-Test-Header" to "test-value").toMsgPackMap(),
                 urlParams = mapOf("param1" to "value1", "param2" to "value2").toMsgPackMap(),
-                responseType = HttpResponseType.TEXT,
+                responseType = ResponseType.TEXT,
                 body = "Hello World"
             )
         )
@@ -197,8 +197,8 @@ class HttpPluginTest {
     fun failedPostRequest() = runTest {
         val args = ArgsPost(
             url = "https://example.com/failure",
-            request = HttpRequest(
-                responseType = HttpResponseType.TEXT,
+            request = Request(
+                responseType = ResponseType.TEXT,
                 body = "Hello World"
             )
         )

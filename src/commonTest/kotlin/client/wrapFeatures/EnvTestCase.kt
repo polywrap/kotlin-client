@@ -1,7 +1,6 @@
 package client.wrapFeatures
 
-import io.polywrap.client.PolywrapClient
-import io.polywrap.configBuilder.ClientConfigBuilder
+import io.polywrap.configBuilder.ConfigBuilder
 import io.polywrap.core.resolution.Uri
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -15,7 +14,7 @@ class EnvTestCase {
     private val wrapperUri = Uri("fs/$pathToTestWrappers/env-type/01-main/implementations/rs")
 
     private val envs = mapOf(
-        wrapperUri.uri to mapOf(
+        wrapperUri.toString() to mapOf(
             "object" to mapOf("prop" to "object string"),
             "str" to "string",
             "optFilledStr" to "optional string",
@@ -24,18 +23,17 @@ class EnvTestCase {
             "en" to "FIRST",
             "array" to listOf(32, 23)
         ),
-        externalWrapperUri.uri to mapOf(
+        externalWrapperUri.toString() to mapOf(
             "externalArray" to listOf(1, 2, 3),
             "externalString" to "iamexternal"
         )
     )
 
-    private val config = ClientConfigBuilder()
+    private val client = ConfigBuilder()
         .addDefaults()
         .addEnvs(envs)
-        .addRedirect("ens/external-env.polywrap.eth" to externalWrapperUri.uri)
+        .setRedirect("ens/external-env.polywrap.eth" to externalWrapperUri.toString())
         .build()
-    private val client = PolywrapClient(config)
 
     @Test
     fun testMethodRequireEnv() = runTest {

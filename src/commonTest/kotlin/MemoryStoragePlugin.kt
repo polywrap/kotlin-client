@@ -1,6 +1,6 @@
-import io.polywrap.core.types.Invoker
-import io.polywrap.msgpack.msgPackDecode
-import io.polywrap.msgpack.msgPackEncode
+import io.polywrap.core.Invoker
+import io.polywrap.core.msgpack.msgPackDecode
+import io.polywrap.core.msgpack.msgPackEncode
 import io.polywrap.plugin.*
 import kotlinx.coroutines.delay
 import kotlinx.serialization.Serializable
@@ -53,8 +53,8 @@ abstract class MemoryStoragePluginModule<TConfig>(config: TConfig) : PluginModul
 
     private suspend fun __getData(
         encodedArgs: ByteArray?,
-        invoker: Invoker,
-        encodedEnv: ByteArray?
+        encodedEnv: ByteArray?,
+        invoker: Invoker
     ): ByteArray {
         val response = getData(invoker)
         return msgPackEncode(serializer(), response)
@@ -62,8 +62,8 @@ abstract class MemoryStoragePluginModule<TConfig>(config: TConfig) : PluginModul
 
     private suspend fun __setData(
         encodedArgs: ByteArray?,
-        invoker: Invoker,
-        encodedEnv: ByteArray?
+        encodedEnv: ByteArray?,
+        invoker: Invoker
     ): ByteArray {
         val args: ArgsSetData = encodedArgs?.let { msgPackDecode(serializer<ArgsSetData>(), it).getOrNull() }
             ?: throw Error("Missing args in invocation to plugin method 'setData'")

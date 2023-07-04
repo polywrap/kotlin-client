@@ -1,6 +1,6 @@
 package io.polywrap.wasm
 
-import io.polywrap.core.types.FileReader
+import io.polywrap.core.FileReader
 
 object FileReaderFactory {
 

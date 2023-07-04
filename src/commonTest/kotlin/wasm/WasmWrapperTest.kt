@@ -1,10 +1,8 @@
 package wasm
 
 import emptyMockInvoker
-import io.polywrap.core.resolution.Uri
-import io.polywrap.core.types.InvokeOptions
-import io.polywrap.msgpack.msgPackDecode
-import io.polywrap.msgpack.msgPackEncode
+import io.polywrap.core.msgpack.msgPackDecode
+import io.polywrap.core.msgpack.msgPackEncode
 import io.polywrap.wasm.WasmWrapper
 import readTestResource
 import kotlin.test.*
@@ -19,14 +17,13 @@ class WasmWrapperTest {
         val wasmModule: ByteArray = readTestResource(modulePath).getOrThrow()
         val wrapper = WasmWrapper(wasmModule)
 
-        val invocation = InvokeOptions(
-            uri = Uri("wrap://ens/WasmWrapperTest/canInvokeWrapper"),
+        val result = wrapper.invoke(
             method = "i32Method",
-            args = msgPackEncode(mapOf("first" to 1, "second" to 2))
+            args = msgPackEncode(mapOf("first" to 1, "second" to 2)),
+            env = null,
+            invoker = emptyMockInvoker
         )
-
-        val result = wrapper.invoke(invocation, emptyMockInvoker)
-        assertEquals(result.exceptionOrNull(), null)
+        assertNull(result.exceptionOrNull())
 
         val data = msgPackDecode<Int>(result.getOrThrow()).getOrNull()
         assertEquals(3, data)

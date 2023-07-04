@@ -1,23 +1,4 @@
-import io.polywrap.core.resolution.Uri
-import io.polywrap.core.resolution.UriResolutionContext
-import io.polywrap.core.types.InvokeOptions
-import io.polywrap.core.types.Invoker
-import io.polywrap.core.types.Wrapper
+import io.polywrap.configBuilder.ConfigBuilder
+import io.polywrap.core.Invoker
 
-val emptyMockInvoker = object : Invoker {
-    override fun invokeWrapper(wrapper: Wrapper, options: InvokeOptions): Result<ByteArray> {
-        throw NotImplementedError()
-    }
-
-    override fun invoke(options: InvokeOptions): Result<ByteArray> {
-        throw NotImplementedError()
-    }
-
-    override fun getImplementations(
-        uri: Uri,
-        applyResolution: Boolean,
-        resolutionContext: UriResolutionContext?
-    ): Result<List<Uri>> {
-        throw NotImplementedError()
-    }
-}
+val emptyMockInvoker = Invoker(ffiInvoker = ConfigBuilder().build().ffiInvoker)

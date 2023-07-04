@@ -1,15 +1,15 @@
 package io.polywrap.plugin
 
-import io.polywrap.core.types.Invoker
+import io.polywrap.core.Invoker
 
 /**
  * A typealias for a function representing a plugin method.
  * @param args The input arguments as a byte array in MessagePack format.
- * @param invoker The [Invoker] instance used to do the invocation.
  * @param env The [WrapperEnv] as a byte array in MessagePack format.
+ * @param invoker The [Invoker] instance used to do the invocation.
  * @return The result of the plugin method as a byte array in MessagePack format.
  */
-typealias PluginMethod = suspend (args: ByteArray?, invoker: Invoker, env: ByteArray?) -> ByteArray
+typealias PluginMethod = suspend (args: ByteArray?, env: ByteArray?, invoker: Invoker) -> ByteArray
 
 /**
  * A typealias for a function representing a plugin factory, used to produce plugin instances

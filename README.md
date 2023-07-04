@@ -4,18 +4,17 @@
 
 This repository hosts a Kotlin implementation of the Polywrap Client.
 
-## Installation
-TODO
+Reference documentation is temporarily available at https://autumn-wave-1981.on.fleek.co/
 
 ## Build
 
-Run the following to compile the project and run all tests:
+Run the following to compile the project:
 
-`./gradlew build`
+`./gradlew assemble`
 
 ## Test
 
-Run the following to just compile and run tests:
+Run the following to run all checks:
 
 ```
 ./gradlew check

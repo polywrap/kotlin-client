@@ -36,6 +36,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 kotlin.srcDirs(uniffiBindingsDir)
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.5.1")
                 implementation("com.ensarsarajcic.kotlinx:serialization-msgpack:0.5.5")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.2")
                 implementation("com.squareup.okio:okio:3.3.0") // fs plugin

@@ -16,7 +16,12 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-        run: cargo install cross --git https://github.com/cross-rs/cross
+
+      - name: Install cross-rs
+        uses: actions-rs/cargo@v1
+        with:
+          command: install
+          args: cross --git https://github.com/cross-rs/cross
 
       - name: Generate Uniffi Bindings
         run: ./gradlew uniffi

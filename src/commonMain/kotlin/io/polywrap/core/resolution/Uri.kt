@@ -42,9 +42,9 @@ class Uri(ffiUri: FfiUri) {
     /**
      * Constructs a Uri instance from a wrap URI string.
      *
-     * @throws FfiException if the URI string is invalid
-     *
      * @param uri a string representation of a wrap URI
+     *
+     * @throws FfiException if the URI string is invalid
      */
     constructor(uri: String) : this(FfiUri.fromString(uri))
 

@@ -5,7 +5,7 @@ import io.ktor.client.*
 import io.ktor.client.engine.mock.*
 import io.ktor.client.plugins.*
 import io.ktor.http.*
-import io.polywrap.core.msgpack.toMsgPackMap
+import io.polywrap.core.msgpack.toGenericMap
 import io.polywrap.plugins.http.HttpPlugin
 import io.polywrap.plugins.http.wrap.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -96,8 +96,8 @@ class HttpPluginTest {
         val args = ArgsGet(
             url = "https://example.com/success-text",
             request = Request(
-                headers = mapOf("X-Test-Header" to "test-value").toMsgPackMap(),
-                urlParams = mapOf("param1" to "value1", "param2" to "value2").toMsgPackMap(),
+                headers = mapOf("X-Test-Header" to "test-value").toGenericMap(),
+                urlParams = mapOf("param1" to "value1", "param2" to "value2").toGenericMap(),
                 responseType = ResponseType.TEXT
             )
         )
@@ -127,7 +127,7 @@ class HttpPluginTest {
         val args = ArgsPost(
             url = "https://example.com/success-text",
             request = Request(
-                headers = mapOf("Content-Type" to "application/json").toMsgPackMap(),
+                headers = mapOf("Content-Type" to "application/json").toGenericMap(),
                 responseType = ResponseType.TEXT,
                 body = """{"key": "value"}"""
             )
@@ -179,8 +179,8 @@ class HttpPluginTest {
         val args = ArgsPost(
             url = "https://example.com/success-text",
             request = Request(
-                headers = mapOf("X-Test-Header" to "test-value").toMsgPackMap(),
-                urlParams = mapOf("param1" to "value1", "param2" to "value2").toMsgPackMap(),
+                headers = mapOf("X-Test-Header" to "test-value").toGenericMap(),
+                urlParams = mapOf("param1" to "value1", "param2" to "value2").toGenericMap(),
                 responseType = ResponseType.TEXT,
                 body = "Hello World"
             )

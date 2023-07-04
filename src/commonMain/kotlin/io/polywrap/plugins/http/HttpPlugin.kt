@@ -7,7 +7,7 @@ import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.util.*
 import io.polywrap.core.Invoker
-import io.polywrap.core.msgpack.toMsgPackMap
+import io.polywrap.core.msgpack.toGenericMap
 import io.polywrap.plugin.PluginFactory
 import io.polywrap.plugin.PluginPackage
 import io.polywrap.plugins.http.wrap.*
@@ -91,7 +91,7 @@ class HttpPlugin(config: Config? = null) : Module<HttpPlugin.Config?>(config) {
         return Response(
             status = response.status.value,
             statusText = response.status.description,
-            headers = responseHeaders.toMsgPackMap(),
+            headers = responseHeaders.toGenericMap(),
             body = responseBody
         )
     }

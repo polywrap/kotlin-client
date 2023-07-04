@@ -1,8 +1,8 @@
 package client.typeTestCases
 
 import io.polywrap.configBuilder.ConfigBuilder
-import io.polywrap.core.msgpack.MsgPackMap
-import io.polywrap.core.msgpack.toMsgPackMap
+import io.polywrap.core.msgpack.GenericMap
+import io.polywrap.core.msgpack.toGenericMap
 import io.polywrap.core.resolution.Uri
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -19,17 +19,17 @@ class MapTestCase {
 
     @Serializable
     private data class CustomMap(
-        val map: MsgPackMap<String, Int>,
-        val nestedMap: MsgPackMap<String, MsgPackMap<String, Int>>
+        val map: GenericMap<String, Int>,
+        val nestedMap: GenericMap<String, GenericMap<String, Int>>
     )
 
     @Test
     fun testReturnMap() = runTest {
         @Serializable
-        data class ArgsReturnMap(val map: MsgPackMap<String, Int>)
+        data class ArgsReturnMap(val map: GenericMap<String, Int>)
 
-        val mapClass = mapOf("Hello" to 1, "Heyo" to 50).toMsgPackMap()
-        val result = client.invoke<ArgsReturnMap, MsgPackMap<String, Int>>(
+        val mapClass = mapOf("Hello" to 1, "Heyo" to 50).toGenericMap()
+        val result = client.invoke<ArgsReturnMap, GenericMap<String, Int>>(
             uri = uri,
             method = "returnMap",
             args = ArgsReturnMap(mapClass)
@@ -40,8 +40,8 @@ class MapTestCase {
 
     @Test
     fun testGetKey() = runTest {
-        val mapClass = mapOf("Hello" to 1, "Heyo" to 50).toMsgPackMap()
-        val nestedMapClass = mapOf("Nested" to mapClass).toMsgPackMap()
+        val mapClass = mapOf("Hello" to 1, "Heyo" to 50).toGenericMap()
+        val nestedMapClass = mapOf("Nested" to mapClass).toGenericMap()
         val result = client.invoke<Int>(
             uri = uri,
             method = "getKey",
@@ -56,8 +56,8 @@ class MapTestCase {
 
     @Test
     fun testReturnCustomMap() = runTest {
-        val mapClass = mapOf("Hello" to 1, "Heyo" to 50).toMsgPackMap()
-        val nestedMapClass = mapOf("Nested" to mapClass).toMsgPackMap()
+        val mapClass = mapOf("Hello" to 1, "Heyo" to 50).toGenericMap()
+        val nestedMapClass = mapOf("Nested" to mapClass).toGenericMap()
         val result = client.invoke<CustomMap>(
             uri = uri,
             method = "returnCustomMap",
@@ -70,11 +70,11 @@ class MapTestCase {
     @Test
     fun testReturnNestedMap() = runTest {
         @Serializable
-        data class ArgsReturnNestedMap(val foo: MsgPackMap<String, MsgPackMap<String, Int>>)
+        data class ArgsReturnNestedMap(val foo: GenericMap<String, GenericMap<String, Int>>)
 
-        val mapClass = mapOf("Hello" to 1, "Heyo" to 50).toMsgPackMap()
-        val nestedMapClass = mapOf("Nested" to mapClass).toMsgPackMap()
-        val result = client.invoke<ArgsReturnNestedMap, MsgPackMap<String, MsgPackMap<String, Int>>>(
+        val mapClass = mapOf("Hello" to 1, "Heyo" to 50).toGenericMap()
+        val nestedMapClass = mapOf("Nested" to mapClass).toGenericMap()
+        val result = client.invoke<ArgsReturnNestedMap, GenericMap<String, GenericMap<String, Int>>>(
             uri = uri,
             method = "returnNestedMap",
             args = ArgsReturnNestedMap(nestedMapClass)

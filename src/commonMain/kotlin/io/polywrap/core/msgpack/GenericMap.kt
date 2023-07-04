@@ -15,45 +15,45 @@ import kotlinx.serialization.builtins.MapSerializer
  * @param V The value type of the map.
  * @property map The map to be serialized.
  */
-@Serializable(with = MsgPackMapExtensionSerializer::class)
-data class MsgPackMap<K, V>(val map: Map<K, V>)
+@Serializable(with = GenericMapExtensionSerializer::class)
+data class GenericMap<K, V>(val map: Map<K, V>)
 
 /**
- * Convenience method to wrap a [Map] in a [MsgPackMap] instance.
+ * Convenience method to wrap a [Map] in a MsgPack-serializable [GenericMap] instance.
  */
-fun <K, V> Map<K, V>.toMsgPackMap(): MsgPackMap<K, V> = MsgPackMap(this)
+fun <K, V> Map<K, V>.toGenericMap(): GenericMap<K, V> = GenericMap(this)
 
 /**
- * A custom serializer for serializing [MsgPackMap] instances using the MsgPack format.
+ * A custom serializer for serializing [GenericMap] instances using the MsgPack format.
  * @param K The key type of the map.
  * @param V The value type of the map.
  * @property keySerializer The serializer for the key type.
  * @property valueSerializer The serializer for the value type.
  */
-class MsgPackMapExtensionSerializer<K, V>(
+class GenericMapExtensionSerializer<K, V>(
     private val keySerializer: KSerializer<K>,
     private val valueSerializer: KSerializer<V>
-) : BaseMsgPackExtensionSerializer<MsgPackMap<K, V>>() {
+) : BaseMsgPackExtensionSerializer<GenericMap<K, V>>() {
 
     override val extTypeId: Byte = 1
 
     /**
-     * Deserializes the given [MsgPackExtension] into a [MsgPackMap] instance.
+     * Deserializes the given [MsgPackExtension] into a [GenericMap] instance.
      * @param extension The [MsgPackExtension] to be deserialized.
-     * @return The deserialized [MsgPackMap] instance.
+     * @return The deserialized [GenericMap] instance.
      */
-    override fun deserialize(extension: MsgPackExtension): MsgPackMap<K, V> {
+    override fun deserialize(extension: MsgPackExtension): GenericMap<K, V> {
         val mapSerializer = MapSerializer(keySerializer, valueSerializer)
         val map = msgPack.decodeFromByteArray(mapSerializer, extension.data)
-        return MsgPackMap(map)
+        return GenericMap(map)
     }
 
     /**
-     * Serializes the given [MsgPackMap] instance into a [MsgPackExtension].
-     * @param extension The [MsgPackMap] instance to be serialized.
+     * Serializes the given [GenericMap] instance into a [MsgPackExtension].
+     * @param extension The [GenericMap] instance to be serialized.
      * @return The serialized [MsgPackExtension] instance.
      */
-    override fun serialize(extension: MsgPackMap<K, V>): MsgPackExtension {
+    override fun serialize(extension: GenericMap<K, V>): MsgPackExtension {
         val mapSerializer = MapSerializer(keySerializer, valueSerializer)
         val data = msgPack.encodeToByteArray(mapSerializer, extension.map)
 

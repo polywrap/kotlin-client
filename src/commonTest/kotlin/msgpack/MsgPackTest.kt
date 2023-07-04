@@ -2,10 +2,10 @@ package msgpack
 
 import io.polywrap.core.WrapEnv
 import io.polywrap.core.msgpack.EnvSerializer
-import io.polywrap.core.msgpack.MsgPackMap
+import io.polywrap.core.msgpack.GenericMap
 import io.polywrap.core.msgpack.msgPackDecode
 import io.polywrap.core.msgpack.msgPackEncode
-import io.polywrap.core.msgpack.toMsgPackMap
+import io.polywrap.core.msgpack.toGenericMap
 import kotlinx.serialization.Serializable
 import kotlin.test.*
 
@@ -40,7 +40,7 @@ class MsgPackTest {
             "firstKey" to "firstValue",
             "secondKey" to "secondValue"
         )
-        val msgPackMap = MsgPackMap(customMap)
+        val msgPackMap = GenericMap(customMap)
 
         // 199 means Ext8, 43 means 43 bytes, 1 means generic map ext type,
         // and the remainder is the 43 bytes of the map
@@ -56,17 +56,17 @@ class MsgPackTest {
         val encoded = msgPackEncode(msgPackMap)
         assertTrue(encoded.contentEquals(expectedBytes))
 
-        val decoded = msgPackDecode<MsgPackMap<String, String>>(encoded).getOrThrow()
+        val decoded = msgPackDecode<GenericMap<String, String>>(encoded).getOrThrow()
         assertEquals(msgPackMap, decoded)
     }
 
     @Test
     fun shouldEncodeAndDecodeNestedMap() {
-        val customMap: Map<String, MsgPackMap<String, String>> = mapOf(
-            "firstKey" to MsgPackMap(mapOf("one" to "1")),
-            "secondKey" to MsgPackMap(mapOf("second" to "2"))
+        val customMap: Map<String, GenericMap<String, String>> = mapOf(
+            "firstKey" to GenericMap(mapOf("one" to "1")),
+            "secondKey" to GenericMap(mapOf("second" to "2"))
         )
-        val msgPackMap = MsgPackMap(customMap)
+        val msgPackMap = GenericMap(customMap)
 
         val expectedBytes = intArrayOf(
             199, 43, 1, 130, 168, 102, 105, 114, 115,
@@ -80,7 +80,7 @@ class MsgPackTest {
         val encoded = msgPackEncode(msgPackMap)
         assertTrue(encoded.contentEquals(expectedBytes))
 
-        val decoded = msgPackDecode<MsgPackMap<String, MsgPackMap<String, String>>>(encoded).getOrThrow()
+        val decoded = msgPackDecode<GenericMap<String, GenericMap<String, String>>>(encoded).getOrThrow()
         assertEquals(msgPackMap, decoded)
     }
 
@@ -90,7 +90,7 @@ class MsgPackTest {
             "firstKey" to byteArrayOf(1, 2, 3),
             "secondKey" to byteArrayOf(3, 2, 1)
         )
-        val msgPackMap = MsgPackMap(customMap)
+        val msgPackMap = GenericMap(customMap)
 
         val expectedBytes = intArrayOf(
             199, 30, 1, 130, 168, 102, 105, 114, 115,
@@ -102,7 +102,7 @@ class MsgPackTest {
         val encoded = msgPackEncode(msgPackMap)
         assertTrue(encoded.contentEquals(expectedBytes))
 
-        val decoded = msgPackDecode<MsgPackMap<String, ByteArray>>(encoded).getOrThrow()
+        val decoded = msgPackDecode<GenericMap<String, ByteArray>>(encoded).getOrThrow()
         assertEquals(msgPackMap.map.keys.toString(), decoded.map.keys.toString())
         val expectedValues = msgPackMap.map.values.map { it.contentToString() }
         val receivedValues = decoded.map.values.map { it.contentToString() }
@@ -137,13 +137,13 @@ class MsgPackTest {
         @Serializable
         data class CustomObject(
             val firstKey: String,
-            val secondKey: MsgPackMap<String, String>?
+            val secondKey: GenericMap<String, String>?
         )
 
         val map = mapOf(
             "firstKey" to "firstKey=24",
             "secondKey" to "secondValue"
-        ).toMsgPackMap()
+        ).toGenericMap()
 
         val customObject = CustomObject("firstValue", map)
         val encoded = msgPackEncode(customObject)

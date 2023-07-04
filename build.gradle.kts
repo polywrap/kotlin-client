@@ -1,12 +1,12 @@
 import com.android.build.gradle.internal.tasks.factory.dependsOn
 
 plugins {
-    kotlin("multiplatform") version "1.8.20"
-    kotlin("plugin.serialization") version "1.8.20"
+    kotlin("multiplatform") version "1.8.22"
+    kotlin("plugin.serialization") version "1.8.22"
     id("com.goncalossilva.resources") version "0.2.5"
     id("org.jlleitschuh.gradle.ktlint") version "11.3.1"
     id("com.android.library") version "8.2"
-    id("org.jetbrains.dokka") version "1.8.10"
+    id("org.jetbrains.dokka") version "1.8.20"
     id("uniffi-pipeline")
     id("convention.publication")
 }
@@ -37,7 +37,7 @@ kotlin {
             dependencies {
                 kotlin.srcDirs(uniffiBindingsDir)
                 implementation("com.ensarsarajcic.kotlinx:serialization-msgpack:0.5.5")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.2")
                 implementation("com.squareup.okio:okio:3.3.0") // fs plugin
                 implementation("io.ktor:ktor-client-core:2.3.1") // http plugin
                 implementation("io.ktor:ktor-client-android:2.3.1") // http plugin
@@ -48,7 +48,7 @@ kotlin {
             resources.srcDirs("src/commonMain/resources")
             dependencies {
                 implementation(kotlin("test"))
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.2")
                 implementation("com.goncalossilva:resources:0.3.2") // access resources in tests
                 implementation("io.ktor:ktor-client-mock:2.3.1") // http plugin test
                 implementation("com.ionspin.kotlin:bignum:0.3.8") // client test
@@ -103,6 +103,12 @@ android {
     compileSdk = 32
     compileOptions {
         targetCompatibility = JavaVersion.VERSION_17
+    }
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+            withJavadocJar()
+        }
     }
 }
 

@@ -1,10 +1,10 @@
 package plugins
 
 import io.polywrap.configBuilder.polywrapClient
-import io.polywrap.core.msgpack.MsgPackMap
+import io.polywrap.core.msgpack.GenericMap
 import io.polywrap.core.msgpack.msgPackDecode
 import io.polywrap.core.msgpack.msgPackEncode
-import io.polywrap.core.msgpack.toMsgPackMap
+import io.polywrap.core.msgpack.toGenericMap
 import io.polywrap.core.resolution.Uri
 import io.polywrap.plugins.http.httpPlugin
 import io.polywrap.plugins.http.wrap.*
@@ -19,7 +19,7 @@ class HttpPluginIntegrationTest {
             url = "https://ipfs.wrappers.io/api/v0/cat",
             request = Request(
                 headers = null,
-                urlParams = mapOf("arg" to "QmThRxFfr7Hj9Mq6WmcGXjkRrgqMG3oD93SLX27tinQWy5/wrap.info").toMsgPackMap(),
+                urlParams = mapOf("arg" to "QmThRxFfr7Hj9Mq6WmcGXjkRrgqMG3oD93SLX27tinQWy5/wrap.info").toGenericMap(),
                 responseType = ResponseType.BINARY,
                 body = null,
                 formData = null,
@@ -43,7 +43,7 @@ class HttpPluginIntegrationTest {
         val httpResponse = Response(
             status = 200,
             statusText = "OK",
-            headers = MsgPackMap(
+            headers = GenericMap(
                 map = mapOf(
                     "Date" to "Thu, 27 Apr 2023 07:34:18 GMT",
                     "Content-Type" to "application/json",

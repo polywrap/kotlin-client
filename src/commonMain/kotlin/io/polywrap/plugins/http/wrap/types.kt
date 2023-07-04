@@ -3,7 +3,7 @@
 
 package io.polywrap.plugins.http.wrap
 
-import io.polywrap.core.msgpack.MsgPackMap
+import io.polywrap.core.msgpack.GenericMap
 import kotlinx.serialization.Serializable
 
 typealias BigInt = String
@@ -18,14 +18,14 @@ typealias Json = String
 data class Response(
     val status: Int,
     val statusText: String,
-    val headers: MsgPackMap<String, String>? = null,
+    val headers: GenericMap<String, String>? = null,
     val body: String? = null,
 )
 
 @Serializable
 data class Request(
-    val headers: MsgPackMap<String, String>? = null,
-    val urlParams: MsgPackMap<String, String>? = null,
+    val headers: GenericMap<String, String>? = null,
+    val urlParams: GenericMap<String, String>? = null,
     val responseType: ResponseType,
     val body: String? = null,
     val formData: List<FormDataEntry>? = null,

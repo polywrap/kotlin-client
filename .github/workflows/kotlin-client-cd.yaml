@@ -22,6 +22,7 @@ jobs:
           version=$(./gradlew properties --no-daemon --console=plain -q | grep "version:" | awk '{print $2}')
           if [[ $version == *"-SNAPSHOT" ]]; then
             echo "::set-output name=snapshot::true"
+          fi
 
   publishing-pipeline:
     needs: check-snapshot

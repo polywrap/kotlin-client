@@ -91,7 +91,7 @@ uniffi {
     libname = "uniffi_polywrap_native"
     bindingsDir = uniffiBindingsDir
     // when false, only builds for current desktop platform even if it's not in the list
-    isRelease = true
+    isRelease = System.getenv("IS_RELEASE") == "true"
 }
 
 android {

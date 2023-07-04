@@ -14,15 +14,10 @@
 
 # generated
 /clones/
-/src/androidMain/resources/android-armv7
-/src/androidMain/resources/android-aarch64
-/src/androidMain/resources/android-x86
-/src/androidMain/resources/android-x86-64
-/src/jvmMain/resources/darwin
-/src/jvmMain/resources/darwin-aarch64
-/src/jvmMain/resources/linux-aarch64
-/src/jvmMain/resources/linux-x86-64
-/src/jvmMain/resources/win32-x86-64
+/src/androidMain/resources/android-*
+/src/jvmMain/resources/darwin-*
+/src/jvmMain/resources/linux-*
+/src/jvmMain/resources/win32-*
 
 ### IntelliJ IDEA ###
 .idea/modules.xml

@@ -12,6 +12,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Setup Rust
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+
+      - name: Install Cross
+      - uses: actions-rs/cargo@v1
+        with:
+          command: install
+          args: cross --git https://github.com/cross-rs/cross
+
       - name: Generate Uniffi Bindings
         run: ./gradlew uniffi
 

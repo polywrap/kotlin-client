@@ -80,10 +80,8 @@ uniffi {
     androidJnaPath = "$projectDir/src/androidMain/resources"
     rustTargets = listOf(
         "armv7-linux-androideabi",
-//        "i686-linux-android", // This arch is not used anymore
         "aarch64-linux-android",
-//        "x86_64-linux-android", // This arch is not used anymore
-//        "x86_64-pc-windows-gnu", // TODO: this is failing
+        "x86_64-pc-windows-gnu",
         "aarch64-unknown-linux-gnu",
         "x86_64-unknown-linux-gnu",
         "x86_64-apple-darwin",
@@ -93,7 +91,7 @@ uniffi {
     libname = "uniffi_polywrap_native"
     bindingsDir = uniffiBindingsDir
     // when false, only builds for current desktop platform even if it's not in the list
-    isRelease = false
+    isRelease = true
 }
 
 android {

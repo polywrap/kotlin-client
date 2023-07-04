@@ -1,0 +1,59 @@
+name: kotlin-client-cd
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  check-snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Check for SNAPSHOT version
+        id: check-version
+        run: |
+          version=$(./gradlew properties --no-daemon --console=plain -q | grep "version:" | awk '{print $2}')
+          if [[ $version == *"-SNAPSHOT" ]]; then
+            echo "::set-output name=snapshot::true"
+
+  publishing-pipeline:
+    needs: check-snapshot
+    if: needs.check-snapshot.outputs.snapshot == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+
+      - name: Install Cross-rs
+        uses: actions-rs/cargo@v1
+        with:
+          command: install
+          args: cross --git https://github.com/cross-rs/cross
+
+      - name: Generate Uniffi Bindings
+        run: ./gradlew uniffi
+
+      - name: Build
+        run: ./gradlew assemble
+
+      - name: Publish
+        run: ./gradlew publish
+        env:
+          SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY_ID }}
+          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}

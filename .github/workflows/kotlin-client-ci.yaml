@@ -17,7 +17,7 @@ jobs:
         with:
           toolchain: stable
 
-      - name: Install cross-rs
+      - name: Install Cross-rs
         uses: actions-rs/cargo@v1
         with:
           command: install

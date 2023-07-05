@@ -4,7 +4,7 @@
 
 This repository hosts a Kotlin implementation of the Polywrap Client.
 
-Reference documentation is temporarily available at https://autumn-wave-1981.on.fleek.co/
+Reference documentation is hosted at https://kotlin.client.polywrap.io/
 
 ## Build
 
